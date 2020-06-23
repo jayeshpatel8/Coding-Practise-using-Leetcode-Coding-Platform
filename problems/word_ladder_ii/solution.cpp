@@ -1,105 +1,101 @@
 class Solution {
 public:
     vector<vector<string>> res;
-    vector<int> * parent;
+    
     vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
         
         int n = wordList.size();
+        unordered_set<string> wset(wordList.begin(),wordList.end());
         // wordList len =0 or endWord not found
-        if (n<1) return vector<vector<string>>();
-        int endidx=-1,i;
+        if (wset.count(endWord)==0) return    vector<vector<string>>();     
         
-        for ( i=0; i<n; i++)
+        unordered_set<string> firstset{beginWord},endset{endWord};
+        bool flag=false, end=false;
+        unordered_map<string,vector<string>> dic;
+        int len=1;
+        
+        while(!firstset.empty() && !endset.empty() && !flag)
         {
-            //if (wordList[i][0] != endWord[0]) continue;
-            if (wordList[i] != endWord)
-                continue;
-            else
-            {endidx = i ; break;}
-        }
-        
-        if (i==n) return res;
+            unordered_set<string> temp;            
+            if(firstset.size()>endset.size()){
+                firstset.swap(endset);
+                end = !end;
+            }
+            
+            for (const auto & s : firstset ) wset.erase(s);
+            for (const auto & s : endset ) wset.erase(s);
+            
+            for( auto s : firstset){                      
                 
-        wordList.push_back(beginWord); n++;
-        
-        vector<int>* graph = createGraph(  wordList);
-       
-        vector<int> vis(n);
-        vis[n-1]=1;
-        
-       queue<int> bfs;
-               
-        bfs.push(n-1); 
-        
-        
-        
-        parent = new vector<int>[n];
-        while(!bfs.empty()){
-            int p = bfs.front();
-            bfs.pop();
-            if (p==endidx)
-                break;
-            for ( i=0; i<graph[p].size(); i++){
-                int node = graph[p][i];
-                if(vis[node] == 0){ //not visited
-                   vis[node] = vis[p]+1;
-                    parent[node].push_back(p);
-                    bfs.push(node);
-                }
-                else if (vis[node] == vis[p]+1){
-                    parent[node].push_back(p);
+                 //cout << "[" <<s<<"]=";
+                string cur=s;
+                for (int i = 0; i<s.length(); i++)
+                {
+                    char old = s[i];
+                    for (char c = 'a'; c<='z'; c++)
+                    {
+                        s[i] = c;                    
+                        //if(wset.count(s)>0)
+                        {
+                            
+                            if (endset.count(s)){
+                            const string* parent = &cur;
+                            const string* child = &s;
+
+                            if(end) swap(parent, child);                                
+                                flag=true;
+                                dic[*parent].push_back(*child);
+                                //cout << "END - " << cur << ":" << old << "-"<< s << ", ";
+                            }                            
+                            else if (wset.count(s) && !flag)
+                            {
+                                
+                                temp.insert(s);
+                            const string* parent = &cur;
+                            const string* child = &s;
+
+                            if(end) swap(parent, child);
+									 dic[*parent].push_back(*child);
+                                //cout <<  s << ", ";
+                            }                            
+                        }                                        
+                    }
+                    s[i]=old;                
                 }
             }
-        }
-        
-        if (vis[endidx]==0) return res;
-        vector<string> s{endWord};
-
-         printParents(wordList,parent[endidx],s);
-         return res;
             
-        
+            firstset.swap(temp);
+            len++;
+        }
+        /*
+        for (auto s: dic){
+            cout << "dic[" << s.first<< "] = "<< s.second.size() <<"[ ";
+            for (auto t : s.second)
+                cout << t << " ";
+            cout << "] ";
+        }*/
+        if (flag){
+           vector<string> s{beginWord};
+            dfs(dic,beginWord,endWord,s);
+            
+        }
+        return res;                    
     }
-
-     vector<int>* createGraph( vector<string>& w){
-         vector<int>* neib = new vector<int>[w.size()];
-         
-         for (int i=0; i<w.size();i++){             
-             for (int j=i+1; j<w.size();j++)
-                 if (isconnected(w[i],w[j]))
-                 {
-                     neib[i].push_back(j);
-                     neib[j].push_back(i);
-                 }
-         }
-         return neib;
-     }
-    void printParents(vector<string>& w, vector<int> &parent2,vector<string>& s){
-        if (parent2.size()==0){
-           vector<string> copy;
-            //reverse_copy(s,s+(s.size()),copy.begin());
-            for (auto it=s.cend()-1; it>=s.cbegin(); --it)
-                copy.push_back(*it);
-          //  reverse(copy.begin(),copy.end());
-            res.push_back(copy); return;
+void dfs(const unordered_map<string,vector<string>>& dic, const string & beginWord,const string & endWord, vector<string>& s){
+         if (beginWord==endWord )
+        {
+           
+                res.push_back(s); 
+            return;
         }
         
-        for (int i=0; i< parent2.size();i++){
-            s.push_back(w[parent2[i]]);
-            printParents(w,parent[parent2[i]],s);
+        const auto it = dic.find(beginWord);
+        if(it == dic.cend()) return;
+         for(const string& child : it->second){
+            s.push_back(child);
+            dfs(dic,child,endWord,s);
             s.pop_back();
         }
-        
     }
-    bool isconnected(string& a, string& b){
-        
-        int s=0,e = b.length(),cnt=0;;
-        while(s<e){
-            if(b[s]!=a[s])
-                if (cnt++!=0)return false;
-            s++;
-                    
-        }
-        return true;        
-    }
+   
 };
