@@ -1,48 +1,38 @@
 class Solution {
 public:
+    unordered_set<string> W,s,e;
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        
-        unordered_set<string> nodeList(wordList.begin(),wordList.end());
-        if (nodeList.count(endWord)==0) return 0;
-        
-        unordered_set<string> s1{beginWord},s2{endWord};
-        
-        bool found=false;
-        int len=1,loop=2;
-         while(!s1.empty() && !s2.empty())
-         {
-             
-             if (s1.size()>s2.size()) {s1.swap(s2);}
-             
-             for (auto & s : s1) nodeList.erase(s);
-             for (auto s : s2) nodeList.erase(s);
-             unordered_set<string> temp;
-             for (const auto & s : s1)
-             {
-                 string  cur = s;
-                 for (int i=0; i<s.size(); i++)
-                 {
-                     char t = cur[i];
-                     for (char c='a'; c <='z'; c++)
-                     {
-                         cur[i] = c;
-                         if (s2.count(cur))
-                         {
-                            return ++len;
-                            //else return 2;
-                        }
-                                                  
-                         else if (nodeList.count(cur)){
-                            temp.insert(cur);
-                         }
-                     }
-                     cur[i]=t;
-                 }
-             }
-             s1.swap(temp);
-             len++;
-         }
+        for (auto w  : wordList) W.insert(w);        
+        if (W.find(endWord) == W.end()) return 0;
+        s.insert(beginWord); 
+        e.insert(endWord);
+        W.erase(beginWord);W.erase(endWord);
+        int l=1,N=beginWord.length();
+        while (!s.empty() && !e.empty()){
+            if (s.size()>e.size()) s.swap(e);
+            
+            unordered_set<string> t;
+            for (auto &st : s){                  
+                cout << st << " ..";
+                string  cur = st;
+                for (int i=0; i<N; i++){
+                    char ct= cur[i];                     
+                    for (char c = 'a'; c<='z'; c++){                        
+                        cur[i]=c;          
+                        if (e.count(cur)) return 1+l;
+                        if (W.find(cur) != W.end()){
+                            W.erase(cur);
+                            t.insert(cur);
+                        }                        
+                    }
+                    cur[i]=ct;
+                }
+            }
+            s.swap(t);
+            l++;
+        }
         
         return 0;
     }
+
 };
