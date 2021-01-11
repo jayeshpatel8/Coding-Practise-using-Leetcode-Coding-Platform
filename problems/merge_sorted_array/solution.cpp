@@ -1,15 +1,20 @@
 class Solution {
 public:
     void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
-        map<int,int> map;
         
-        for (int i=0; i<m;i++) map[nums1[i]]++;
-        for (auto i:nums2) map[i]++;   
-        int c=0;
-        for (auto i = map.begin(); i!= map.end();i++)
-        {
-            while(i->second--)
-                nums1[c++]=i->first;   
+        if (n==0) return ;
+        m--,n--; 
+        int i = m+n+1;
+        while (i>=0 && m>=0 && n>=0){
+            if (nums1[m] > nums2[n]){
+                nums1[i--] = nums1[m--];
+            }
+            else
+                nums1[i--] = nums2[n--];
         }
+        while(n>=0){
+            nums1[i--] = nums2[n--];
+        }
+        return ;
     }
 };
