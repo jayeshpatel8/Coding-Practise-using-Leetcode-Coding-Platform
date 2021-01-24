@@ -3,48 +3,36 @@
  * struct ListNode {
  *     int val;
  *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-
-ListNode*  mergelist(ListNode *a, ListNode *b){
-    ListNode *p,*h;
-    if (b==NULL) return a;
-    if (a==NULL) return b;
-    
-    if (a->val < b->val) {p= a;a=a->next;}
-    else {p= b;b=b->next;};
-    h=p;
-    while (a && b){
-        if (a->val < b->val) {p->next= a;a=a->next;}
-        else {p->next= b;b=b->next;}
-        p=p->next;        
-    }
-    while (a)
-        {p->next= a;a=a->next;p=p->next;}
-    while (b)
-        {p->next= b;b=b->next;p=p->next;}    
-    return h;
-}
-
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        if (lists.empty())return NULL;
-        int size=lists.size();
-        
-        while (size > 1){
-            int i=0;
-            while(i*2+1 < size)
-            {            
-                 lists[i]  = mergelist(lists[i*2],lists[i*2+1]);
-                i+=1;
+        int k = lists.size();
+        if (k==0) return NULL ;
+        struct Compare{
+            bool operator()(ListNode*a, ListNode*b){return  a->val > b->val;}
+        };
+        priority_queue<ListNode*, vector<ListNode*>, Compare> pq;
+        //lists = [[1,4,5],[1,3,4],[2,6]]
+        for (int i=0; i<k; i++){
+            if (lists[i]){
+                pq.push(lists[i]);
             }
-            if (size >2 && size%2) lists[i]=lists[i*2];
-            size = size/2 + size%2;
-           // lists.resize(size);
-         //   printf("%d,", size);
         }
-        return lists[0];
+        ListNode *res,dummy;
+        res = &dummy;
+        while (!pq.empty()){
+            ListNode *t=pq.top();pq.pop();
+            res->next = t;
+            if(t->next)
+                pq.push(t->next);
+            res=res->next;            
+        }
+        res->next=0;
+        return dummy.next;
     }
 };
