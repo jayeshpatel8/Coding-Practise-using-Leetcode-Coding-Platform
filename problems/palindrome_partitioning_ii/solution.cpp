@@ -1,34 +1,23 @@
 class Solution {
 public:
     int minCut(string s) {
-        // prepare the table for Palindrome
-        int n=s.size();
-        if (!n) return n;
-        int Part[n+1];
+        int n = s.length();
+        int pal[n+1];
+        for (int i=0; i<=n; i++) pal[i]=i-1;
         
-        for (int i=0; i<=n; i++)
-            Part[i] = i-1;
-        
-        for (int Len=0; Len<n; Len++){            
-            bool pal1=true, pal2=true;    
-            for ( int prev= Len , next = Len; 
-                 prev>=0 && next<n && (pal1 || pal2); 
-                 prev--,next++){
-                
-                // case: a
-                if (pal1 && (s[prev] == s[next]))
-                 Part[next+1] = min ( Part[next+1], 1 + Part[prev] );
-                else
-                    pal1=false;
-                
-                // case: aa
-                if (pal2 && next+1<n && (s[prev] == s[next+1]))                    
-                    Part[next+2] = min ( Part[next+2], 1 + Part[prev] );                    
-                else
-                    pal2=false;
+        //aabba
+        for (int L=0; L<n; L++){
+            
+            bool pal1 = true,pal2=true;
+            for (int i=L, j =L,k=L+1; i>=0 && j<n && (pal1 || pal2); i--,j++){
+                if (pal1 && s[i] == s[j])
+                    pal[j+1] = min(pal[j+1], 1 + pal[i]);
+                else pal1=false;
+                if (pal2 && k<n && s[i] == s[k])
+                    pal[k++ +1] = min(pal[k+1], 1 + pal[i]);                
+                else pal2=false;
             }
         }
-        return Part[n];
-  }
-
+          return pal[n];      
+    }
 };
