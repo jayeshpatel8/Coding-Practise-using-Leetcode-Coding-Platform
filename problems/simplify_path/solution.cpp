@@ -1,27 +1,27 @@
 class Solution {
 public:
     string simplifyPath(string path) {
+        stack<string> s;
+        
         int n = path.size();
-        vector<string> s;
-        
-        string str;
-        stringstream X(path);
-        while(getline(X,str,'/')){
+        for (int i=0; i<n; ){
+            if ((i+1 <n && path[i+1]=='/') || i+1 ==n ){i++; continue;}
+            auto j = path.find('/',i+1);
+            string t;
+            if (j == string::npos)  j = n;
+            t = path.substr(i,j-i);
             
-            if (str=="/" || str==".") continue;
-            if (str == "..") {
-                if (!s.empty())s.pop_back();
-                continue;
+            if (t=="/.")i+=2;
+            else if (t=="/.."){
+                if(!s.empty())s.pop();
+                i+=3;
             }
-            if (str.size())
-                s.push_back(str);
+            else
+            {s.push(t);i =  j;}
         }
-
+        if (s.empty())  return "/";
         string res;
-        
-        //cout << res<<" ,";
-
-         for(auto str : s) {res += "/"+str;}
-        return res.empty() ? "/" : res;
+        while (!s.empty()) {res =s.top()+res;s.pop();}
+        return res;
     }
 };
