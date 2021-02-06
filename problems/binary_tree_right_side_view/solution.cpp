@@ -13,21 +13,20 @@ class Solution {
 public:
     vector<int> rightSideView(TreeNode* root) {
         vector<int> res;
-        if (!root) return res;
-        
+        if(!root) return res;
+        // BFS
         queue<TreeNode*> q;
         q.push(root);
         
-        while (!q.empty()){
-                res.push_back( q.front()->val);
-                int cnt=q.size();
-                while (cnt--){
-                    TreeNode * i = q.front(); q.pop();
-                    if (i->right)  q.push(i->right);
-                    if (i->left)   q.push(i->left);                                                           }
+        while(!q.empty()){
+            int sz = q.size();
+            res.push_back(q.front()->val);
+            while (sz--){
+                if(q.front()->right) q.push(q.front()->right);
+                if(q.front()->left) q.push(q.front()->left);
+                q.pop();
+            }
         }
         return res;
-        
     }
- 
 };
