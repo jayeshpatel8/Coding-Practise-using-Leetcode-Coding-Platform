@@ -9,39 +9,31 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-
-
-
 class Solution {
 public:
-   // vector<TreeNode*> o;
-    map<pair<int,int>,vector<TreeNode*>> dp;
-    vector<TreeNode*> generateTrees(int n) {
-        if (n==0){
-            return {};
-        }else{
-            return generateTrees(1, n);
-        }
-    }
-    vector<TreeNode*> generateTrees(int start, int end) {
-        vector<TreeNode*> res;
-        if (start > end) {res.push_back(NULL);;return res;}
-        if (dp.count({start,end})) return dp[{start,end}];
+    unordered_map<size_t , vector<TreeNode*>> DP;
+    vector<TreeNode*> generateTrees(int n) {        
         
-        vector<TreeNode*> l,r;
-        for (int i=start; i<=end; i++)
-        {
-            l = generateTrees(start,i-1);
-            r = generateTrees(i+1,end);
-            
-            for (auto  &&lt:l)
-                for (auto && rt:r){
-                    TreeNode * root = new TreeNode(i);
-                    root->left=lt;
-                    root->right=rt;
-                    res.push_back(root);
-                }
-        }
-        return dp[{start,end}]=res;
+        return gt(1,n);
+    }
+   vector<TreeNode*>  gt(int start, int end){
+        vector<TreeNode*> v;
+        if (start > end) return vector<TreeNode*> {NULL};
+       size_t id = (size_t)start<<32|end;
+       if(DP.count(id)) return DP[id]; 
+       for (int i=start; i<=end; i++){
+           vector<TreeNode*> l = gt(start, i-1);
+           vector<TreeNode*> r = gt(i+1, end);
+           
+           for (int j = 0; j< l.size(); j++){
+               for (int k = 0; k< r.size(); k++){
+                   TreeNode * node = new TreeNode(i);
+                   node->left = l[j];
+                   node->right = r[k];
+                   v.push_back(node);
+               }
+           }           
+       }
+       return DP[id]=v;
     }
 };
