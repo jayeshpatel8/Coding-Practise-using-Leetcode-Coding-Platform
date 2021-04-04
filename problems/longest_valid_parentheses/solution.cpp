@@ -1,20 +1,25 @@
 class Solution {
 public:
     int longestValidParentheses(string s) {
-        int len = s.length();
-        if (len<2) return 0;
-        int dp[len]={0};
-        int m=0;
-        for (int i=1; i<len; i++){
-            if (s[i] == ')' )
-                if (s[i-1] == '(')
-                    dp[i] = (i >= 2 ? dp[i - 2] : 0) +2;                                   
-                else if (((i-dp[i-1]-1)>=0 && (s[(i-dp[i-1]-1)] == '(')))
-                    dp[i]=dp[i-1]+(((i-dp[i-1]-2)>0)?dp[i-dp[i-1]-2]:0)+2;
-                m = max(dp[i],m);
-          //  cout << dp[i] << ",";
-        }    
-        //cout << endl;
-        return m;
+        stack<int> st;
+        int ans=0;
+        
+        for (int i=0; i<s.size(); i++){
+            if (s[i] == '(') st.push(i);
+            else {
+                if (!st.empty() && s[st.top()]=='(') 
+                    st.pop();
+                else
+                    st.push(i);
+            }
+        }
+        
+        int start, end=s.length();
+        while (!st.empty()){
+            start=st.top(); st.pop();
+            ans  = max(ans, end-start-1);
+            end=start;
+        }
+        return max(ans, end);
     }
 };
