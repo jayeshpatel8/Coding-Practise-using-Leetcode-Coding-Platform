@@ -1,41 +1,38 @@
-#include <bits/stdc++.h>
 class Solution {
 public:
-    //unordered_map<string,int> dict;
-    
+    int m,n;
+    int dp[200][200];
     int longestIncreasingPath(vector<vector<int>>& matrix) {
-        int m = matrix.size();
-        if (m <1) return m;
-        
-        int n = matrix[0].size();
-        vector<vector<int>> R (m,vector<int>(n,-1));
-        int r=0;
-        
+         m =  matrix.size();
+        n=matrix[0].size();
+             int ans=0;
+       memset(dp,0,sizeof(dp));
         for (int i=0; i<m; i++){
-            for (int j=0; j<n; j++)
-            {
-                r = max(r,longestIncreasingPath(matrix,i,j,m,n,R));
+            for(int j=0; j<n; j++){
+                ans = max (ans, lip(matrix,i,j));               
             }
-         }
-        return r;
+        }
+        return ans;
     }
-    int longestIncreasingPath(vector<vector<int>>& M, int i, int j, int m, int n,vector<vector<int>>& R){
-            
+    int lip(vector<vector<int>>& matrix, int i, int j){
+               
+        if ( matrix[i][j] < 0 ) return 1;
+        if ( dp[i][j]!=0) return  dp[i][j];
+         int prev = matrix[i][j];
+        matrix[i][j]= -1;
+        int ans=1;
         
-        if (R[i][j] != -1 ) return R[i][j];
-        int res=0;
-        if (i+1 < m && (M[i+1][j]-M[i][j]>0) ){
-            res = max(res,longestIncreasingPath(M,i+1,j,m,n,R));
+        if ((i+1 <m )&& prev < matrix[i+1][j] ) 
+            ans = max (ans ,  1 + lip(matrix,i+1,j));
+        
+        if ((j+1 <n) && prev < matrix[i][j+1] ) {
+                    ans = max (ans ,  1 + lip(matrix,i,j+1));
         }
-        if (j+1 < n && (M[i][j+1]-M[i][j]>0) ){
-            res = max(res,longestIncreasingPath(M,i,j+1,m,n,R));
-        }
-        if (j-1 >= 0 && (M[i][j-1]-M[i][j]>0) ){
-            res = max(res,longestIncreasingPath(M,i,j-1,m,n,R));
-        }
-        if (i-1 >= 0 && (M[i-1][j]-M[i][j]>0) ){
-            res = max(res,longestIncreasingPath(M,i-1,j,m,n,R));
-        }
-        return R[i][j]=res+1;
+        if (i-1 >=0 && prev < matrix[i-1][j] ) ans = max (ans ,  1 + lip(matrix,i-1,j));
+        if (j-1 >=0 && prev < matrix[i][j-1] ) ans = max (ans ,  1 + lip(matrix,i,j-1));
+        
+        matrix[i][j]= prev;
+        
+        return dp[i][j]= ans;
     }
 };
