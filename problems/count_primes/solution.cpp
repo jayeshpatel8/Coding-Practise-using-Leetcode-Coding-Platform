@@ -1,19 +1,20 @@
 class Solution {
 public:
-    int countPrimes(int n) {
-        if (n <2) return 0;
-        vector<bool> p(n,true);
-        int c=0;
-        
-        for (int i=2; i*i <=n; i++){
-            if (p[i]){
-                for (int j=i*i; j<n; j+=i)   p[j]=false;
-            }
-        }
 
-        for (int i=2; i <n; i++) 
-            if (p[i]) c++;
-        return c;
-       
+    int countPrimes(int n) {
+        int cnt=0;
+        vector<int> p(n+1,1);
+        
+        uint64_t ceil_ = ceil(sqrt(n));
+
+        for (int i=2;  i<n; i++ ){
+            if (p[i]==0 )  continue;
+            cnt += 1;
+            if (i>= ceil_) continue;
+            for (int j=i+i; j<=n; j+=i)
+                p[j]=0;            
+        }
+            
+        return cnt;
     }
 };
