@@ -12,32 +12,18 @@
 class Solution {
 public:
     void flatten(TreeNode* root) {
-        //vector<int> res;
         if (!root) return ;
-        flatten_(root);
-       
-    }
-    TreeNode*  flatten_(TreeNode* root) {
-        if (!root) return root;
-       
-        TreeNode * re=0, *le=0;
-        if (root->left || root->right)
-        {
-            le=flatten_(root->left);
-            re=flatten_(root->right);
+        flatten(root->left);
+        flatten(root->right);
+        if (root->left){
+            TreeNode *t = root->right;
+            root->right = root->left;
+            root->left = NULL;
+                while (root->right)  root = root->right;
+                root->right = t;
+     
         }
-        else
-            return root;
+    }
+    
 
-        
-        if (le)
-        { 
-            le->right= root->right;
-            root->right =root->left;
-            root->left=0;
-        }
-        if (!re) 
-                re=le;
-        return re;                
-    }
 };
