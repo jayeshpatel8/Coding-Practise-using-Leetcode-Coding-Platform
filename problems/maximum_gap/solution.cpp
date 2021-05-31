@@ -1,34 +1,32 @@
 class Solution {
 public:
     int maximumGap(vector<int>& nums) {
-        // 4,2,0,10,6,
-        int n = nums.size();
-        if (n<2) return 0;
+        int n  = nums.size();
+        if (n < 2) return 0;
+        int hi  = 0, lo = INT_MAX;
+        for (auto &i : nums)
+            hi  = max (hi, i ),  lo  = min (lo, i );
+        int bsize = max((int)(hi-lo)/ (n-1), 1);
         
-        int minV = *min_element(nums.begin(), nums.end());
-        int maxV = *max_element(nums.begin(), nums.end());
+        vector<vector<int>> bucket( (hi-lo)/(bsize ) + 1, vector<int>() );
         
-        if ( maxV - minV < 2 ) return maxV - minV;
-
-        double interval = (double)n / (maxV - minV);
-        vector<pair<int,int>> bucket(n+1,{-1,-1});
-        
-        for (int i=0; i<n; i++){
-            int idx = (int)((int)(nums[i] - minV) * interval);
-            if (bucket[idx].first==-1)
-                bucket[idx]={nums[i] , nums[i] };
-            else{
-                bucket[idx].first= min ( bucket[idx].first , nums[i]) ;
-                bucket[idx].second = max ( bucket[idx].second , nums[i]) ;
-            }
+        for (auto &i : nums){
+            
+            bucket[(int)(i - lo)/bsize].push_back(i);
+            
         }
-        int diff=0, prev= 0;
-        for (int i=1; i<=n; i++){
-            if (bucket[i].second!= -1){
-                diff = max (diff, bucket[i].first- bucket[prev].second);
-                prev = i;
-            }
-        }        
-        return diff;
+        int prevh, curl,curh=0 ,ans=0;
+        int bn=-1;
+        for (auto &b : bucket){
+            bn++;
+            if(b.empty()) continue;
+            
+            prevh = curh ? curh : b[0],curl = b[0];
+            for (auto &i : b)
+                curh  = max(curh,  i), curl = min(curl, i);
+            
+            ans = max(ans, curl - prevh);
+        }
+        return ans;
     }
 };
