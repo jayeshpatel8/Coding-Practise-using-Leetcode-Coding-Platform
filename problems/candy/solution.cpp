@@ -1,20 +1,19 @@
 class Solution {
 public:
-    int candy(vector<int>& rate) {
-        int n = rate.size();
-        vector<int> CandyL(n,0);
-        vector<int> CandyR(n,0);
-        
-        for (int i=1; i<n; i++){
-            if (rate[i] > rate [i-1])
-                CandyL[i]=CandyL[i-1]+1;
+    int candy(vector<int>& ratings) {
+        vector<int> L(ratings.size(),0);
+        vector<int> R(ratings.size(),0);
+        for ( int i=1; i< ratings.size(); i++){
+            if (ratings[i] > ratings[i-1]) {
+                L[i] = L[i-1]+1;
+            }
         }
-        int sum=max(CandyR[n-1], CandyL[n-1]);
-        for (int i=n-2 ; i >=0; i--){
-            if (rate[i] > rate [i+1])
-                CandyR[i]= CandyR[i+1]+1;
-            sum +=max(CandyR[i], CandyL[i]);
-        }                
-        return sum+n;
+        long ans=max(L[ratings.size()-1],R[ratings.size()-1]);
+        for (int i=ratings.size()-2; i>=0; i--){
+            if (ratings[i]>ratings[i+1])
+                R[i] = R[i+1] +1;
+            ans+=max(L[i],R[i]);
+        }
+        return ans + ratings.size();
     }
 };
