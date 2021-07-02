@@ -1,16 +1,12 @@
 class Solution {
 public:
     vector<int> grayCode(int n) {
-   
-        vector<int> res;
-        res.push_back(0);
-        int i=1;
-        int max=pow(2,n);
-        for (;i<max; i++){
-            
-            res.push_back(i^(i/2));
-        }
-      
-        return res;
+        int num = 1 << n;
+        vector<int> ans(num);
+        ans[0]=0;
+        for (int i=1; i<num; i++){
+            ans[i] = i ^ (i >> 1);
+        }       
+        return ans;
     }
 };
