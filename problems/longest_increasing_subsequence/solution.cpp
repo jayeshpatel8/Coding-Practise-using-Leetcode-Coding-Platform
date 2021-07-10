@@ -1,20 +1,14 @@
 class Solution {
 public:
     int lengthOfLIS(vector<int>& nums) {
-        // 1 1 1 2 2 3 4 4
-        // 1 2 2 3 3 4 
-        int n = nums.size();
-        vector<int> dp;
-              dp.push_back(nums[0]);
-        for (int i=1; i<n; i++){
-            int a = nums[i];
-            if (dp.back() < a)
-                dp.push_back(a);            
-            else{
-                auto e = lower_bound(dp.begin(), dp.end(),a);
-                *e = a;
-            }            
+        int N = nums.size();
+        vector<int> lis;   
+        lis.push_back(nums[0]);
+        for (int i = 1; i<N; i++){
+            auto it = lower_bound(begin(lis), end(lis),nums[i]);
+            if (it == end(lis)) lis.push_back(nums[i]);
+            else *it  = nums[i];
         }
-        return dp.size();
+        return lis.size();
     }
 };
