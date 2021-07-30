@@ -1,94 +1,39 @@
-
 class MapSum {
-        unordered_map<char ,  MapSum*> n;
-    bool e;
-    int v;
 public:
     /** Initialize your data structure here. */
+    struct trie{
+        trie * ch[26] = {};
+        int sum = 0;
+    } root;
+    unordered_map<string, int> keys;
     MapSum() {
-        n.clear();
-        e=0;
-        v=0;
     }
     
-  
-    void insert(string word, int val) {
-        MapSum *t1=this;
-    
-        if (word.empty())
-         return;
-        if (n.empty())
-        {
-            //root node empty
-            for(auto c1: word){
-                auto *n1 = new MapSum();
-                t1->n.emplace(c1,n1);
-                t1=n1;
-            }
-            t1->v=val;
-            t1->e=true;
-            return;
+    void insert(string key, int val) {
+        int diff = val - keys[key];
+        keys[key] = val;
+        auto p = &root;
+        for (int i=0  ; i<key.size(); ++i){
+            int ch = key[i]- 'a';
+            if (!p->ch[ch])
+                p->ch[ch] = new trie();
+            p = p->ch[ch];
+            p->sum +=diff;            
         }
-       size_t len=word.length();
-        for(auto c1 : word)
-        {
-            auto got  = t1->n.find(c1);
-            len--;
-            if( got == t1->n.end())
-            {
-                auto *n1 = new MapSum();
-                t1->n.emplace(c1,n1);
-                t1=n1;
-                continue;
-            }
-            else  
-
-                t1=got->second;
-
-        }
-        t1->v=val;t1->e=true;
     }
-        int mapsum(MapSum * t1)
-                {
-                    int sum1=0;
-                    
-                    for(auto it = t1->n.begin();it!=t1->n.end();++it)
-                    {
-                        sum1 +=  mapsum((it->second));
-                    }
-                    sum1+=(t1)->v;
-                    return sum1;
-                        
-                }
+    
     int sum(string prefix) {
-              MapSum *t1=this;
-        
-        if (prefix.empty()|| n.empty() )
-             return 0;
-        size_t s = prefix.length();
-        for(auto c1 : prefix)
-        {
-            s--;
-            auto got  = t1->n.find(c1);
-            if( got == t1->n.end())
-            {
-                return 0;
-            }
-            else if(0==s)
-            {
-                return mapsum(got->second);
-            }
-            else
-                t1=got->second;
-
+        trie * p = &root;
+        for ( int i = 0; p && i < prefix.size(); ++i){
+            p = p->ch[ prefix[i]-'a'];
         }
-        return 0;   
+        return p ? p->sum : 0;
     }
 };
 
 /**
  * Your MapSum object will be instantiated and called as such:
- * MapSum obj = new MapSum();
- * obj.insert(key,val);
- * int param_2 = obj.sum(prefix);
+ * MapSum* obj = new MapSum();
+ * obj->insert(key,val);
+ * int param_2 = obj->sum(prefix);
  */
