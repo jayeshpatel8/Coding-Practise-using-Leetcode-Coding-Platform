@@ -1,16 +1,22 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        vector<int> map(128,0);
-        for(auto c: t) map[c]++;
-        int counter=t.size(), begin=0, end=0, d=INT_MAX, head=0;
-        while(end<s.size()){
-            if(map[s[end++]]-->0) counter--; //in t
-            while(counter==0){ //valid
-                if(end-begin<d)  d=end-(head=begin);
-                if(map[s[begin++]]++==0) counter++;  //make it invalid
-            }  
+        int sz = s.size(), st = t.size();
+        if (sz< st) return  "";
+
+        int map[128]={}, start=-1,d=INT_MAX;
+        for (auto c : t)  map[c]++;
+        
+        for ( int r=0,l=0, cnt = st; r < sz; r++){            
+            char c = s[r];
+            map[c]--;
+            if (map[c]>=0) cnt--;
+            while (cnt == 0 && l<=r){
+                if(d > r-l+1) d = r-l+1, start = l;
+                map[s[l]]++;
+                if (map[s[l++]] > 0) cnt++;
+            }
         }
-        return d==INT_MAX? "":s.substr(head, d);
+        return start==-1 ? "" : s.substr(start,d);
     }
 };
