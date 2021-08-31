@@ -9,11 +9,11 @@ public:
             // 2 1 3
             // 3 1 2
               int m = l + (r-l) / 2 ;
-            if (nums[m] <  nums[r]) 
-                r=m;
+            if (l==m ? nums[l] <  nums[++m] : nums[l] <  nums[m]) 
+                l=m;
             else
-                l=m+1;
+                r=m-1;
         }
-        return nums[l];
+        return nums[(r+1)%nums.size()];
     }
 };
