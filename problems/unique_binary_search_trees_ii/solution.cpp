@@ -11,29 +11,28 @@
  */
 class Solution {
 public:
-    unordered_map<size_t , vector<TreeNode*>> DP;
-    vector<TreeNode*> generateTrees(int n) {        
-        
-        return gt(1,n);
+    vector<TreeNode*> dp[9][9]={};
+    vector<TreeNode*> generateTrees(int n) {
+        return build(1,n);
     }
-   vector<TreeNode*>  gt(int start, int end){
+    vector<TreeNode*> build(int i, int n){
+        if (i>n) return {NULL};
+        if (!dp[i][n].empty()) return dp[i][n];
         vector<TreeNode*> v;
-        if (start > end) return vector<TreeNode*> {NULL};
-       size_t id = (size_t)start<<32|end;
-       if(DP.count(id)) return DP[id]; 
-       for (int i=start; i<=end; i++){
-           vector<TreeNode*> l = gt(start, i-1);
-           vector<TreeNode*> r = gt(i+1, end);
-           
-           for (int j = 0; j< l.size(); j++){
-               for (int k = 0; k< r.size(); k++){
-                   TreeNode * node = new TreeNode(i);
-                   node->left = l[j];
-                   node->right = r[k];
-                   v.push_back(node);
-               }
-           }           
-       }
-       return DP[id]=v;
+        for (int j=i; j<=n; j++){        
+            vector<TreeNode*> left = build(i,j-1);
+            vector<TreeNode*> right = build(j+1,n);
+            
+            for (auto &l : left){
+                for (auto &r : right)
+                {
+                    TreeNode* root = new TreeNode(j);
+                    root->left = l;
+                    root->right = r;
+                    v.push_back(root);                        
+                }
+            }
+        }
+        return dp[i][n] = v;
     }
 };
