@@ -1,24 +1,30 @@
 class Solution {
 public:
     int orderOfLargestPlusSign(int n, vector<vector<int>>& mines) {
-        vector<vector<int>> grid(n, vector<int>(n,n));
-        
-        for (auto &m : mines) grid[m[0]][m[1]]=0;
-        
-        for (int i=0; i<n; i++){
-            for (int j=0, l=0,r=0,u=0,d=0, k=n-1; j<n; j++,k--){
-                grid[i][j] = min(grid[i][j], l = (grid[i][j]==0 ? 0 : l+1)); 
-                grid[i][k] = min(grid[i][k], r = (grid[i][k]==0 ? 0 : r+1));
-                grid[j][i] = min(grid[j][i], u = (grid[j][i]==0 ? 0 : u+1));
-                grid[k][i] = min(grid[k][i], d = (grid[k][i]==0 ? 0 : d+1));
+        vector<vector<int>> g(n,vector<int>(n,n));
+        for (auto &i : mines ) g[i[0]][i[1]]=0;
+        for ( int ro = 0; ro<n; ro++){
+            int l ,r, u, d;
+            l=r=u=d=0;
+            for (int c = 0 ,rc = n-1; c<n; c++,rc--){                
+                if (g[ro][c]) g[ro][c] = min(g[ro][c], ++l );
+                else 
+                    l=0;
+                if (g[ro][rc])
+                    g[ro][rc] = min(g[ro][rc], ++r);
+                else r=0;
+                if (g[c][ro])
+                    g[c][ro] = min(g[c][ro], ++u);
+                else u = 0;
+                if (g[rc][ro])
+                    g[rc][ro] = min(g[rc][ro], ++d);
+                else d = 0;
             }
         }
-                                 
-        int ans=0;
-        for (auto &r : grid){
-            for (auto &v : r){
-                ans = max(ans,v);
-            }
+        int ans = 0;
+        for(auto &i : g){
+            for( auto j : i)
+                ans = max(ans, j);
         }
         return ans;
     }
