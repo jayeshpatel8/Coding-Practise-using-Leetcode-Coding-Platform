@@ -12,7 +12,7 @@ public:
             g[e[0]].push_back({e[1],e[2]});
             g[e[1]].push_back({e[0],e[2]});
         }
-        //map<pi,int> used;
+
         priority_queue<pi ,vector<pi>,greater<pi>> pq; // {distance , node}
         pq.push({0,0});
         while(!pq.empty()){
@@ -23,7 +23,7 @@ public:
             
             for(auto nei : g[u]){
                 int v = nei.first, d1 = nei.second;
-                //used[{u,v}] = min(d1,maxMoves-d);
+
                 
                 int d2 = d + d1 + 1;
                 if (d2 < dist[v]){
