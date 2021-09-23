@@ -1,6 +1,41 @@
 class Solution {
 public:
     string longestDiverseString(int a, int b, int c) {
+        priority_queue<pair<int,char>> pq;
+        if(a)pq.push({a,'a'});
+        if(b)pq.push({b,'b'});
+        if (c) pq.push({c,'c'});
+        string ans;
+        int sz=0;
+        while(!pq.empty()){
+           pair<int,char> t  = pq.top(); pq.pop();
+            
+           if (sz < 2){
+               ans +=t.second; sz++;
+               t.first--;
+           }
+            else{
+                if (t.second != ans[sz-1] || (t.second != ans[sz-2])){
+                   ans +=t.second; sz++;
+                   t.first--;                   
+                }
+                else {
+                    if (pq.empty()) return ans;
+                    else{
+                        pair<int,char> t2  = pq.top(); pq.pop();
+                        ans +=t2.second; sz++;
+                        t2.first--;
+                        if (t2.first) pq.push(t2);
+                    }
+                }
+            }
+           if (t.first) 
+            pq.push(t);             
+        }
+        return ans;
+    }
+        /*
+        string longestDiverseString(int a, int b, int c) {
         int sz = a+b+c, acnt=0,bcnt=0,ccnt=0;
         string ans;
         for (int i=0; i<sz; i++){
@@ -14,5 +49,5 @@ public:
                 return ans;
         }
         return ans;
-    }
+    }*/
 };
