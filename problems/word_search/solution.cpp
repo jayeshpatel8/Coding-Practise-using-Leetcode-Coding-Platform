@@ -1,40 +1,26 @@
-bool backtrace(vector<vector<char>>&  board,string& word,int i, int j,int k){
-   
-    int m=board.size(), n= board[0].size();
-    if (board[i][j]==0 || board[i][j]!=word[k]) return false;
-    
-    int t = board[i][j];board[i][j]=0;
-    if (word.size()-1 == k) return true;    
-    // match
-    if (i+1<m ) {
-        if (backtrace(board,word,i+1,j,k+1)) return true;
-    }
-    if (j+1<n  ) {
-        if (backtrace(board,word,i,j+1,k+1)) return true;
-    }
-    if (i-1>=0 ){
-        if  (backtrace(board,word,i-1,j,k+1)) return true;
-    }
-    if (j-1>=0 ) {
-        if  (backtrace(board,word,i,j-1,k+1)) return true;
-    }
-    board[i][j]=t;
-    return false;
-}
 class Solution {
 public:
+    int  N, M, W;
     bool exist(vector<vector<char>>& board, string word) {
-         int m=board.size(), n= board[0].size();
-        
-      vector<vector<bool>> used(m,vector<bool>(n,0));
-         
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++)
-            {
-                if (board[i][j] == word[0] ){
-                    if( backtrace(board,word,i,j,0)) return true;
+        M = board.size(), N = board[0].size(),W =word.size();
+        for (int i=0; i<M; i++){
+            for (int j=0;j<N; j++){
+                if (word[0] == board[i][j]){
+                    if (dfs(board, i,j,word,0)) return true;
                 }
             }
+        }
+        return false;
+    }
+    int dfs(vector<vector<char>>& board, int i, int j,string& word, int k){
+        if (i >= M || i<0 || j<0 ||j >=N || board[i][j] != word[k]) return false;
+        if (k == W-1) return true;
+        board[i][j]=1;
+        if (dfs(board, i+1,j,word,k+1) || dfs(board, i,j+1,word,k+1) ||
+            dfs(board, i-1,j,word,k+1) || dfs(board, i,j-1,word,k+1)){
+            return true;
+        }
+        board[i][j]=word[k];
         return false;
     }
 };
