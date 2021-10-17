@@ -11,22 +11,19 @@
  */
 class Solution {
 public:
-    unordered_map<int,int> prefixsum;
+    unordered_map<int, int> prefixsum;
     int pathSum(TreeNode* root, int targetSum) {
-        if (!root) return 0;
-        prefixsum[0]++;
-        return trav(root, targetSum);
+        prefixsum[0] = 1;
+        return dfs(root,targetSum, 0);
     }
-    int trav(TreeNode* root, int t, int sum =0){
-        if (!root) return 0;
-        int newsum = sum + root->val;
-        
-        int cnt = prefixsum[newsum-t];
-        prefixsum[newsum]++;
-        cnt += trav(root->left, t, newsum);
-        cnt += trav(root->right, t, newsum);
-        prefixsum[newsum]--;
-        
+    int dfs(TreeNode* root, int target, int sum){
+        if(!root) return 0;
+        int s = root->val +sum;
+        int cnt = prefixsum[s-target];
+        prefixsum[s]++;
+        cnt += dfs(root->right,target, s);
+        cnt += dfs(root->left,target, s);
+        prefixsum[s]--;
         return cnt;
     }
 };
