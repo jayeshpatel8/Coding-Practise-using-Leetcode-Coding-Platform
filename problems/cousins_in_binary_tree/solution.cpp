@@ -11,42 +11,33 @@
  */
 class Solution {
 public:
-    
+    int dx=-1,dy=-2, px=-1,py=-2;
     bool isCousins(TreeNode* root, int x, int y) {
-        if (root->val == x || root->val==y) return false;
-        queue<TreeNode*> q;
-        q.push(root);
-        int p1=0,p2=0;
-        //cout << p1  << " " << p2 << endl;
-        while(!q.empty()){
-            
-            int sz  = q.size();
-            while(sz--){
-                TreeNode * n = q.front();  q.pop();
-                if (n->left ){
-                    if((n->left->val == x || n->left->val == y)){
-                        if (p1) p2 = n->val; else p1 = n->val;
-                    }
-                    else
-                        q.push(n->left);
-                    
-                }
-                if (n->right){
-                    if  (n->right->val == x || n->right->val == y) { 
-                        if (p1) p2 = n->val; 
-                        else p1 = n->val;
-                    }else
-                        q.push(n->right);
-                }
-                        
-            }
-            if (p1 || p2) {
-                //cout << p1  << " " << p2 << endl;
-                if (!p1 || !p2) return false;
-                return (p1 != p2);
-            }
-            
+        depth(root, x, y);
+        return (px!= py) && (dx  == dy);
+    }
+    void depth(TreeNode* root, int x, int y, int i = 0){
+        if (!root) return ;
+        i++;
+        if (root->right)
+        {
+           if (root->right->val == x ) {
+                   dx = i+1; px=root->val;
+           }
+            else if (root->right->val == y ) {                
+                    dy = i+1; py=root->val;
+            } 
         }
-        return false;
+        if (root->left)
+        {
+           if (root->left->val == x ) {
+               dx = i+1; px=root->val;
+           }
+            else if (root->left->val == y ) {
+                dy = i+1; py=root->val;
+            } 
+        }
+        depth(root->right, x,y,i), depth(root->left, x,y,i);
+        return ;
     }
 };
