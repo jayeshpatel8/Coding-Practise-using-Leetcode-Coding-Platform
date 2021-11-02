@@ -1,12 +1,9 @@
 int uniquePathsIII_(vector<vector<int>>& grid, int cnt, int i, int j){
      int r =grid.size(), c=grid[0].size();
         
-    if (grid[i][j]==2 ) {
-        if (cnt==0)
-            return 1;
-      //  cout << cnt << ",";
-        return 0;
-    }
+    if (grid[i][j]==2 ) 
+        return cnt==0;
+    
     if (grid[i][j]==3 || grid[i][j]==-1) return 0;
     grid[i][j]=3;
     cnt--;
