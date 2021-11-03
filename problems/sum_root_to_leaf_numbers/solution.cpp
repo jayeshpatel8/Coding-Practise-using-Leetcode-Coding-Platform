@@ -10,21 +10,17 @@
  * };
  */
 class Solution {
-    int sum=0;
 public:
-    int sumNumbers(TreeNode* root) {
-         sumNumbers(root,0);
-        return sum;
-    }
-    void sumNumbers(TreeNode* root,int n){
-        if (!root) {return;}
-        n =n*10+root->val;
-         if(!root->left && !root->right)
-             {sum+=n;return;}
+    int ans = 0;
+    int sumNumbers(TreeNode* root, int sum = 0) {
+        if (!root) {
+            return ans;
+        }
         
-        sumNumbers(root->right,n);
-        
-        sumNumbers(root->left,n);
-        
+        sum =  sum * 10 + root->val;
+        if (!root->left && !root->right) return ans+=sum;
+        sumNumbers(root->left,sum);
+        sumNumbers(root->right,sum);
+        return ans;
     }
 };
