@@ -1,16 +1,10 @@
 class Solution {
 public:
     vector<int> singleNumber(vector<int>& nums) {
-        
-        
-        int xory=0;
-        for (auto i : nums) xory ^=i;
-        
-        int b=xory & -xory;
-        int x=0;
-        for (auto i : nums) 
-            if (i & b) x ^=i;
-            
-        return  vector<int>{x,x^xory};
+        int xor_=0   ;
+        for (auto i : nums) xor_ ^= i;
+        int bit_set=xor_ & -(long)xor_, num1=0;
+        for (auto i : nums) if (i & bit_set) num1 ^= i;
+        return {num1, xor_ ^ num1};
     }
 };
