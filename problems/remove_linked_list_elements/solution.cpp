@@ -11,18 +11,20 @@
 class Solution {
 public:
     ListNode* removeElements(ListNode* head, int val) {
-     while(head && head->val == val){
-         head=head->next;
-     }
-     ListNode* pre=head, *cur=head ?head->next:head;   
-     while (cur){
-         if(cur->val == val ){
-             pre->next = cur->next;             
-         }
-         else 
-             pre = cur;
-         cur=cur->next;
-     }
-     return head;
+        
+        while(head && head->val ==val)
+            head = head->next;
+        
+        if(!head) return head;
+        ListNode * h = head;
+         
+        while(h->next){
+            if (h->next->val == val){
+                h->next = h->next->next;
+                continue;
+            }
+            h = h->next;
+        }
+        return head;
     }
 };
