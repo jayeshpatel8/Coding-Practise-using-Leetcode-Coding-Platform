@@ -4,19 +4,15 @@ public:
     int countVowelSubstrings(string word) {
         
         
-        for (int i=0; i<word.size(); i++){
+        for (int i=0 ,j=0,k=0; i<word.size(); i++){
             if (isvowel(word[i])){
-                
-                for (int j=i; j<word.size(); j++){
-                    if (isvowel(word[j])){                        
-                        ch[word[j]]=1;
-                        ans += (allvowel() == 5);                        
-                    }
-                    else
-                     break;
-                }
+                ch[word[i]]+=1;
+                for (; allvowel(); k++)
+                    ch[word[k]]-=1;              
+                ans +=  k - j;
             }
-            clear();
+            else
+                k=j=i+1,clear();
         }
         return ans;
     }
@@ -24,7 +20,7 @@ public:
         return c=='a' || c=='e' || c=='i' || c=='o' || c=='u';
     }
     int allvowel(){
-        return (ch['a']+ch['e']+ch['i']+ch['o']+ch['u']);
+        return (ch['a']&&ch['e']&&ch['i']&&ch['o']&&ch['u']);
     }
     void clear(){
         ch['a']=ch['e'] =ch['i'] =ch['o'] =ch['u'] = 0;
