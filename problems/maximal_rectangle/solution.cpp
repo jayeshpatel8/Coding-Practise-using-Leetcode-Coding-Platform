@@ -21,6 +21,7 @@ public:
                 else {r[j]=n; right=j;};                
             for (int j=0; j<n; j++)
                 max1 = max(max1,(r[j]-l[j])*height[j]);
+         
         }
     return max1;
     }
