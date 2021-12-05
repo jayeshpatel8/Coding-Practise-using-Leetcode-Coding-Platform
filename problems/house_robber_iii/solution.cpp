@@ -11,21 +11,20 @@
  */
 class Solution {
 public:
-    int rob(TreeNode* root) {
-        if (root == NULL) return 0;
-        auto p  = rob1(root);
-        return max(p.first,p.second);
-    }
-    
     pair<int,int> rob1(TreeNode* root) {
-        if (root == NULL) return {0,0};
+        if (!root)
+            return {0,0};
+            
+        pair<int,int> l , r;
+        l = rob1(root->left);
+        r = rob1(root->right);
+        int without_root = l.first + r.first;
         
-        pair<int,int> l = rob1(root->left);
-        pair<int,int> r = rob1(root->right);
-        /*int prev1 = l.first+r.first; 
-        int prev2 = l.second + r.second;*/
-        //int cur = max(root->val + prev2, prev1);
-        // return {cur, prev1};
-        return {max(root->val + l.second + r.second , l.first+r.first), l.first+r.first}; /* {prev1 , prev2}*/
-    }    
+        return {max(root->val + l.second + r.second, without_root), l.first + r.first};
+    }
+
+    int rob(TreeNode* root) {
+        pair<int,int> ans = rob1(root);
+        return max(ans.first ,ans.second);
+    }
 };
