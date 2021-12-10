@@ -1,32 +1,35 @@
 class Solution {
 public:
-    
+    int dp[1001][2], mod = 1e9 + 7;
     int numTilings(int n) {
-        unsigned int dp[n+1][3];
-        memset(dp,0,sizeof(dp));
-        dp[0][0]=1;
-        dp[0][1]=1;
-        dp[0][2]=1;
+        if(n<=2) return n;
+        memset(dp,-1,sizeof(dp));
+        return dfs(n,1);
+    }
+    long dfs(int n, bool done){
+        if (n<0) return 0;
+        if (n==0) return done;
+
         
-        dp[1][0]=1;
-        dp[1][1]=0;
-        dp[1][2]=0;
+        if (dp[n][done]!= -1) return dp[n][done];
         
-        for (int i=2; i<=n; i++){
-            
-            dp[i][0]  += dp[i-1][0];
-            dp[i][0]  += dp[i-2][0];
-            dp[i][0]  += dp[i-1][1];
-            dp[i][0]  += dp[i-1][2];
-            
-            dp[i][1]  +=  dp[i-1][2];
-            dp[i][2]  +=  dp[i-1][1]; 
-            dp[i][1]  +=  dp[i-2][0];
-            dp[i][2]  +=  dp[i-2][0];
-            dp[i][0] = dp[i][0] % ((int)1e9 + 7 );
-            dp[i][1] = dp[i][1] % ((int)1e9 + 7 );
-            dp[i][2] = dp[i][2] % ((int)1e9 + 7 );
+        long ans = 0;
+        if (done)
+            ans += dfs(n-1, 1) + dfs(n-2,1) + 2 * dfs(n-2,0);
+        else{
+            ans +=  dfs(n-1,0) + dfs(n-1,1);
         }
-        return dp[n][0];
+        return dp[n][done] = ans % mod;
     }
 };
+/*
+
+// dom
+n>= 1  vertical 
+n>=2  2 Horiz
+
+// trom
+n>=3 2 trom
+n>=5 2 trom + 2  dom
+
+*/
