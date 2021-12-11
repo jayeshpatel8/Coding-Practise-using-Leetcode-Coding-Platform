@@ -1,24 +1,23 @@
 class MedianFinder {
 public:
-    /** initialize your data structure here. */
-    multiset<int> s;
-    multiset<int>::iterator it = s.begin();
-    bool odd = false;
     MedianFinder() {
-    }
-    
-    void addNum(int num) {
-        s.insert(num);
         
-        if (it==s.end()|| (!odd && num>=*it)) it++;
-        else if (odd && num<*it) it--;
-        odd = !odd;
+    }
+    priority_queue<int, vector<int>,greater<int>> minHeap;
+    priority_queue<int> maxHeap;
+    void addNum(int num) {
+        maxHeap.push(num);
+        minHeap.push(maxHeap.top());
+        maxHeap.pop();
+        if (minHeap.size() > maxHeap.size()){
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
     }
     
     double findMedian() {
-        if (odd)return *it;
-         
-        return (*it + *next(it))/ 2.0;
+        if (maxHeap.size() > minHeap.size()) return maxHeap.top();
+        return (maxHeap.top() + minHeap.top()) / 2.0;
     }
 };
 
