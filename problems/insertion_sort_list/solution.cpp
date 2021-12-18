@@ -10,33 +10,21 @@
  */
 class Solution {
 public:
-    void swap(ListNode * h,ListNode * h2){
-        int t = h->val;
-        h->val = h2->val;
-        h2->val=t;
-    }
     ListNode* insertionSortList(ListNode* head) {
-        
         if (!head || !head->next) return head;
-        ListNode * cur=head, dummy;
-        while(cur){
-            if (cur->next && cur->val > cur ->next->val)
-            {
-                ListNode * before=&dummy, *next=cur->next;
-                before->next=head;
-                
-                while (before->next->val < next->val)
-                    before = before->next;
-                
-                cur->next = next->next;
-                if (before->next == head)head = next;
-                
-                // Append the list
-                next->next = before->next;
-                before->next = next;
+        
+        int len = 0;
+        ListNode * h =head;
+        while(h)
+            ++len, h = h->next;
+        for ( int i=len - 1; i>=0; i--){
+            ListNode * h =head;
+            int j = 1;
+            while (j++ < i) h = h->next;
+            while (h->next && h->val > h->next->val) {
+                swap(h->val , h->next->val);
+                h=h->next;
             }
-            else
-                cur= cur->next;
         }
         return head;
     }
