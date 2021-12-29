@@ -18,12 +18,14 @@ public:
 
 class Solution {
 public:
-    Node* connect(Node* root) {
-     if (!root || !root->right) return root;
-        root->left->next=root->right;
-        root->right->next=(root->next)?(root->next->left):0;
-        connect(root->left);
-        connect(root->right);
+    Node* connect(Node* root, Node* prevl = NULL) {
+        if (root && root->right){
+            //root->right->next=NULL;
+            root->left->next  =root->right;
+            if (prevl) prevl->right->next = root->left, prevl=prevl->right;            
+            connect(root->left,prevl);
+            connect(root->right,root->left);
+        }
         return root;
     }
 };
