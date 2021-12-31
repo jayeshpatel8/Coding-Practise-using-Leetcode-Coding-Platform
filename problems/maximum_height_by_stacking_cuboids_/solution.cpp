@@ -1,29 +1,23 @@
 class Solution {
 public:
+    
     int maxHeight(vector<vector<int>>& cubs) {
-        for (auto &a : cubs){
-            if (a[2]<a[1]) swap(a[2],a[1]);
-            if (a[2]<a[0]) swap(a[2],a[0]);
-            if (a[1]<a[0]) swap(a[1],a[0]);
-        }
-        sort(begin(cubs),end(cubs),[](auto & a, auto &b){
-                    return a[2]!=b[2] ? (a[2]< b[2]) : (a[1]!=b[1]? a[1]<b[1] : a[0]<b[0]);
-                });
-
-        int N = cubs.size();
-        int dp[N+1],ans=0;
-        dp[N]=0; dp[N-1] = cubs[N-1][2];
-        for (int i = N-2; i>=0; i--){
-            dp[i]=cubs[i][2];
-            for (int j=N-1;j>i; j-- ){
-                if (cubs[i][0]<=cubs[j][0] && 
-                   cubs[i][1]<=cubs[j][1] && 
-                   cubs[i][2]<=cubs[j][2] ){
-                    dp[i]  = max(dp[i], cubs[i][2]+dp[j]);
-                }
+        for (auto& i : cubs) sort(begin(i),end(i));  //constraint : You can rearrange any cuboid's dimensions by rotating it to put it on another cuboid.
+        cubs.push_back({0,0,0});
+        sort(begin(cubs),end(cubs));
+        
+        int ans=0;
+        vector<int> dp(cubs.size());
+        for (int i=1; i<cubs.size(); i++){
+            //constraint : You can place cuboid i on cuboid j if widthi <= widthj and lengthi <= lengthj and heighti <= heightj.
+            int s = cubs[i][0], m= cubs[i][1], l = cubs[i][2]; //smallest, mid, largeest            
+            for (int j=0; j<i; j++){
+                if (cubs[j][0] <= s && cubs[j][1] <= m && cubs[j][2]<= l) 
+                    dp[i] = max(dp[i],l + dp[j]);                
             }
-            
+            ans= max(ans, dp[i]);
         }
-        return *max_element(dp,dp+N);
+        return ans;
     }
+
 };
