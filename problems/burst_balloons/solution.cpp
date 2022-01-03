@@ -1,22 +1,20 @@
 class Solution {
 public:
-    int dp[501][501];
     int maxCoins(vector<int>& nums) {
-        memset(dp,-1,sizeof(dp));
-        return dfs(nums,0,nums.size()-1);
-    }
-    int dfs(vector<int>& nums, int i, int j){
-        if (i>j) return 0;
-        if (dp[i][j] != -1) return dp[i][j];
-        int ans = 0;
-        // k is last blast (not latest)
-        // [i,j] is outside i an j is already bursted now burst among [i,j]
-        // [i....k...j] => (i-1) * k (j+1) + prev burst from  remaining dfs(i,k-1) + dfs(k+1,j)
-        for ( int  k = i; k<=j; k++){
-            ans = max(ans , (i == 0? 1 : nums[i-1]) * nums[k] * (j+1>=nums.size() ? 1 : nums[j+1]) + 
-                       dfs (nums, i,k-1)
-                     + dfs (nums, k+1,j));
+        int n = nums.size();
+        nums.insert(nums.begin(),1);
+        nums.push_back(1);
+        vector<vector<int>> dp(n+2,vector<int>(n+2));
+
+        for (int len=1; len<=n; len++){
+            for ( int i=1; i<=n-len+1; i++){
+                int j=i+len-1, best = 0;
+                for (int k=i; k<=j; k++){
+                    best = max(best, (nums[i-1]*nums[k]*nums[j+1]) + dp[i][k-1] + dp[k+1][j]);
+                }
+                dp[i][j] = best;
+            }
         }
-        return dp[i][j] = ans;
+        return dp[1][n];
     }
 };
