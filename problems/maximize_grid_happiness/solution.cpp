@@ -1,36 +1,49 @@
-
 class Solution {
 public:
-    int M,N , dp[25][1024][7][7]={};
-    int getMaxGridHappiness(int m, int n, int in, int ex) {
-        M =m, N=n;
-        return dfs(0,0,in,ex);
+    int dp[5][5][1024][7][7]={}, m, n ;
+    int getMaxGridHappiness(int m1, int n1, int introvertsCount, int extrovertsCount) {
+       
+        //  1 ext, 2 int, 0 empty
+        m=m1, n=n1;
+        return dfs(0,introvertsCount,extrovertsCount, 0,0);
     }
+    int dfs(int mask, int intv, int extv, int i, int j){
+        
+        if (j==n)  i++,j=0;
+        
+        if (i==m) return 0;
+        
+        if (dp[i][j][mask][intv][extv]) return dp[i][j][mask][intv][extv];
+       
+        int pos= 2*j, nmask = mask & ~(3 << pos);        
+        int up =(mask & (3<<pos))>>pos, prev = j==0?0: (mask & (3<<(pos-2)))>>(pos-2);
+        
+        int ans= dfs(nmask,intv,extv,i,j+1);;
+        if (extv){
+            int s=40;
+            if (i>0 && up) s += getscore(1,up)  ;
+            if (j>0 && prev) s += getscore(1,prev);        
+            ans = max (ans, s + dfs(nmask|1<<pos,intv,extv-1,i,j+1));
+        }
+        if (intv){
+            int s=120;
+            if (i>0 && up ) s += getscore(2,up);
+            if (j>0 && prev ) s += getscore(2,prev);
 
-    int dfs(int i, int mask, int in, int ex){
+           
+            ans = max (ans, s + dfs(nmask|2<<pos,intv-1,extv,i,j+1));
+        }        
         
-        if (i >= M*N || (in+ex)==0)  return 0;        
-        if (dp[i][mask][in][ex]) return dp[i][mask][in][ex];
-        int r = i/N, c = i%N, pos = 2*c;
-        int newmask = mask & ~(3<<pos);
-        int ans= dfs(i+1,newmask,in,ex);
-        if (in)
-            ans = max (ans, cost(r,c,mask,true) + dfs(i+1,newmask | 1<<pos ,in-1,ex));
-        if(ex)
-            ans = max (ans, cost(r,c,mask,false) + dfs(i+1,(newmask | 2<<pos) ,in,ex-1));
-        
-        return dp[i][mask][in][ex] = ans;
+        return dp[i][j][mask][intv][extv] = ans;
     }
-    int cost(int i, int j, int mask, bool in){
-        int pos = 2*j, 
-            up = (mask & 3 << pos) >> pos, 
-            prev = j==0? 0 : (mask & (3 <<(pos-2)))>>(pos-2);
-        int res = (up == 0 ? 0 : up==1 ? -30 : 20) + 
-                  (prev == 0 ? 0 : prev==1 ? -30 : 20);
-        if(in)
-            res += 120 - (up != 0 ? 30 : 0) - (prev != 0 ? 30 : 0);
-        else
-            res += 40 + (up != 0 ? 20 : 0) + (prev != 0 ? 20 : 0);
-        return res;
+    int getscore(int a, int n){
+        int s=0;
+        {
+            if (a == 1) s+=20;
+            else s-=30;
+            if (n==1) s+=20;
+            else s-=30;
+        }
+        return s;
     }
 };
