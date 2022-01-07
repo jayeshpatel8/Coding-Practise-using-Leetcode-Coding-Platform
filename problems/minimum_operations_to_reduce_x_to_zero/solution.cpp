@@ -1,20 +1,26 @@
 class Solution {
 public:
-    int minOperations(vector<int>& A, int x) {
-        x = accumulate(begin(A), end(A),0) - x ;
-        if (x == 0) return A.size();
-        if (x < 0) return -1;
-        // lsum + ..remaining.. + rsum => lsum + rsum = x
-        //  find  =  total - x = remaining with largest size
-        int ans=-1, total=0,l=0,r=0,N=A.size();
-        while ( l<=r){
-            if (total < x )  {if (r < N) total +=A[r++]; else break;}
-            
-            else{
-                if (total ==x) ans = max(ans, r-l);                    
-                total -=A[l++];
-            }         
+    int minOperations(vector<int>& nums, int x) {
+        int n=nums.size(), sum=0, i=0, j= n-1, ans= INT_MAX;
+        if (x < nums[0] && x < nums[n-1]) return -1;
+        for ( ; i<n ; i++)    {
+            sum +=nums[i];
+            if (sum>x){
+                sum -=nums[i]; break;
+            }
         }
-        return ans == -1 ? -1 : A.size()-ans;
+        if (i==n && sum != x) return -1;
+        --i;
+        if(sum ==x) ans= min(ans, i+1);
+        while (  j>=0 ){
+            sum += nums[j];
+            
+            {
+                while (i>=0 && sum > x) sum-=nums[i--];
+            }
+            if (sum == x) ans = min(ans, i+1+n-j);
+            j--;
+        }
+        return ans;
     }
 };
