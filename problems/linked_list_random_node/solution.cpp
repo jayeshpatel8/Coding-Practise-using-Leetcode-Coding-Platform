@@ -10,23 +10,18 @@
  */
 class Solution {
 public:
-    /** @param head The linked list's head.
-        Note that the head is guaranteed to be not null, so it contains at least one node. */
     ListNode * h;
     Solution(ListNode* head) {
         h = head;
     }
     
-    /** Returns a random node's value. */
     int getRandom() {
-        
-        int k = 1;
-        ListNode * cur = h;
-        int ans , cnt=1;
-         while(cur){
-             if (rand() % cnt++ < k) ans = cur->val;
-             cur = cur->next;
-         }
+        ListNode  *t = h;
+        int k=1, cnt=1, ans = 0;
+        while (t){
+            if (rand() % cnt++ < k) ans = t->val;
+            t=t->next;
+        }
         return ans;
     }
 };
