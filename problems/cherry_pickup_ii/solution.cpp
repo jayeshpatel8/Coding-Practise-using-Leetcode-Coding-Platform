@@ -1,20 +1,23 @@
 class Solution {
 public:
-    int dp[71][71][71], M , N;
+    int dp[71][71][71];
+    int m , n;
     int cherryPickup(vector<vector<int>>& grid) {
         memset(dp,-1,sizeof(dp));
-        M = grid.size(), N = grid[0].size();
-        return dfs(grid,0,0,N-1);
+        m = grid.size(),n = grid[0].size();
+        return dfs(grid,0,0,n-1);
     }
-    int dfs(vector<vector<int>>& grid, int r, int c1, int c2){
-        if(c1 <0 || c2 <0 || c1>=N || c2 >=N) return INT_MIN;
-        if (r == M) return 0;
-        if (dp[r][c1][c2] != -1) return dp[r][c1][c2];
-        
-        int ans= INT_MIN;
-        for (int i=-1; i<2; i++)
-            for (int j=-1; j<2; j++)
-                ans = max(ans, dfs(grid,r+1,c1+i,c2+j));
-        return dp[r][c1][c2] = ans + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+    int dfs(vector<vector<int>>& g, int i, int j, int j1){
+        if (j<0 || j1<0 || j>=n || j1>=n) return INT_MIN;
+        if (i==m) return 0;
+
+        if (dp[i][j][j1] != -1) return dp[i][j][j1];
+        int ans = INT_MIN;
+        for (int k=-1; k<2; k++){
+            for (int k1=-1; k1<2; k1++)
+                    ans = max(ans, dfs(g,i+1,j+k,j1+k1));         
+        }
+        return dp[i][j][j1] = ans + g[i][j] + (j!=j1 ?g[i][j1] : 0) ;
+            
     }
-};
+}; 
