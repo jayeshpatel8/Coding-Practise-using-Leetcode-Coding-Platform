@@ -1,18 +1,12 @@
 class Solution {
 public:
     int countVowelStrings(int n) {
-        if (n==1) return 5;
-        return count(n,5);
-    }
-    map<pair<int,int>, int> M;
-    int count(int n, int i){
-        if (n==1) {
-            return i;
+        int dp[6] = {0, 1,1,1,1,1};
+        for ( int i=1; i<n; i++){
+            for ( int j = 1; j<=5; j++){
+                dp[j] += dp[j-1]; 
+            }
         }
-        if (M.count({n,i})) return M[{n,i}];
-        int c =0;
-        for (int j=i; j>=1; j--)
-            c+= count (n-1,j);
-        return M[{n,i}]=c;
+        return accumulate(begin(dp),end(dp),0L);
     }
 };
