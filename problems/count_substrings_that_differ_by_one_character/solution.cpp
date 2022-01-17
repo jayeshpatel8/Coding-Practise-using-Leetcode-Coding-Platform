@@ -1,16 +1,19 @@
 class Solution {
 public:
     int countSubstrings(string s, string t) {
-     int ans=0;
-        for (int i=0; i< s.size(); i++)
-        {        
-            for (int j=0; j<t.size(); j++){
-                int a=i, b=j, diff=0;
-                while(a<s.size() && b<t.size()){
-                    if (s[a++] != t[b++]) diff++;
-                    if(diff==1) ans++;
-                    else if (diff>1) break;
-                    
+        int sn = s.size(), tn = t.size(), ans = 0;
+        vector<vector<int>> match(sn+1,vector<int>(tn+1));
+        
+        for (int i = 0; i<sn; i++){            
+            for (int j = 0; j<tn; j++){
+                int f=0;
+                for (int l=0, lm = min(sn-i,tn-j); l<lm; l++){
+                    if (s[i+l] == t[j+l] ) {
+                        if (f==1) ans++;
+                     }
+                    else if (f++) break;
+                    else
+                        ans++;
                 }
             }
         }
