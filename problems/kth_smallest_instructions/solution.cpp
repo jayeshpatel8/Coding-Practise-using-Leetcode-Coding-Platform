@@ -1,26 +1,36 @@
+long dp[31][17] = {};
 class Solution {
 public:
-    string kthSmallestPath(vector<int>& des, int k) {
-        
-        int r= des[0] , c = des[1], n = r+c;
-        int dp[n+1][n+1];
-        memset(dp,0,sizeof(dp));
-        dp[0][0]=1;
-        //ncr using pascal traingle
-        for ( int i=1; i<=n; i++){
-            dp[i][0] = 1;
-            for (int j =1; j<=i; j++)
-                dp[i][j] = dp[i-1][j] + dp[i-1][j-1];
-        }
-        string ans;
-        int v=r;
-        for ( int i=0,rem = n - (i+1);i<n; i++){            
-            if (dp[rem][v] >= k)
-                ans +='H';
-            else 
-                ans +='V',  k-=dp[rem][v--];
-            rem--;
-        }
+
+    int nCr(int i, int j) {
+        if (i == 0) return 0;
+        if ( j == 1)
+            return dp[i][j] = 1;
+        return dp[i][j] ? dp[i][j] : dp[i][j] = (long)nCr(i - 1, j) + nCr(i-1, j - 1);
+    }
+int comb(int n, int r) {
+        long ans = 1;
+        for (int i = 1, j = n - r + 1; i <= r; ++i, ++j) ans = ans * j / i;
         return ans;
+    }    
+    string kthSmallestPath(vector<int>& d, int k) {
+        int h = d[1] , v = d[0];
+        string s;
+
+        for ( int i=h+v; i>0; i--){
+            if (h){
+                long c =  nCr(h+v,v+1);
+                //int c =  comb(h-1+v,v);
+                
+                if (k <= c)
+                    s +='H', h--;
+                else
+                    s+='V',v--, k-=c;
+            }
+            else{
+                s+=string(v,'V'); break;
+            }
+        }
+        return s;
     }
 };
