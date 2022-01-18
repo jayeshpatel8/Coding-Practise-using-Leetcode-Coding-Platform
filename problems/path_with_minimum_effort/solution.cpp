@@ -1,37 +1,29 @@
 class Solution {
 public:
-    uint32_t res=0,R,C;
-
-    
-    int minimumEffortPath(vector<vector<int>>& h) {
-        C=h[0].size()-1;
-        R=h.size()-1;
-        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>> pq;
-        uint32_t i,j;
-        pq.push({0,{0,0}});
-        while(i!=R||j!=C){
-            auto node = pq.top();pq.pop();
-            i =node.second.first;
-            j =node.second.second;                         
-            uint32_t w=node.first;   
-            
-            res = max(res,w);
-            int x=i-1,y=j;
-        
-            if(i&&h[x][y]>0) pq.push({abs(h[i][j]-h[x][y]),{x,y}});
-            
-            x=i,y=j-1;
-            if(j&&h[x][y]>0) pq.push({abs(h[i][j]-h[x][y]),{x,y}});       
-            x=i+1,y=j;
-            
-            if(i<R&&h[x][y]>0) pq.push({abs(h[i][j]-h[x][y]),{x,y}});     
-            x=i,y=j+1;
-            
-            if(j<C&&h[x][y]>0) pq.push({abs(h[i][j]-h[x][y]),{x,y}});
-            h[i][j]=-h[i][j];
-            
+    int M, N, ans = INT_MAX;
+    int d [5] = {-1,0,1,0,-1};
+    int minimumEffortPath(vector<vector<int>>& H) {
+        M = H.size(), N = H[0].size();
+        priority_queue<pair<int, array<int,2>>> pq;
+        pq.push({0,{0,0}});        
+        vector<vector<int>> dp(M,vector<int>(N, INT_MAX));
+        dp[0][0]=0;
+        while (!pq.empty()){
+            auto [e , p] = pq.top();
+            pq.pop();
+            int x = p[0], y = p[1] ,eff = (-1) * e;
+            if (x==M-1 && y==N-1) return eff;
+            for (int r = 0; r<4; r++){
+                int x1 = x +d[r], y1 = y + d[r+1];
+                if (x1 <0 || x1 >= M || y1 < 0 || y1 >= N ) continue;
+                int e2 = max(abs(H[x][y] - H[x1][y1]),eff);
+                
+                if (e2  < dp[x1][y1]){
+                    dp[x1][y1] = e2;
+                    pq.push({(-1) * e2,{x1,y1}});
+                }
+            }            
         }
-        return res;
+        return -1;
     }
-
 };
