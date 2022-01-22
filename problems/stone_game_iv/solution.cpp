@@ -1,32 +1,36 @@
 class Solution {
 public:
-    int dp[100001];
+    vector<int> sq;
     bool winnerSquareGame(int n) {
-        dp[0]=0;
-        for (int i=1; i<=n; i++){
-            bool ans=false;
-            for (int j=1 ; !ans && j*j<=i; ++j){
-                ans |= !dp[i - j*j];
-            }  
-            dp[i]=ans;
+        
+        //vector<int> dp(n+1,-1);
+        for (int i=1, j =1; j <=n;i++ ){
+            sq.push_back(j);
+            j = i*i;
+        }
+        vector<bool> dp(n+1,0);
+        for ( int i =1; i<=n; i++){
+            bool ans= false;
+            for (auto &j : sq){
+                if (j > i || ans)break;
+                ans = ans | !dp[i-j]; 
+            }
+            dp[i] = ans;
         }
         return dp[n];
+        //return dfs(n,dp);
     }
-    /*
-    
-    bool winnerSquareGame(int n) {
-        memset(dp,-1,sizeof(int)*(n+1));
-        return dfs(n);
-    }
-    bool dfs(int n){
-        if (n==0) return false;
-        if(dp[n]!=-1) return dp[n];
-        bool ans =false;
+    bool dfs(int n,vector<int>& dp){
+        if (n ==0 ) return false;
+        if (dp[n] != -1) return dp[n];
         
-        for (int j=1, k = 1 ; !ans &&  j*j<=n; ++j){
-            ans = !dfs(n - j*j);
+        bool ans = false;
+        
+        for (auto i :sq){
+            if (i > n ) break;
+            ans |= !dfs(n-i,dp);
+            if (ans) break;
         }
         return dp[n] = ans;
     }
-    */
 };
