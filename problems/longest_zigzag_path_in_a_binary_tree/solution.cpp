@@ -11,11 +11,27 @@
  */
 class Solution {
 public:
+    int ans = 0;
     int longestZigZag(TreeNode* root) {
-        return max(dfs(root->right,'r',0),dfs(root->left,'l',0));
+        //max(ans, dfs(root,0));
+        dfs(root);
+        return ans-1;
     }
-    int dfs(TreeNode* root, int d, int len){
-        if (!root) return len;
-        return max (dfs(root->left,'l',d=='r' ? len+1 : 0 ),dfs(root->right,'r',d=='l' ?len+1 :0 ));
+    array<int,2> dfs(TreeNode* root){
+        if (!root) return {0,0};
+        int r = (dfs(root->right)[0]) +1;
+        int l = (dfs(root->left)[1]) +1;        
+        ans= max({ans,r,l});
+        
+        return {l,r};
+    }    
+    int dfs2(TreeNode* root, int dir){
+        if (!root) return 0;
+        int r = (dfs2(root->right,1)) +1;
+        int l = (dfs2(root->left,0)) +1;
+        int k = dir ==0 ? r : l;
+        ans= max({ans,r,l});
+        
+        return k;
     }
 };
