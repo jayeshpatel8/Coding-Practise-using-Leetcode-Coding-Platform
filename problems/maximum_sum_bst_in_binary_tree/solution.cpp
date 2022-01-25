@@ -11,28 +11,26 @@
  */
 class Solution {
 public:
-    int ans = 0;
+    int ans=0;
     int maxSumBST(TreeNode* root) {
-        int minv, maxv;
-        msum(root,minv,maxv);
+        dfs(root);
         return ans;
     }
-    int msum(TreeNode * r , int & minv, int & maxv){
-        if (r == 0){
-            minv=INT_MAX, maxv=INT_MIN;
-            return 0;
+    array<int,3> dfs(TreeNode* root){
+        if (!root) return {50000,-50000,0};
+        int v = root->val;
+        
+        auto a = dfs(root->left);
+        auto b = dfs(root->right);
+        
+        if ((a[1]<v) && (b[0]>v)){
+            int sum = a[2]+b[2]+v;
+            ans = max(ans, sum);
+            int l = root->left == 0 ? v : a[0];
+            int r = root->right == 0 ? v : b[1];
+            return {l,r,sum};
         }
-        int lsum , rsum, sum = 0, minv2,maxv2;
-        lsum = msum(r->left,minv,maxv);
-        rsum = msum(r->right,minv2,maxv2);
-        if (maxv < r->val && minv2 > r->val) {
-            minv = min(minv,r->val);
-            maxv = max(maxv2, r->val);
-            sum =lsum + r->val +rsum;   
-            ans =  max (ans, sum);
-        }else{
-            maxv = INT_MAX, minv = INT_MIN;
-        }
-        return sum;
+        else
+            return {INT_MIN,INT_MAX,0};
     }
 };
