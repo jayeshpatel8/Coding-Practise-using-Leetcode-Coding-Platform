@@ -1,27 +1,28 @@
 class Solution {
 public:
-    vector<vector<int>> dp;
-    int M, N;
+    int dp[8][1<<8] , N, M;
     int maxStudents(vector<vector<char>>& seats) {
-        M = seats.size(), N = seats[0].size();
-        dp.resize(M,vector<int>(1<<N,-1));
-        return dfs(seats);
+        M= seats.size(), N=seats[0].size();
+        memset(dp,-1,sizeof(dp));
+        return dfs(seats,0,0);
     }
-    int dfs(vector<vector<char>>& seats, int i = 0, int pmask = 0){
-        if(i==M) return  0;
-        if (dp[i][pmask] !=  -1) return dp[i][pmask];
-        int ans = 0, cur=0;
+    int dfs (vector<vector<char>>& seats, int r, int pmask){
+
+        if (r==M) return 0;            
+
+        if (dp[r][pmask] != -1) return dp[r][pmask];
         
-        for (int k=0; k < N; k++)  if (seats[i][k] != '#')  cur |= (1<<k);
+        int cmask =0 , ans =0 ;
+        for (int i=0; i <N; i++) if (seats[r][i] == '.') cmask |= 1<<i;
         
-        for ( int j=0, mask = cur & j; j< (1<<N); mask = cur & ++j){
-            if (!(mask & (mask >> 1) || (pmask & (mask<<1)) || pmask & (mask>>1)) )
-                ans  = max(ans,cntbits(mask) +  dfs(seats,i+1,mask));
-        }
-        return dp[i][pmask] = ans;
+        for (int i=0 ,mask=cmask & i; i<(1<<N); mask = cmask & ++i)
+            if (!(mask & (mask>>1) || pmask & (mask<<1) || pmask & (mask>>1)))
+                ans = max(ans, bitset(mask) + dfs(seats,r+1,mask));
+        return dp[r][pmask] = ans;
     }
-    int cntbits(int n, int cnt=0){        
-        while(n) ++cnt, n&=n-1;
-        return cnt;
+    int bitset(int n){
+        int c=0;
+        while(n) c++,  n&=n-1;
+        return c;
     }
 };
