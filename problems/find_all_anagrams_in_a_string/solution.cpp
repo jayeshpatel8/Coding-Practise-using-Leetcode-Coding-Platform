@@ -1,21 +1,16 @@
 class Solution {
 public:
     vector<int> findAnagrams(string s, string p) {
-        int n = p.length(), sn = s.length();
-        if ( n==0 || sn < n  ) return vector<int>();
-        
-        int ch[256]={};
-        
-        for (int i=0;i<n; i++) {
-            ch[p[i]]++;
+        int freq2[126]={};
+        vector<int> ans;
+        for (auto i : p) freq2[i]++;
+        for (int i=0,j=0,ps = p.size()-1,c=ps+1; j<s.size(); j++){
+            if (freq2[s[j]]-->=1) c--;
+            if (j>=ps){
+                if(c==0) ans.push_back(i);                    
+                if(freq2[s[i++]]++>=0) c++;
+            }
         }
-        vector<int> res;
-        
-        for (int l=0,r=0,cnt=n; r<sn;){
-            if(ch[s[r++]]-->=1) cnt--;
-            if (cnt == 0) res.push_back(l);
-            if (r-l == n  && ch[s[l++]]++ >=0)cnt++;
-        }
-        return res;
+        return ans;
     }
 };
