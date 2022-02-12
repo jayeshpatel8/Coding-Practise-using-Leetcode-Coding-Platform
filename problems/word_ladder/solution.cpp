@@ -1,38 +1,33 @@
 class Solution {
 public:
-    unordered_set<string> W,s,e;
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        for (auto w  : wordList) W.insert(w);        
-        if (W.find(endWord) == W.end()) return 0;
-        s.insert(beginWord); 
-        e.insert(endWord);
-        W.erase(beginWord);W.erase(endWord);
-        int l=1,N=beginWord.length();
-        while (!s.empty() && !e.empty()){
-            if (s.size()>e.size()) s.swap(e);
-            
-            unordered_set<string> t;
-            for (auto &st : s){                  
-                cout << st << " ..";
-                string  cur = st;
+    int ladderLength(string be, string en, vector<string>& wl) {        
+        unordered_set<string> set(begin(wl),end(wl));
+        if (set.count(en)==0) return 0;
+        int N = wl[0].size();
+        queue<string> q ;q.push(be);
+        int len=1;
+        while(!q.empty()){
+            int sz =  q.size();
+            while (sz-- > 0 ){
+                string &s = q.front();
+                if (s == en) return len;
                 for (int i=0; i<N; i++){
-                    char ct= cur[i];                     
-                    for (char c = 'a'; c<='z'; c++){                        
-                        cur[i]=c;          
-                        if (e.count(cur)) return 1+l;
-                        if (W.find(cur) != W.end()){
-                            W.erase(cur);
-                            t.insert(cur);
-                        }                        
+                    int ch = s[i];
+                    for (char c= 'a'; c<='z'; c++){
+                        if (c == ch) continue;
+                        s[i]=c;
+                        auto it = set.find(s);
+                        if (it != set.end()){
+                            set.erase(it);
+                            q.push(s);
+                        }
                     }
-                    cur[i]=ct;
-                }
+                    s[i]=ch;
+                }                
+                q.pop();
             }
-            s.swap(t);
-            l++;
+            len++;
         }
-        
         return 0;
     }
-
 };
