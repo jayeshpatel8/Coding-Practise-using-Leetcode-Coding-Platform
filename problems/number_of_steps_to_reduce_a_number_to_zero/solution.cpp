@@ -1,14 +1,13 @@
 class Solution {
 public:
-    int numberOfSteps (int num) {
-        int cnt=0;
-        while (num & (num-1)) {
-            cnt++;
-            num &= num-1;
-        }
+    int numberOfSteps(int num) {
+        int ans = 0;
         while (num){
-            cnt++; num>>=1;
+            if (num & 1) num-=1;
+            else
+                num /=2;
+            ans++;
         }
-        return cnt;
-    }    
+        return ans;
+    }
 };
