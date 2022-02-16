@@ -1,34 +1,24 @@
 class Solution {
 public:
     int minTaps(int n, vector<int>& ranges) {
-        vector<int> dp(n+1);
-        for (int i=0, left = 0; i<=n; i++){
-            left = max(0, i - ranges[i]);
-            dp[left] = max(dp[left],min(n,i + ranges[i]));
+        priority_queue<array<int,2>,vector<array<int,2>>, greater<>> q;
+        for (int i=0; i < ranges.size(); i++){
+            q.push({i - ranges[i], i + ranges[i]});
         }
-        int r=dp[0], tap=1, m = 0;
-        for (int l=0; l<=n;){                        
-            if (r >= n) return tap;
-            while (l<=r)
-                m = max(m,dp[l++]);
-
-            
-            if (m < l)                
+        int start=0, cnt=0, end=-1;
+        while(!q.empty() && end <n){
+            bool f=false;
+            while (!q.empty() && q.top()[0]<=start){
+                end= max(end, q.top()[1]);
+                q.pop();
+                f=true;
+            }          
+            start = end;
+            if (f)
+                cnt++;
+            else
                 return -1;
-            
-            tap++; r = m;
         }
-        return tap;
+        return end>=n ? cnt : -1;
     }
-    /*
-    int minTaps(int n, vector<int>& ranges) {
-        vector<int> dp(n+2,n+2);
-        dp[0]=0;
-        for( int i=0; i <=n; i++){
-            int left = max(0,i-ranges[i]);
-            for (int j = max(0,i-ranges[i]), right = min(n,i+ranges[i]); j<= right; j++)
-                dp[j]  = min(dp[j], 1 +dp[left]);
-        }
-        return dp[n] < n+1 ? dp[n] : -1;
-    }*/
 };
