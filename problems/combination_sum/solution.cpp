@@ -1,35 +1,19 @@
-
-vector<int> v;
- void combinationSum_util(vector<int>& candidates, int target,int idx,vector<vector<int>> & out) {
-     if (target == 0)
-          out.push_back(v);
-        
-     int len=candidates.size();
-     for(int i=idx;i<len;i++)
-     {
-         if  ((target-candidates[i]) <0)
-             continue;
-         
-         v.push_back(candidates[i]);
-         combinationSum_util(candidates,target-candidates[i],i,out) ;
-         v.pop_back();
-     }
- }
-     
 class Solution {
 public:
+    vector<vector<int>> ans;
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<vector<int>> out;
-        int len=candidates.size();
-        
-        for(int i=0;i<len;i++)
-        {
-             if  ((target-candidates[i]) <0)
-                 continue;            
-            v.push_back(candidates[i]);
-            combinationSum_util(candidates, target-candidates[i],i, out);
-            v.pop_back();
+        dfs(candidates,target,0,vector<int>()={});
+        return ans;
+    }
+    void dfs(vector<int>& cand, int target, int i, vector<int>& cur){
+        if (target == 0) { 
+            ans.push_back(cur); return;
         }
-        return out;
+        if (i>=cand.size() || target<0) return ;
+        
+        cur.push_back(cand[i]);
+        dfs(cand,target-cand[i],i,cur);
+        cur.pop_back();        
+        dfs(cand,target,i+1,cur);
     }
 };
