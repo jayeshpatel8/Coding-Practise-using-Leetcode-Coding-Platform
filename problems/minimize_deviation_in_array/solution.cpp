@@ -2,18 +2,22 @@ class Solution {
 public:
     int minimumDeviation(vector<int>& nums) {
         int min_=INT_MAX;
-        priority_queue<int> pq;
-        for (auto i: nums){
-            int n = i%2? (i*2) : i;
-            pq.push(n);
-            min_ = min(min_,n);
+        priority_queue<int>pq;
+        for (auto & i : nums){
+            if (i & 1) 
+                i <<=1;
+            pq.push(i);
+            min_ = min(min_ , i);
         }
-        int ans=INT_MAX;
-        while(pq.top()%2 == 0){
-            ans=min(pq.top() - min_,ans);
-            min_ = min(min_,pq.top()/2);
-            pq.push(pq.top()/2);pq.pop();
+        int ans = INT_MAX;
+        while (pq.top()%2 == 0){
+            int i = pq.top();pq.pop();
+            ans = min(ans, i- min_);
+            min_ = min(min_ , i/=2);
+            pq.push(i);
         }
-        return min(ans, pq.top() - min_);;
+        if (pq.empty()) return ans;
+        return min(ans, pq.top()- min_);
+        
     }
 };
