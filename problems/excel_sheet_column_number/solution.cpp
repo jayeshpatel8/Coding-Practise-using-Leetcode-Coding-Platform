@@ -1,10 +1,10 @@
 class Solution {
 public:
-    int titleToNumber(string s) {
-     uint64_t r=0;
-        for (auto c : s){
-            r = r * 26 + c-'A' + 1;
+    int titleToNumber(string columnTitle) {
+        int ans = 0;
+        for (auto &i: columnTitle){
+            ans = ans * 26 + ( i - 'A' +1 );
         }
-        return r;
+        return ans;
     }
 };
