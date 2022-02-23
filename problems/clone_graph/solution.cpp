@@ -18,25 +18,22 @@ public:
     }
 };
 */
-//0->1,3
-//1->3
+
 class Solution {
 public:
+    unordered_map<Node*,Node*>map;
     Node* cloneGraph(Node* node) {
-      if (!node) return node;
-      
-      unordered_map<Node*,Node *> N;        
-      return dfs(node, N);
+        return dfs(node);
         
     }
-
-    Node* dfs(Node * node, unordered_map<Node*,Node *>& N){
-        if (!node) return node;
-        if (N.find(node) != N.end()) return N[node] ;
-        Node *t = new Node(node->val);
-        N[node]=t; 
-        for (auto i : node->neighbors)
-            t->neighbors.push_back(dfs(i,N));
-        return t;    
+    Node * dfs(Node * node){
+        if (!node ) return node;
+        if (map.count(node)) return map[node];
+        Node * n = new Node(node->val);
+        map[node] = n;
+        for ( auto &i : node->neighbors){                        
+            n->neighbors.push_back(dfs(i));
+        }
+        return n;
     }
 };
