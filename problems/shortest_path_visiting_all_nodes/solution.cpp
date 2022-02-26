@@ -1,30 +1,29 @@
 class Solution {
 public:
-    vector<vector<int>> dp;
     int shortestPathLength(vector<vector<int>>& graph) {
-        int n= graph.size();
-        dp.resize(n,vector<int>(1<<n,INT_MAX) );
-        queue<pair<int,int>> q; // {node, visitedMask}
-        for (int i=0; i<n; i++)
-        {
+        int N = graph.size();
+        vector<vector<bool>> seen(N,vector<bool>(1<<N));
+        queue<array<int,2>> q;
+        int step = 0, endMask =  (1<<N)-1;
+        for (int i=0; i<N; i++){
             q.push({i,1<<i});
-            dp[i][1<<i]=0;                    
+            seen[i][1<<i]=true;
         }
-        while(!q.empty()){                        
-            auto &[u, mask] = q.front(); 
-            for ( auto v : graph[u]){
-                int nmask = mask | (1 << v);
-                if (dp[v][nmask] > dp[u][mask]+1){
-                    dp[v][nmask] = dp[u][mask]+1;
-                    q.push({v,nmask});
+        while(!q.empty()){
+            int sz = q.size();
+            while(sz--){
+                auto u  = q.front(); q.pop();
+                for (auto v : graph[u[0]]){
+                    int mask = u[1] | (1<<v);
+                    if (mask == endMask) return step +1 ;
+                    if (!seen[v][mask]){
+                        seen[v][mask]=true;
+                        q.push({v,mask});
+                    }
                 }
             }
-            q.pop();
+            step++;
         }
-        
-        int ans=INT_MAX;
-        for (int i=0; i<n; i++)
-            ans = min(ans, dp[i][ (1<<n)-1 ]);
-        return ans;
+        return 0;
     }
 };
