@@ -1,25 +1,27 @@
 class Solution {
 public:
-    int numberOfArithmeticSlices(vector<int>& A) {
-     
-        int N = A.size(), slice=0;
-        if (N<3) return 0;
-        int diff = A[0]-A[1],start=0;
-        int i=2;
-        for (; i<N; i++){
-            if(diff!= (A[i-1]-A[i])){
-                if (i-start>=3){
-                    int n = i-start-2;
-                    slice += (n * (n+1))/2;
-                }
-                diff = A[i-1]-A[i];
-                start = i-1;
+    int numberOfArithmeticSlices(vector<int>& nums) {
+        int ans = 0;
+        
+        for ( int i=2, p = 0;i<nums.size(); i++){
+            if (nums[i-2]-nums[i-1] == nums[i-1]-nums[i]){
+                ans += ++p;
+            }
+            else
+                p=0;
+        }
+        return ans;
+    }
+    int numberOfArithmeticSlices2(vector<int>& nums) {
+        int N = nums.size();
+        vector<int> dp(N,0);
+        for ( int i=2;i<N; i++){
+            if (nums[i-2]-nums[i-1] == nums[i-1]-nums[i]){
+                if (dp[i-1])
+                    dp[i] = dp[i-1];
+                dp[i] += 1;
             }
         }
-        if (i-start>=3){
-            int n = i-start-2;
-            slice += (n * (n+1))/2;
-        }        
-        return slice;
-    }
+        return accumulate(begin(dp), end(dp),0);
+    }    
 };
