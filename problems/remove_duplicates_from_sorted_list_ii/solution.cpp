@@ -10,25 +10,19 @@
  */
 class Solution {
 public:
-    ListNode* deleteDuplicates(ListNode* t) {
-        if (!t || !t->next) return t;
-        ListNode dummy,*p;
-        p=&dummy; 
-        while(t && t->next){
-             if(t->val != t->next->val){
-                p->next = t;
-                t=t->next;
-            }
-            else{
-                int v = t->val;
-                while(t->next && v == t->next->val) {
-                    t=t->next;
-                }
-               t=t->next; continue;             
-            }
-            p=p->next;
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode *h=head,dummy,*h1=&dummy;
+        dummy.next=h;
+        int f[201]={};
+        while(h){
+            f[100 + h->val]++;
+            h=h->next; 
         }
-        p->next=t;
+        for(int i=0; i<201;i++){
+          if(f[i]==1)
+            h1->next->val=i-100,h1=h1->next;
+        }
+         h1->next=0;
         return dummy.next;
     }
 };
