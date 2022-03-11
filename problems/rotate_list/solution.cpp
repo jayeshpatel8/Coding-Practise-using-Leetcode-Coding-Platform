@@ -3,29 +3,35 @@
  * struct ListNode {
  *     int val;
  *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-                
-        ListNode* h= head, * end=head;
-        int len=1;
         if (!head || !head->next) return head;
-        while(end->next)len++, end=end->next;
-        k %=len;
-        if (!k) return head;
-        h= head;
-
-        len =len - k;
-        cout << len;
-        while (--len )
+        int l = len(head);
+        
+        k = k % l;
+        if (k == 0) return head;
+        ListNode * h = head, *p;
+        int i= l - k -1;
+        while( i-- > 0){
             h=h->next;
-    
-        end->next=head;
-        head=h->next;
-        h->next=NULL;
-        return head;
+        }
+        p=h; h=h->next;
+        p->next=0; p = h;
+        while(h->next)
+            h=h->next;
+        h->next = head;
+        return p;
+    }
+    int  len(ListNode * h){
+        int ans=0;
+        while(h)
+            ans++,h=h->next;
+        return ans;
     }
 };
