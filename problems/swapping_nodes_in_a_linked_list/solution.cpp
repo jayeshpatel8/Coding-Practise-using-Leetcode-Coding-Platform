@@ -11,15 +11,15 @@
 class Solution {
 public:
     ListNode* swapNodes(ListNode* head, int k) {
-        if(!head) return head;
-        ListNode* h =head,*first=head, *second =head;
-        while(--k)
-            h=h->next;
-        
-        first=h;
-        while(h->next)
-            h=h->next, second = second->next;        
-        swap(first->val , second->val);
-        return head;        
+        ListNode dummy;
+        dummy.next = head;
+        auto * slow =&dummy , *fast =&dummy;
+        while(k--)
+            fast=fast->next;
+        auto *node1 =fast;
+        while(fast)
+            fast=fast->next, slow=slow->next;
+        swap(slow->val,node1->val);
+        return head;
     }
 };
