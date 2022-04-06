@@ -1,35 +1,35 @@
 class Solution {
 public:
     int threeSumMulti(vector<int>& arr, int target) {
-        long freq[101]={};
-        
-        for(auto  i: arr) freq[i]++;
-        
-        int num[101],n=0,mod = (int)1e9 + 7;
-        uint64_t ans=0;
-        for(int i=0; i<101; i++){
-            if(freq[i]) num[n++]=i;
-        }
-        
-        for (int i=0; i<n; i++){
-            int a = num[i];
-            int diff  = target - a;
-            int j=i,k=n-1;
-            while(j<=k){
-                int b = num[j], c = num[k];
-                if(b + c < diff) j++;
-                else if (b+c > diff) k--;
-                else {
-                    if (i< j && j < k ) 
-                        ans += freq[a] * freq[b] * freq[c];
-                    else if ((i<j && j == k ) || (i==j && j < k ))                        
-                        ans += freq[a] * (freq[b]-1) * freq[c]/2 ; 
-                    else  
-                        ans += freq[a] * (freq[b]-1) * (freq[c]-2)/6;
-                    j++,k--;
-                    ans %=mod;
-                    
-                }                
+        vector<long> freq(101);
+        for (auto i : arr) freq[i]++;
+        int ans = 0, mod = 1e9 + 7;
+
+        for (int i=0; i<=100; i++){
+            if (freq[i] ){
+                if (freq[i] >1){
+                    long long next = target - (2 * i);
+                    if (next != i && next>=0 && next <=100){
+                        if (freq[next]){
+                            ans = ( ans  + (freq[i]-1) * freq[i]/2  * freq[next])%mod;
+                        }
+                    }
+                }
+                if (freq[i] >2){
+                    long long next = target - 3 * i;
+                    if (next==0){                        
+                        ans = ( ans  + (freq[i]-2) * (freq[i]-1) * (freq[i])/6)%mod;                   
+                    }                    
+                }
+                //>0
+                {
+                    for (int j=i+1; j<101; j++){
+                        long long next = target - i -j;    
+                        if (next > j && next <=100){
+                            ans = ( ans  + freq[i] * (freq[j]) * (freq[next]))%mod;          
+                        }
+                    }                                        
+                }
             }
         }
         return ans;
