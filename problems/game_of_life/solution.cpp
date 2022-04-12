@@ -1,68 +1,29 @@
 class Solution {
 public:
-    int m ,n;
-    int row[3]={-1,0,1};
-    int getLive(vector<vector<int>>& board, int x, int y){
-        int l=0;
-        for (int i=0; i<3; i++){
-            for (int j=0; j<3; j++)
-            {
-                if (row[i] || row[j])                     
-                {
-                    int r = x + row[i];
-                    int c = y + row[j];
-                    if (r>=0 && r<m && c>=0 && c<n)
-                        l += board[r][c] > 0;         
-                }                
-            }
-        }
-        return l;
-        /*
-        if (i>0){
-            if (j>0)
-                l += board[i-1][j-1] > 0;
-            l += board[i-1][j]> 0;
-            if (j+1<n)
-                    l += board[i-1][j+1]> 0;
-        }
-        if (j>0)
-           l += board[i][j-1]> 0;
-        if (j+1<n)
-           l += board[i][j+1]> 0;        
-        if (i+1<m ){
-            if (j>0)
-                l += board[i+1][j-1]> 0;
-            l += board[i+1][j]> 0;
-            if (j+1<n)
-                    l += board[i+1][j+1]> 0;
-        }        
-        return l;*/
-    }
     void gameOfLife(vector<vector<int>>& board) {
-        m = board.size(), n = board[0].size();
-        
-
-        for (int i=0; i<m; i++){
-            for (int j=0; j<n; j++){        
-                int l = getLive(board,i,j);
-                if (board[i][j]!=0){                    
-                    if (l < 2) board[i][j]=2;
-                    else if (l > 3) board[i][j]=2;
-                }
-                else if (l==3) board[i][j]=-1;
-            }
-        }
-        
-        for (int i=0; i<m; i++){
+        vector<vector<int>> ans(board);
+        for (int i=0  , m = board.size(),n = board[0].size(); i<m; i++){
             for (int j=0; j<n; j++){
+                int cnt = 0;
                 
-                if (board[i][j]==-1){
-                    board[i][j]=1;
+                for (int k=max(0,j-1); k <min(n,j+2); k++){
+                    if (i > 0 ) cnt +=board[i-1][k];
+                    if (i < m -1 ) cnt +=board[i+1][k];
                 }
-                else if (board[i][j]==2)
-                    board[i][j]=0;
+                if (j>0) cnt +=board[i][j-1];
+                if (j+1 < n) cnt +=board[i][j+1];
+
+                if (board[i][j]){
+                    if (cnt ==2 || cnt==3) continue;
+                    ans[i][j]=0;
+                }
+                else{
+                    if (cnt==3)
+                        ans[i][j]=1;
+                }
             }
-        }        
-        
+
+        }
+        board.swap(ans);        
     }
 };
