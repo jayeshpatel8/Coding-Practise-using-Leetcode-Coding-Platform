@@ -1,23 +1,33 @@
 class Solution {
 public:
     vector<vector<int>> generateMatrix(int n) {
-        int y[4] = {1,0,-1,0};
-        int x[4] = {0,1,0,-1};
-        
-        int rc[2]={n,n-1};
-        int dir=0,idir=0;
-        int r=0,c=-1;
-        int num=1;
-        vector<vector<int>> res(n,vector<int>(n,0));
-        while(rc[dir%2]){
-            for (int i=0;i<rc[dir%2]; i++){                
-                r+=x[idir ];c+=y[idir];
-                res[r][c]=num++;                
+        int dirs[] = {0,1,2,3};
+        int cnt= n*n, i=0,j=0 ,c=0 ,r=n,d=n,l=-1,u=0,dir=0;
+        vector<vector<int>> ans(n,vector<int>(n));
+        while (cnt-- > 0){
+            switch(dir){
+                    case 0:
+                        ans[i][j++]=++c; 
+                        if (j==r)
+                            dir=1,i++,j=j-1,r--;
+                    break;
+                    case 1:
+                        ans[i++][j]=++c;
+                        if (i==d)
+                            dir=2,i=i-1,j--,d--;
+                    break;
+                    case 2:
+                        ans[i][j--]=++c;
+                        if (j==l)
+                            dir=3,i--,j=j+1,l++;
+                    break;
+                    case 3:
+                        ans[i--][j]=++c;
+                        if (i==u)
+                            dir=0,i+=1,j=i,u++;
+                    break;
             }
-            idir = (idir+1)%4;
-            rc[dir]--;
-            dir = (++dir)%2;            
         }
-        return res;
+        return ans;
     }
 };
