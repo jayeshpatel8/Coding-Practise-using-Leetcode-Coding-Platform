@@ -11,17 +11,13 @@
  */
 class Solution {
 public:
-    TreeNode* convertBST(TreeNode*   root) {
-        int sum=0;
-        convertBST(root,sum);
+    int sum = 0;
+    TreeNode* convertBST(TreeNode* root) {
+        if (!root) return root;
+        convertBST(root->right);        
+        sum+=root->val;
+        root->val = sum;
+        convertBST(root->left);
         return root;
-    } 
-    void convertBST(TreeNode*   root, int &sum){
-        if (!root) return ;
-        convertBST(root->right,sum); 
-        root->val +=sum;
-        sum = root->val;
-        convertBST(root->left,sum);        
-        return ;        
     }
 };
