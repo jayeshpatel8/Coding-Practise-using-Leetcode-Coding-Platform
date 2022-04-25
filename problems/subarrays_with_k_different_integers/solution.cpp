@@ -5,13 +5,12 @@ public:
         int ans = 0;
 
         for (int  i=0, j=0, cnt = 0, prefix = 0; i<nums.size(); i++){
-            auto n = nums[i];
-            if (m[n]++==0) cnt++;
+            if (m[nums[i]]++ == 0) cnt++;
+            if (cnt > k ) prefix=0, --m[nums[j++]],--cnt;
+            while (m[nums[j]] > 1) prefix++, m[nums[j++]]--;
             
-            if(cnt > k) --m[nums[j++]] , cnt--, prefix = 0;
-            
-            while (m[nums[j]] > 1) prefix++, --m[nums[j++]];
-            if (cnt == k) ans += 1 + prefix;
+             
+            if (cnt == k) ans+=1 +prefix;
         }
         return ans;
     }
