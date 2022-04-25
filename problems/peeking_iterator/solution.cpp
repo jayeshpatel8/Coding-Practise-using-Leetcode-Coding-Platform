@@ -5,6 +5,7 @@
  *  class Iterator {
  *		struct Data;
  * 		Data* data;
+ *  public:
  *		Iterator(const vector<int>& nums);
  * 		Iterator(const Iterator& iter);
  *
@@ -17,33 +18,32 @@
  */
 
 class PeekingIterator : public Iterator {
-    int val;    
-    bool has_next  =false;    
 public:
+    int val,has_next;
 	PeekingIterator(const vector<int>& nums) : Iterator(nums) {
 	    // Initialize any member here.
 	    // **DO NOT** save a copy of nums and manipulate it directly.
 	    // You should only use the Iterator interface methods.
         has_next = Iterator::hasNext();
-	    val = Iterator::next();
+        val = Iterator::next();
 	}
 	
     // Returns the next element in the iteration without advancing the iterator.
 	int peek() {
-        return (val);
+        
+            return val;
+        
 	}
 	
 	// hasNext() and next() should behave the same as in the Iterator interface.
 	// Override them if needed.
 	int next() {
-        int temp= val;
-        
-	    if (Iterator::hasNext()){
-             val = Iterator::next();
-            
-        }else 
-            has_next = false;
-        return temp;
+        int t =val;
+        has_next = Iterator::hasNext();
+	    if (has_next){
+            val  = Iterator::next();
+        }
+        return t;
 	}
 	
 	bool hasNext() const {
