@@ -1,28 +1,27 @@
-void dfs(vector<int>& num,vector<bool>& used,vector<int>& v,vector<vector<int>> & r)
-{
-    if (v.size() == num.size()) {
-        r.push_back(v); 
-        return;
-    }
-    for (int i =0; i<num.size();i++){
-        if(used[i]) continue;
-        if (i>0 && num[i]==num[i-1] && !used[i-1] ) continue;
-        used[i]=true;
-        v.push_back(num[i]);
-        dfs(num,used,v,r);
-        v.pop_back();
-        used[i]=false;
-    }
-}
 class Solution {
 public:
+    vector<vector<int>> ans;
+    int N = 0;
     vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> r;
-        sort(nums.begin(),nums.end());
-        vector<bool> used(nums.size(),false);
-        vector<int> v;
-        dfs(nums,used,v,r);
-        
-        return r;
+        vector<int> t;
+        N = nums.size();
+        sort(begin(nums), end(nums));
+        perm(nums,0, t);
+        return ans;
+    }
+    void perm(vector<int>& nums, int mask, vector<int> &t){
+        if (mask == (1<<N)-1) {
+            ans.push_back(t);
+            return;
+        }
+        int prev=20;
+        for ( int i=0; i<N; i++){
+            if (mask & (1<<i) || nums[i] == prev) 
+                continue;
+            prev=  nums[i];
+            t.push_back(prev);
+            perm(nums,mask | (1<<i), t);
+            t.pop_back();
+        }
     }
 };
