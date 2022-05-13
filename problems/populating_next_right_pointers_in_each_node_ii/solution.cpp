@@ -19,22 +19,46 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        if (!root ) return root;
+        if(root==NULL)
+            return NULL;
+        queue<Node *> q;
+        q.push(root);        
         
-      Node *r = root->next;
-
-        while (r && !r->left && !r->right)
-                r = r->next;
-         r =  r? (r->left ? r->left:r->right):0;    
-       
-        if(root->right) { 
-            root->right->next =r;
-            if (root->left)root->left->next=root->right;
+        //BFS
+        while (!q.empty()){
+            int sz = q.size()-1;
+            
+            while (sz-- > 0 ){
+                auto * t =  q.front(); q.pop();
+                t->next = q.front();
+                if (t->left) q.push(t->left);
+                if (t->right) q.push(t->right);
+            }
+            auto * t =  q.front(); q.pop();
+            t->next = NULL;
+            if (t->left) q.push(t->left);
+            if (t->right) q.push(t->right);
         }
-        else if (root->left)root->left->next= r;
-        connect(root->right);
-        connect(root->left);
-        
         return root;
+    }
+    Node* connect2(Node* root) {
+        dfs(root,NULL);
+        return root;
+    }
+    void dfs(Node * root, Node * parent){
+        if (!root) return ;
+        root->next = parent ?  : parent;
+        auto * t =  root->next;
+        if (root->right ||  root->left){
+            while (t){
+                if (t->left || t -> right){
+                    t = (t->left ? t->left : t->right);
+                    break;
+                }
+                t=t->next;
+            }                    
+        }
+        dfs(root->right, t);    
+        dfs(root->left, root->right ? root->right : t);    
     }
 };
