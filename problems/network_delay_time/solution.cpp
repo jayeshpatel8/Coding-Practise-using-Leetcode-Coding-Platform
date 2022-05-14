@@ -1,30 +1,26 @@
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        vector<array<int,2>> G[n+1];
-        for (auto & t : times){
-            G[t[0]].push_back({t[1],t[2]});
+        vector<int> dp(n,INT_MAX);
+        vector<array<int,2>> edge[n];
+        for (auto &t : times){
+            edge[t[0]-1].push_back({t[1]-1,t[2]});
         }
-        priority_queue<array<int,2> ,vector<array<int,2>>, greater<>> pq;
-        pq.push({0,k});
-        vector<int> vis(n+1, INT_MAX);
-        vis[0]=-1;
+        priority_queue<array<int,2>, vector<array<int,2>>, greater<array<int,2>>> pq;
+        pq.push({0,k-1});
+        
         while (!pq.empty()){
-            auto u1 = pq.top(); pq.pop();
-            int u = u1[1], time= u1[0];
-            if (time > vis[u]) continue;
-            vis[u]=time;
+            auto [w,u] = pq.top(); pq.pop();
+            //--u,--v;
+            if (dp[u] <= w) continue;
             
-            for (auto v : G[u]){
-                if (vis[v[0]] > time+v[1]){
-                    vis[v[0]] = time+v[1];
-                    pq.push({vis[v[0]],v[0]});
-                }
+            dp[u] = w;
+            for (auto &v : edge[u]){
+               // if (w+v[1] < dp[v[0]])
+                    pq.push({w+v[1],v[0]});
             }
         }
-        int ans=-1;
-        for (auto t : vis) {ans = max(ans, t);
-                           }
+        auto ans = *max_element(begin(dp),end(dp));
         return ans == INT_MAX ? -1 : ans;
     }
 };
