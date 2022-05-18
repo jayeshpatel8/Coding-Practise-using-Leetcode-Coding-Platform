@@ -1,38 +1,40 @@
 class Solution {
 public:
-    vector<int> visited, low_time, visit_time;
+    vector<vector<int>> ans;
+    int time=0;
     vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
-        vector<vector<int>> ans;
-        vector<vector<int>> graph(n+1);
-        visited.resize(n,0);
-        low_time.resize(n,0);
-        visit_time.resize(n,0);
-        for (auto i : connections){
-            graph[i[0]].push_back(i[1]);
-            graph[i[1]].push_back(i[0]);
-        }  
-        
-        dfs(graph, 0,-1,ans);
+        vector<bool> vis(n);
+        vector<int> disc(n), low(n);// parent(n,-1);
+        vector<vector<int>> G(n, vector<int>());
+        for (auto &e : connections){
+            G[e[0]].push_back(e[1]);
+            G[e[1]].push_back(e[0]);
+        }
+        for (int i=0; i<n;i++){
+            if (vis[i]) continue;
+            dfs(i,G,vis,disc,low,-1);
+        }
         return ans;
     }
-    void dfs (vector<vector<int>> &graph , int i, int parent , vector<vector<int>> &ans ){
-        static int time=0;
-        visited[i]=true;
-         visit_time[i]=low_time[i]=time++;
-        for (auto n : graph[i]){
-            if(n == parent) continue;
-           
-            if (!visited[n]){
-                
-                dfs(graph, n,i,ans);
-                
-                low_time[i] = min(low_time[i], low_time[n]); 
-                if (low_time[n] > visit_time[i]) ans.push_back({i,n});
+    void dfs(int u, vector<vector<int>>&G, vector<bool> &vis,vector<int> &disc, vector<int> &low, int parent){
+        disc[u] = low[u] =++time;
+        vis[u] = true;
+        for (auto v : G[u]){
+            if (parent == v) continue;
+            if (!vis[v]){
+                //parent[v]=u;
+                dfs(v,G,vis,disc,low,u);
+                //low[u] = min(low[v], low[u]);
+                //if (low[v] > disc[u]){
+                //    ans.push_back({u,v});
+                //}
             }
-            else{
-                low_time[i] = min(low_time[i], visit_time[n]); 
-            }
-                
+            //else if (parent[u] != v){
+                //low[u] = min(low[u], disc[v]);
+            //}
+            low[u] = min(low[v], low[u]);
+            if (disc[u] < low[v])
+                ans.push_back({u,v});
         }
     }
 };
