@@ -1,38 +1,33 @@
 class Solution {
 public:
-    int m,n;
-    int dp[200][200];
+    int m , n ;
+    //bool vis[201][201]={};
     int longestIncreasingPath(vector<vector<int>>& matrix) {
-         m =  matrix.size();
-        n=matrix[0].size();
-             int ans=0;
-       memset(dp,0,sizeof(dp));
-        for (int i=0; i<m; i++){
-            for(int j=0; j<n; j++){
-                ans = max (ans, lip(matrix,i,j));               
+         m = matrix.size();
+        n = matrix[0].size();
+        int ans = 0;
+        vector<vector<int>> dp(m,vector<int>(n));
+        for (int i=0; i<m; i++)
+            for (int j=0; j<n; j++){
+                if (dp[i][j]==0)
+                    ans= max(ans,dfs(i,j,dp,matrix));
             }
-        }
+
         return ans;
     }
-    int lip(vector<vector<int>>& matrix, int i, int j){
-               
-        if ( matrix[i][j] < 0 ) return 1;
-        if ( dp[i][j]!=0) return  dp[i][j];
-         int prev = matrix[i][j];
-        matrix[i][j]= -1;
+    int dirs[5] = {-1,0,1,0,-1};
+    int dfs(int i, int j,vector<vector<int>> &dp,vector<vector<int>>& M){
+        //if (vis[i][j]) return 0;
+        if (dp[i][j]) return dp[i][j];
         int ans=1;
-        
-        if ((i+1 <m )&& prev < matrix[i+1][j] ) 
-            ans = max (ans ,  1 + lip(matrix,i+1,j));
-        
-        if ((j+1 <n) && prev < matrix[i][j+1] ) {
-                    ans = max (ans ,  1 + lip(matrix,i,j+1));
+        //vis[i][j]=1;
+        for ( int d=0; d<4; d++){
+            int r = i + dirs[d], c = j + dirs[d+1];
+            if (r<0 || c<0 || r>=m ||c >= n || M[r][c]<=M[i][j]) continue;
+            ans = max(ans, 1 + dfs(r,c,dp,M));
+            
         }
-        if (i-1 >=0 && prev < matrix[i-1][j] ) ans = max (ans ,  1 + lip(matrix,i-1,j));
-        if (j-1 >=0 && prev < matrix[i][j-1] ) ans = max (ans ,  1 + lip(matrix,i,j-1));
-        
-        matrix[i][j]= prev;
-        
-        return dp[i][j]= ans;
+        //vis[i][j]=0;
+        return dp[i][j] = ans;
     }
 };
