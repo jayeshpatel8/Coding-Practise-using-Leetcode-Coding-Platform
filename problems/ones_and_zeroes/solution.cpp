@@ -1,44 +1,48 @@
-
 class Solution {
 public:
-/*
+
     int findMaxForm(vector<string>& strs, int m, int n) {
-        
-        int N = strs.size(), dp[m+1][n+1];
-        memset(dp,0,sizeof(dp));
-        for (int i=N-1; i>=0; i--){              
-            int z = 0, o = 0;
-            for (auto c : strs[i]) if (c =='0') z++; else o++;               
-            for (int j=m; j>=z; j--)
-                for (int k =n; k>=o; k--)
-                    if (z<=j && o<=k)
-                        dp[j][k] = max(dp[j][k], 1+ dp[j-z][k-o]);
+        int dp[m+1][n+1];
+         memset(dp,0,sizeof(dp));
+        for (auto &s  : strs){
+            int c0=0,c1=0;    
+            for (auto &c : s) if (c=='0') c0++; else c1++;
+            
+            for (int i=m; i>=c0; i--){
+                for (int j=n; j>=c1; j--){
+                    dp[i][j] = max(dp[i][j] , 1 + dp[i-c0][j-c1]);
+                }
+            }            
         }
-        
         return dp[m][n];
     }
-*/
-    int memo[601][101][101], N;
-    int zo[600][2];
-    int findMaxForm(vector<string>& strs, int m, int n) {
+    /*
+        int dp[601][101][101], M,N;
+        vector<array<int,2>> cnt;
+    int findMaxForm2(vector<string>& strs, int m, int n) {
+        M=m; N=n;
+        memset(dp,-1,sizeof(dp));
         
-        N = strs.size();
-        
-        memset(memo[0],-1,sizeof(memo[0])*(N+1));
-        memset(zo[N],0,sizeof(zo[N]));
-        for (int i =0 ; i<N; i++) for (auto &c : strs[i]) zo[i][c - '0']++;
-        return subseq(strs, 0,n,m);
-    }
-    int subseq(vector<string>& strs, int i , int ones ,int zeroes){                
-        if (i== N) return  0;       
-        
-        if (memo[i][ones][zeroes] != -1) return memo[i][ones][zeroes];
-        
-        int ans = subseq(strs,i+1,ones,zeroes);
-        if (ones-zo[i][1] >= 0 && zeroes-zo[i][0] >=0){
-            ans = max(ans, 1 + subseq(strs,i+1,ones-zo[i][1],zeroes-zo[i][0]));
+        for (auto &s  : strs){
+            int c0=0,c1=0;    
+            for (auto &c : s) 
+                if (c=='0')c0++;
+                else c1++;            
+            cnt.push_back({c0,c1});
         }
-        return memo[i][ones][zeroes] = ans;
+        //sort(begin(strs),end(strs),[](auto &a, auto &b){ return a.size() < b.size();})
+        return dfs(strs,0,m,n);
+        
     }
+    int dfs(vector<string>& strs, int i, int m, int n) {
+        if (i >= strs.size() || (m == 0 && n == 0) ) return 0;
+        if (-1 != dp[i][m][n]) return dp[i][m][n];
+        int ans = 0;
+        if (cnt[i][0] <=m && cnt[i][1] <=n){
+            ans = 1 + dfs(strs,i+1,m-cnt[i][0] , n - cnt[i][1]);
+        }
+        ans = max(ans, dfs(strs,i+1,m , n ));
+        return dp[i][m][n] = ans;
+    }
+    */
 };
-
