@@ -1,15 +1,15 @@
 class Solution {
 public:
-    vector<int> canSeePersonsCount(vector<int>& heights) {        
-        vector<int> next(1,INT_MAX);//sentinel height
-        for ( int i=heights.size()-1 ; i>=0; --i){   
-            int h = heights[i], cnt = 0;
-            while(next.back() < h) 
-                next.pop_back(), cnt++;   
-    
-            heights[i] = cnt + (next.back() != INT_MAX);      
-            next.push_back(h);
+    vector<int> canSeePersonsCount(vector<int>& heights) {
+        int n = heights.size();
+        vector<int> ans(n),st;
+        for (int i=n-1; i>=0; i--){
+            int cnt = 0;
+            while (!st.empty() && st.back() <= heights[i])
+                cnt++, st.pop_back();
+            ans[i] = cnt + !st.empty();
+            st.push_back(heights[i]);
         }
-        return heights;
+        return ans;
     }
 };
