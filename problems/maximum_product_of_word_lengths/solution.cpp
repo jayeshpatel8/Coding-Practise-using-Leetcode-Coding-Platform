@@ -1,20 +1,23 @@
 class Solution {
 public:
     int maxProduct(vector<string>& words) {
-        int n = words.size();
-        vector<int> bits(n);
-        
-        for (int  w=0; w < n; w++){
-            int i=0;
-            for (auto c : words[w])
-                i  |=  (1 << (c - 'a'));
-            bits[w]=i;
+        size_t N = words.size(), ans = 0;
+        vector<size_t> bv(N) ,l(N);
+        for (int i=0; i < N; i++){
+            int bits=0, l1=0;
+            for (auto c : words[i]){
+                bits |= 1 << (c-'a');
+                l1++;
+            }
+            bv[i]=bits;
+            l[i] = l1;
         }
-        int ans=0;
-        for (int i=0; i<n; i++){    
-            for (int j=i+1; j<n; j++){                
-                    if ((bits[i] & bits[j]) == 0)
-                       ans = max(ans, (int)(words[i].length() * words[j].length()));
+        for (int i=0; i<N; i++){
+            unsigned int l1=l[i];
+            for (int j =i+1; j<N; j++){
+                if (i == j) continue;
+                if (bv[i] & bv[j]) continue;
+                ans = max(ans, l1 *  l[j]);
             }
         }
         return ans;
