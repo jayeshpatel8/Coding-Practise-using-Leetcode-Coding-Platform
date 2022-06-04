@@ -1,45 +1,38 @@
 class Solution {
 public:
-    vector<vector<string>> res;
-    int N;
+    int N ;
+    vector<vector<string>> ans;
     vector<vector<string>> solveNQueens(int n) {
-        N=n;
-        vector<bool> visited(n,0);
-        vector<string> board(n,string(n, '.'));
-        solveNQueens(n,0,visited,board);
-        
-        return res;
+        vector<string> vis(n,string(n,'.'));
+        vector<bool> col(n);
+        N = n;
+        dfs(vis,col,0);
+        return ans;
     }
-    void solveNQueens(int n, int r, vector<bool>& visited, vector<string>& board){
-        if (r == n ) {
-            res.push_back(board);
+    void dfs(vector<string>& vis, vector<bool>& col, int r){
+        if (r==N) {
+            ans.push_back(vis);
             return;
         }
-       //for (; c < n; c++){
-           for (int c=0; c < n; c++){
-               if ( allowed(board,r,c)){
-                   visited[r]=1;
-                   board[r][c]='Q';
-                   
-                   solveNQueens(n,r+1,visited,board);
-                   
-                   board[r][c]='.';
-                   visited[r]=0;
-               }
-           }
-           return ;
-       //}   
+        
+        for (int c=0; c<N; c++){
+            if (!col[c] && isallowed(vis,r,c)){
+               vis[r][c]='Q';
+                col[c]=true;
+                dfs(vis,col,r+1);
+                col[c]=false;
+                vis[r][c]='.';
+            }
+        }
+        
     }
-    bool allowed(vector<string>& s, int r , int c){
-    int n = s.size();
-    // check for col
-    for (int i =0; i<n; i++)
-        if (s[i][c]=='Q' ) return false;
-    // right cross check
-    for (int i =r-1,j=c-1;  i>=0 && j >=0; i--,j--)
-        if (s[i][j]=='Q') return false;        
-    for (int i =r-1,j=c+1;  j<n && i>=0 ; i--,j++)
-        if (s[i][j]=='Q') return false;
-    return true;
+    bool isallowed(vector<string>& vis, int r,int c){
+        for (int j1=c-1, r1 = r-1; r1>=0 && j1>=0; r1--,j1--){
+            if (vis[r1][j1] == 'Q') return false;
+        }
+        for (int j1=c+1, r1 = r-1; r1>=0 && j1<N; r1--,j1++){
+            if (vis[r1][j1] == 'Q') return false;
+        }
+        return true;
     }
 };
