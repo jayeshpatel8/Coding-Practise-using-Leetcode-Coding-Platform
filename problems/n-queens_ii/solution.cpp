@@ -1,37 +1,30 @@
 class Solution {
 public:
-    int N;
+    bool vis[9][9]={};
+    bool col[9]={};
+    int ans = 0, N ;
     int totalNQueens(int n) {
-        vector<vector<bool>> board(n,vector<bool>(n,0));
-        int cnt=0;
-        N=n;
-        nq(board, 0,cnt);
-        
-        return cnt;
+        N = n;
+        dfs(0);
+        return ans;
     }
-    void nq(vector<vector<bool>>& B, int r, int & cnt){
-        if ( r == N ) { cnt++; return; }
-        
-        for (int c=0; c<N; c++){
-            if (isAllowed(B,r,c)){
-                B[r][c]=1;
-                nq(B, r+1,cnt);
-                B[r][c]=0;
+    void dfs(int r){
+        if (r >= N) ans++;
+        else{
+            for (int c =0; c <N; c++){
+                if (!col[c] && isallow(r,c)){
+                    vis[r][c]=col[c]=true;
+                    dfs(r+1);
+                    vis[r][c]=col[c]=false;
+                }
             }
         }
     }
-    bool isAllowed(vector<vector<bool>>& B, int r, int c){
-        
-        for (int i=0; i<r; i++){
-            if (B[i][c]) return false;
-        }        
-        for (int i=r-1,j=c-1; i>=0 && j >=0; i--,j--){
-            if (B[i][j]) return false;
-        }
-        for (int i=r-1,j=c+1; i>=0 && j<N; i--,j++){
-            if (B[i][j]) return false;
-        }        
+    bool isallow(int r , int c){
+        for (int r1=r-1, c1=c-1; r1>=0 && c1 >=0; r1--,c1--)
+            if (vis[r1][c1]) return false;
+        for (int r1=r-1, c1=c+1; r1>=0 && c1 <N; r1--,c1++)
+            if (vis[r1][c1]) return false;
         return true;
     }
-   
 };
