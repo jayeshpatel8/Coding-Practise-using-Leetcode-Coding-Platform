@@ -1,26 +1,19 @@
 class Solution {
 public:
     int minOperations(vector<int>& nums, int x) {
-        int n=nums.size(), sum=0, i=0, j= n-1, ans= INT_MAX;
-        if (x < nums[0] && x < nums[n-1]) return -1;
-        for ( ; i<n ; i++)    {
-            sum +=nums[i];
-            if (sum>x){
-                sum -=nums[i]; break;
+        int sum1 = accumulate(begin(nums), end(nums),0)-x, sum=0;
+        int ans = INT_MAX, N = nums.size(), l=0, r =0;
+        while ( l<=r ){
+            if (sum <= sum1){
+                if (sum == sum1) ans = min(ans, l+N-r);
+                
+                if (r <N) sum +=nums[r++]; 
+                else break;
+                
             }
+            else
+                sum -=nums[l++];
         }
-        if (i==n && sum != x) return -1;
-        --i;
-        if(sum ==x) ans= min(ans, i+1);
-        while (  j>=0 ){
-            sum += nums[j];
-            
-            {
-                while (i>=0 && sum > x) sum-=nums[i--];
-            }
-            if (sum == x) ans = min(ans, i+1+n-j);
-            j--;
-        }
-        return ans;
+        return ans ==INT_MAX ? -1 : ans;
     }
 };
