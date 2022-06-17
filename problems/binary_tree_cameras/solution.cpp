@@ -11,25 +11,28 @@
  */
 class Solution {
 public:
-    
-    int minCameraCover(TreeNode* root) {
-        int cnt =0;
-        if (!root ) return 0;
-
-        if (minc(root, cnt)==1) cnt++;
-        return cnt;
+    int ans=0  ;
+    unordered_set<TreeNode *> set={NULL};
+    int minCameraCover(TreeNode* root){
+        dfs(root);
+        return ans;
     }
-    int minc(TreeNode * root, int & cnt)
-    {
-        if (!root ) return 0;
-        int L = minc(root->left,cnt);
-        int R = minc(root->right,cnt);
-        if (L==1 || R==1) {
-            cnt++;
-            return -1;
-        }        
+    void dfs(TreeNode* root , TreeNode * p  = 0) {
+        if (!root) return ;
+        dfs(root->left, root);
+        dfs(root->right,root);
+        if (!set.count(root->left)  || !set.count(root->right)){
+            ans++;
+            set.insert(root);
+            //set.insert(root->left);
+            //set.insert(root->right);
+            set.insert(p);
+        }
+        else if (!p && !set.count(root)){
+            ans++;
+            set.insert(root);
+            set.insert(p);
+        }
         
-        if (L==-1 || R==-1) return 0;
-        else return 1;
     }
 };
