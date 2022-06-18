@@ -1,57 +1,37 @@
-class Trie{
-    public:
-    Trie * ch[28];
-    int in;
-    Trie(){
-        memset(ch,0,sizeof(ch));
-        in = -1;
-        
-    }
-    void insert(string & s, int in){
-        Trie *ptr=this;
-       
-        for (auto ch : s){
-            int c =   ch - 'a';
-            if (!ptr->ch[c])   ptr->ch[c] = new Trie();                      
-            
-            ptr = ptr->ch[c];
-        }
-         ptr->in = in;
-        
-    }
-    int search(string & s){
-     
-      Trie *ptr=this;
-      for (auto ch:s){
-          int c =   ch - 'a';
-          if (!ptr->ch[c])      return -1;
-          ptr =ptr->ch[c];
-      } 
-        
-        return ptr->in;
-        
-    }
-};
-
 class WordFilter {
 public:
-    Trie tr; 
+    struct Trie{
+        Trie* ch[27]={};
+        int ind=0;
+    };
+    Trie trie;
     WordFilter(vector<string>& words) {
-        int n = words.size();
-        for(int pos = 0; pos < n; pos++) {
-            string s = words[pos];
-            for(int i = 0; i < (int) s.size(); i++) {
-                for(int j = (int) s.size() - 1; j >= 0; j--) {
-                    string a = s.substr(0, i + 1) + '|' + s.substr(j);
-                    tr.insert(a, pos);
+        
+        for (int i=0; i<words.size(); i++){            
+            string w = words[i];
+            string w1 = w + '{' + w;
+            
+            for(int j=0; j<=w.size(); j++){
+                Trie * t = &trie;
+                for (int k = j; k<w1.size(); k++){
+                    if(!t->ch[w1[k]-'a'])
+                        t->ch[w1[k]-'a']  = new Trie;
+                    t = t->ch[w1[k]-'a'] ;
+                    t->ind = i;
                 }
             }
         }
     }
     
     int f(string prefix, string suffix) {
-        string s = prefix + "|" + suffix;
-        return tr.search(s);   
+        string w = suffix + '{' + prefix;
+        
+        auto * t = &trie;
+        for (auto c : w){
+            if (!t->ch[c-'a']) return -1;
+            t = t->ch[c-'a'];            
+        }
+        return t->ind;
     }
 };
 
