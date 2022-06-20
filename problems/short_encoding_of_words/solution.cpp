@@ -1,27 +1,46 @@
 class Solution {
 public:
-    int trie[2000*7+1][26];
-    int idx=0;
-    bool trieInsert(string &s){
-        int i = s.length()-1;
-        int j=0;
-        bool res=true;
-        for (; i>=0; i--){
-            int c = s[i]-'a';
-            if (trie[j][c]==0){
-                trie[j][c] = ++idx;
-                res=false;
-            }
-            j = trie[j][c];
+    struct Trie{
+        Trie *ch[26]={};
+        bool w=false;
+    } trie;
+    bool insert(string &s){
+        Trie *t = &trie;
+        bool news = false;
+        for (int i=s.size()-1; i>=0; i--){
+            int c = s[i];
+            if (!t->ch[c-'a'])
+                t->ch[c-'a'] = new  Trie, news = true;
+            t = t->ch[c-'a'];            
         }
-        return res;
+        
+        if (!news) return false;
+
+        return t->w=true;
+        
     }
+    
+
     int minimumLengthEncoding(vector<string>& words) {
+        
         sort(words.begin(), words.end(), [](auto &s1, auto &s2){return s1.length()>s2.length();});
-        int len=0;
-        for (auto s : words){
-            if (!trieInsert(s)) len += s.length()+1;
+        int ans = 0;
+        for (auto &w : words){
+           if(insert(w))
+               ans += w.size() +1 ;
         }
-        return len;
+        return ans;
+    }
+    int minimumLengthEncoding2(vector<string>& words) {
+        sort(begin(words),end(words),[](auto &a, auto &b){return a.size() > b.size();});
+        
+        string ans;
+        for (auto &w : words){
+             w+='#';
+            if (ans.find(w) != string::npos) continue;
+            ans += w;
+        }
+      
+        return ans.size();
     }
 };
