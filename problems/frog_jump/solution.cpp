@@ -1,22 +1,24 @@
-unordered_map<int, bool> dp;
-bool canCross_(vector<int>& s, int pos, int k){
-    int n=s.size();
-    if (pos >=n-1) return true;
-    int key = pos|k<<11;
-    if (dp.count(key)) return dp[key];
-    for (int i=pos+1; i<n; i++)
-    {
-        int diff = s[i]-s[pos];
-        if (diff < k-1) continue;
-        if (diff > k+1) return dp[key]=false;
-        if (canCross_(s,i,diff)) return dp[key]=true;
-    }
-    return dp[key]=false;
-}
 class Solution {
 public:
-    bool canCross(vector<int>& s) {
-        dp.clear();
-        return canCross_(s,0,0); 
+    unordered_map<long,bool> dp;
+    unordered_map<int,int> map;
+    bool canCross(vector<int>& stones) {
+        for (int i=0; i<stones.size(); i++) map[stones[i]] = i;
+        return dfs(stones,0,0);
+    }
+    bool dfs(vector<int>& stones, int i, int k){
+        if (i >= stones.size()-1) return true;
+    
+        long idx = k<<20 | i ;
+        auto it = dp.find(idx);
+        if (it != end(dp)  ) return it->second;
+        
+        for (int s=max(stones[i]+1,stones[i]+k-1)  ;  s<= stones[i]+k+1; s++){
+            auto it = map.find(s);
+            if (it == end(map)) continue;
+            if (dfs(stones, it->second, s-stones[i]))
+                return dp[idx] = true;            
+        }
+        return dp[idx]=false;
     }
 };
