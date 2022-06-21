@@ -1,20 +1,17 @@
 class Solution {
 public:
     bool isValid(string s) {
-        unordered_map<char, char> m;
-        m['[']=']';
-        m['{']='}';
-        m['(']=')';
-        stack<char> st;
-        for (int i=0; i<s.size();i++){
-            auto it  = m.find(s[i]);
-            if (it == m.end()){
-                if (st.empty() || st.top() != s[i]) return false;
+        stack<int>st;
+        string s1 = "[({";
+        unordered_map<char,char> bra={{']','['},{')','('}, {'}','{'}};
+        for (auto c :s){
+            if (s1.find(c) != string::npos)
+                st.push(c);
+            else{
+                if (st.empty() || st.top() != bra[c] ) return false;
                 st.pop();
             }
-            else
-                st.push(it->second);
         }
-        return st.empty();
+     return st.empty();   
     }
 };
