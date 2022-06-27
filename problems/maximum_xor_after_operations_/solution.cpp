@@ -1,6 +1,8 @@
 class Solution {
 public:
     int maximumXOR(vector<int>& nums) {
+        return accumulate(begin(nums),end(nums),0,bit_or<int>());
+        /*
         int dp[32]={0} ,x=0;
         for (auto i : nums){
             for (long j = 0; j<32; j++){
@@ -16,5 +18,6 @@ public:
         }
      
         return x ^ n;
+        */
     }
 };
