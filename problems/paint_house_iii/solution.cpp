@@ -1,22 +1,24 @@
 class Solution {
 public:
     int dp[101][21][101], M, N;
-    int minCost(vector<int>& houses, vector<vector<int>>& cost, int m, int n, int t) {
-        M= m, N = n;
+    int minCost(vector<int>& houses, vector<vector<int>>& cost, int m, int n, int target) {
         memset(dp,-1,sizeof(dp));
-        int ans = dfs(houses, cost, 0, 0, t);
-        return ans >=1e6+1 ? -1 : ans;
+        int ans;
+        M=m,N=n;
+        ans = dfs(houses,cost,0,0,target);
+        return ans > 1e6 ? -1 : ans;
     }
-    int dfs(vector<int>& houses, vector<vector<int>>& cost, int i,int col, int t){
-        if (i>= M || t <0)
-            return t == 0? 0 : 1e6+1;
-        if (dp[i][col][t] != -1) return dp[i][col][t];
-        if (houses[i] != 0)
-            return dfs(houses, cost, i+1, houses[i], t- (col != houses[i]));
-        int ans = 1e6+1;
-        for (int c = 1; c <=cost[i].size(); c++){
-            ans = min (ans, cost[i][c-1] + dfs(houses, cost, i+1, c, t- (col != c)));
+    int dfs(vector<int>& h, vector<vector<int>>& cost, int i, int j, int k){
+
+         if (i >=M || k < 0)
+        return k == 0 ? k : 1e6 + 1;
+        if (h[i] !=0 )
+            return dp[i][j][k] = dfs(h,cost,i+1,h[i],k - (j!= h[i]));
+        if (dp[i][j][k] != -1) return dp[i][j][k];
+        int ans =  1e6 + 1;
+        for (int j1 = 1; j1 <= N; j1++){
+            ans = min(ans, cost[i][j1-1] + dfs(h,cost,i+1,j1,k - (j != j1)) );
         }
-        return dp[i][col][t] = ans;
+        return dp[i][j][k] = ans;
     }
 };
