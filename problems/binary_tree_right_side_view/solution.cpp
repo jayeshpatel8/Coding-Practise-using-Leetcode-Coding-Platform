@@ -12,21 +12,22 @@
 class Solution {
 public:
     vector<int> rightSideView(TreeNode* root) {
-        vector<int> res;
-        if(!root) return res;
-        // BFS
-        queue<TreeNode*> q;
-        q.push(root);
+        vector<int> ans;
+        vector<TreeNode*> a;
+        if (!root) return ans;
         
-        while(!q.empty()){
-            int sz = q.size();
-            res.push_back(q.front()->val);
-            while (sz--){
-                if(q.front()->right) q.push(q.front()->right);
-                if(q.front()->left) q.push(q.front()->left);
-                q.pop();
+        a.push_back(root);
+        while (!a.empty()){
+            ans.push_back(a.back()->val);
+            vector<TreeNode*> t;
+            for (auto &r : a){
+                if (r->left)
+                    t.push_back(r->left);
+                if (r->right)
+                    t.push_back(r->right);
             }
+            a.swap(t);
         }
-        return res;
+        return ans;
     }
 };
