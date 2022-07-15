@@ -1,25 +1,26 @@
 class Solution {
 public:
+    bool vis[51][51]={};
+    int M,N;
+    int dirs[5] = {1,0,-1,0,1};
     int maxAreaOfIsland(vector<vector<int>>& grid) {
-        int ans=0;
-        for (int i= 0; i< grid.size(); i++){
-            for (int j=0; j< grid[0].size(); j++){
-                if(grid[i][j]){
-                    
-                    ans = max(ans, maxArea(grid, i, j));
-                }
-            }
-        }
-     return ans;
+        M = grid.size(), N = grid[0].size();
+
+        int ans = 0;
+        for (int i=0; i<M; i++)
+            for (int j=0; j<N; j++)
+                ans= max(ans , dfs(grid,i,j));
+        return ans;
     }
-    int maxArea(vector<vector<int>>& grid, int x, int y){
-        if (x < 0 || y < 0 || x >= grid.size() || y >= grid[0].size() || grid[x][y] == 0){
-            return 0;
-        }
+    int dfs(vector<vector<int>>& grid, int i, int j) {
+        if (i<0 || j <0 ||i >=M ||j >= N || grid[i][j]==0 || vis[i][j] ) return 0;
+        vis[i][j] = true;
         int ans = 1;
-        grid[x][y] = 0;
-        ans += maxArea(grid, x+1, y) +  maxArea(grid, x, y-1)
-               +  maxArea(grid, x-1, y) +  maxArea(grid, x, y+1);
-        return ans;            
+        for (int k=0; k<4; k++){
+            int r = i + dirs[k], c = j + dirs[k+1];
+            ans+=  dfs(grid,r,c);
+        }
+
+        return  ans;
     }
 };
