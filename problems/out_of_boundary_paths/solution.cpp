@@ -1,61 +1,24 @@
 class Solution {
 public:
-    int M,N;
-    
-    int mod = 1e9 + 7;
+    int dp[51][51][51];
+    int M,N,move ,mod = 1e9 + 7;
+    int dirs[5] = {1,0,-1,0,1};
     int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
-        long count =0;
-        int prev[51][51]={0};
-        prev[startRow][startColumn]=1;
-        for (int move = 1; move<=maxMove; move++){
-            int cur[51][51]={0};
-            for(int i=0; i<m; i++){
-                for (int j=0; j<n;j++){
-                    if (i==0 )count = (count + prev[i][j])%mod;
-                    if (j==0)count = (count + prev[i][j])%mod;
-                    if (i==m-1)count = (count + prev[i][j])%mod;
-                    if (j==n-1) count = (count + prev[i][j])%mod;
-                   {
-                        cur[i][j] = (cur[i][j] + (i<m-1?(long)prev[i+1][j] : (long)0 )
-                                    + (i>0? prev[i-1][j]:0)
-                                    + (j<n-1 ? prev[i][j+1]:0)
-                                    + (j>0 ? prev[i][j-1]:0)) %  mod;                                         
-                    }
-                }
-            }
-            swap(prev,cur);
+        M=m,N=n,move=maxMove;
+        memset(dp,-1,sizeof(dp));
+        return dfs(startRow, startColumn, move);
+    }
+    int dfs(int r, int c, int m){
+        if (r<0 || c<0 || r>=M ||c >=N){
+            return 1;
         }
-        return count;
+        if (m == 0) return 0;
+        if (dp[r][c][m] != -1) return dp[r][c][m];
+        int ans = 0;
+       
+        for (int d=0; d<4;d++)
+            ans = (ans + dfs(r+dirs[d], c+dirs[d+1],m-1))%mod;
+       
+        return dp[r][c][m] = ans;
     }
-
-}; 
-/*
-class Solution {
-public:
-    int M,N;
-    int dp[52][52][52];
-    int mod = 1e9 + 7;
-    int findPaths(int m, int n, int maxMove, int startRow, int startColumn) {
-        M=m;
-        N=n;
-        memset(dp,0xff,sizeof(dp));
-        return path(startRow, startColumn,maxMove);
-    }
-    
-    int path(int i , int j, int move){
-        
-        if (i<0 || j<0 || i>=M || j>=N) return 1;
-        if (move == 0) return 0;
-        if (dp[i][j][move] != -1) return dp[i][j][move];
-          int m = move-1;;
-        return dp[i][j][move] =  (
-                  
-                    (long)path(i+1,j,m) 
-                    + path(i-1,j,m)
-                    + path(i,j+1,m)
-                    + path(i,j-1,m)
-                ) % mod;
-        
-    }
-}; 
-*/
+};
