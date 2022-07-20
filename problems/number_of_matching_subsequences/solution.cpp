@@ -1,18 +1,18 @@
 class Solution {
 public:
     int numMatchingSubseq(string s, vector<string>& words) {
-        vector<vector<int>> ch(26);
-        for (int i=0; i<s.length(); ++i) ch[s[i]-'a'].push_back(i);
-        int ans=0;
-        for (auto w : words){
-            int i=-1,j=0;
-            for (; j< w.size(); j++){                
-                int cha = w[j] - 'a';
-                auto it = upper_bound(begin(ch[cha]), end(ch[cha]), i);
-                if (it == end(ch[cha])) break;
-                i = *it;
+        vector<vector<int>> index(26);
+        for (int i=0;i<s.size(); i++) index[s[i]-'a'].push_back(i);
+        int ans= 0;
+        for (auto &w : words){
+            int idx=-1 , i = 0, j = w.size();
+            for (; i<j; i++){
+                auto c  = w[i]-'a';
+                auto it = upper_bound(begin(index[c]), end(index[c]),idx);
+                if (it  == end(index[c])) break;
+                idx= *it;
             }
-            ans+= (j == w.size()) ;
+            ans+= i==j;
         }
         return ans;
     }
