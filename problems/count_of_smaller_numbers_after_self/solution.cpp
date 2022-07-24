@@ -1,25 +1,28 @@
 class Solution {
 public:
-    int bit[100001]={};
-    vector<int> countSmaller(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> ans(n);
-        
-        for (int i = n-1; i>=0; i--){
-            int j = nums[i]+10001;
-            ans[i] = psum(j-1);
-            update(j);
+     static const int N = 20000+1  , base =  10000 + 1;
+    int BIT[N] ={} ;
+    void add(int i){
+        for (; i<N; i += i & -i){
+            BIT[i] +=1;
         }
+    }
+    int get(int i){
+        int ans = 0;
+        for (; i>0; i -= i & -i)
+            ans += BIT[i];
         return ans;
     }
-    void update(int n){
-        for (int i=n; i<=20001; i += i & -i)
-            bit[i]++;
-    }
-    int psum(int i){
-        int sum=0;
-        for (; i; i -= i & -i )
-            sum += bit[i];
-        return sum;
+    vector<int> countSmaller(vector<int>& nums) {
+        int M = nums.size();
+        vector<int> ans(M);
+      
+        
+        for (int i=M-1; i>=0; i--){
+            ans[i] = get(base + nums[i] - 1) ;
+            
+            add(base + nums[i]);
+        }
+        return ans;
     }
 };
