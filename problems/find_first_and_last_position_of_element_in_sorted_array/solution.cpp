@@ -1,22 +1,13 @@
 class Solution {
 public:
-    vector<int> searchRange(vector<int>& nums, int t) {
-        int s ,e;
-        vector<int> v(2,-1);
-        s=0,e=nums.size()-1;
-         while(s <= e){
-             int m = s + (e-s)/2;
-             if (nums[m] == t) v[0]=m, e = m-1;
-             else if (nums[m]<t)s=m+1;
-             else e=m-1;
-         }
-        e=nums.size()-1;
-         while(s <= e){
-             int m = s + (e-s)/2;
-             if (nums[m] == t) v[1]=m, s = m+1;
-             else if (nums[m]<t)s=m+1;
-             else e=m-1;
-         }
-        return v;
+    vector<int> searchRange(vector<int>& nums, int target) {
+        if (nums.empty()) return {-1,-1};
+        auto it = upper_bound(begin(nums),end(nums),target-1);
+        if (it==end(nums) || *it != target) return {-1,-1};
+        auto it2 = upper_bound(next(it),end(nums),target);
+        if (it2==end(nums)) 
+            return {(int)(it- begin(nums)), (int)(nums.size()-1)};
+        else
+            return {(int)(it- begin(nums)), int(it2-begin(nums))-1};
     }
 };
