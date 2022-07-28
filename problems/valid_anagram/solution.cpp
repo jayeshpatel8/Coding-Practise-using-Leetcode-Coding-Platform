@@ -1,9 +1,9 @@
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        vector<int> s1(26),t1(26);
-        for (auto c : s) s1[c-'a']++;
-        for (auto c : t) t1[c-'a']++;
-        return s1==t1;
+        vector<int> A(26);
+        for (auto &c : s) A[c-'a']++;
+        for (auto &c : t) A[c-'a']--;
+        return count(begin(A),end(A),0)==26;
     }
 };
