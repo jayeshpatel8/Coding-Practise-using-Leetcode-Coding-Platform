@@ -1,31 +1,37 @@
+
 class Solution {
 public:
-    int dp[51][51][11];
-    int A[51][51]={}, mod =  1e9 +7,M,N;
+    int dp1[51][51][11], M, N, mod = 1e9 + 7;
     int ways(vector<string>& pizza, int k) {
-        
          M = pizza.size(), N = pizza[0].size();
-        for(int i= M-1; i>=0; i--)
-            for(int j=N-1;j>=0; j--){
-                A[i][j] = (pizza[i][j] == 'A') + A[i][j+1] + A[i+1][j]-A[i+1][j+1];
+        vector<vector<int>> psum(M+1,vector<int>(N+1));
+        for (int i=0; i<M; i++){            
+            for (int j=0; j<N; j++){
+                psum[i+1][j+1] = psum[i][j+1]+psum[i+1][j]-psum[i][j] + (pizza[i][j]=='A');
             }
-        memset(dp,-1,sizeof(dp));
-        return dfs(pizza, k-1, 0, 0);
-    }
-    int dfs(vector<string>& pizza, int k, int r, int c){
-        if(A[r][c] == 0) return 0;
-        if(k==0) return 1;
-        if(dp[r][c][k] != -1) return dp[r][c][k];
-        int ans = 0;
-        
-        for(int r1 = r+1; r1<M; r1++){
-            if(A[r][c] == A[r1][c]) continue;
-            ans = (ans + dfs(pizza, k-1, r1, c))%mod;
         }
-        for(int c1 = c+1; c1<N; c1++){
-            if(A[r][c] == A[r][c1]) continue;
-            ans = (ans + dfs(pizza, k-1, r, c1))%mod;
-        }        
-        return dp[r][c][k] =ans;
+        memset(dp1,-1, sizeof(dp1));
+        return dfs(pizza, psum, 0,0,k);
     }
+    bool getApple(vector<vector<int>> &psum, int r1, int c1, int r2, int c2){
+        return psum[r2+1][c2+1]-psum[r2+1][c1]-psum[r1][c2+1]+ psum[r1][c1];
+    }
+   
+    int dfs(vector<string>& pizza, vector<vector<int>> &psum, int i, int j, int k){        
+        if (k==1)
+            return getApple(psum, i,j,M-1,N-1);
+        
+        if (dp1[i][j][k] != -1) return dp1[i][j][k];
+        int ans = 0;
+        for (int r=i; r<M-1; r++ )
+            if (getApple(psum,i,j,r,N-1))
+                ans =  (ans + dfs( pizza,psum,r+1,j,k-1)) % mod;
+
+        for (int c=j; c<N-1; c++ )
+            if (getApple(psum,i,j,M-1,c))
+                ans =  (ans + dfs( pizza,psum,i,c+1,k-1)) % mod;
+
+        return dp1[i][j][k] = ans;
+    }
+        
 };
