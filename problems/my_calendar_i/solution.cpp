@@ -1,25 +1,43 @@
 class MyCalendar {
 public:
-    set<pair<int,int>> s;
+map<int,int> map; 
     MyCalendar() {
-        
+        map[-1]=-1;
     }
     
     bool book(int start, int end) {
-        auto it = s.lower_bound({start, end});
-        if (it != s.end()) {
-            if (end > it->first) {
-                return false;
-            }
+       
+        auto it = map.upper_bound(start);
+        if (it == map.end() || end <= it->second){
+            map[end]=start;
+            return true;
         }
-        if (it != s.begin()) {
-            if ((--it)->second > start) {
-                return false;
-            }
-        }       
-        s.insert({start, end});
-        return true;
+        else
+            return false;        
     }
+    /*
+set<array<int,2>> st; 
+    MyCalendar() {
+        st.insert({-1,-1});
+    }
+    
+    bool book(int start, int end) {
+       
+        auto it = st.upper_bound({start,end});
+        if (it == st.end()){
+            st.insert({end,start});
+            return true;
+        }
+        else{
+            if (end <= (*it)[1]){
+                st.insert({end,start});
+                return true;
+            }
+            else
+                return false;
+        }
+    }
+    */
 };
 
 /**
