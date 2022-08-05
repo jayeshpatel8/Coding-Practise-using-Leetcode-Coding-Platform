@@ -1,18 +1,23 @@
 class Solution {
 public:
+    int dp[1001];
     int combinationSum4(vector<int>& nums, int target) {
-        int n=nums.size();
-        vector<uint64_t> dp(target+1,0);
-        dp[0]=1;
-        // [1,2,3], target = 4
-        // 
-        for (int t=1; t<=target; t++){
-            for (auto i: nums){                
-                if (i<=t){
-                    dp[t] += dp[t-i];
-                }                
+        memset(dp,-1,sizeof(dp));
+        sort(begin(nums),end(nums));
+        return dfs(nums,target);
+    }
+    int dfs(vector<int>& nums, int target) {
+        if (target == 0) return 1;
+        
+        if (dp[target] >= 0) return dp[target];
+        int ans = 0;
+        for (int i=0; i<nums.size(); i++){
+            if (nums[i] <= target){
+                ans += dfs(nums,target-nums[i]);
             }
+            else
+                break;
         }
-        return dp[target];
+        return dp[target] = ans;
     }
 };
