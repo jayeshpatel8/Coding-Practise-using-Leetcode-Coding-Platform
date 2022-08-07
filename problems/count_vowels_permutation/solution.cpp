@@ -1,20 +1,25 @@
 class Solution {
 public:
-    
-    int mod =  1e9 + 7;
     int countVowelPermutation(int n) {
-        
-        long a=1,e=1,i=1,o=1,u=1;
-        for (int i1=1;i1<n;i1++){
-            
-            long ta = (e + i + u )%mod;
-            long te =(a + i)%mod;
-            long ti = (e + o )%mod;
-            long to=(i);
-            long tu=(i+o)%mod;
-            a=ta; e=te; i=ti;o=to;u=tu;
+        long cnt[126]={} , mod  = 1e9 + 7;
+        for ( auto c : string("aeiou"))
+            cnt[c]=1;
+        for (int j=1;j<n;j++){
+            int e =(cnt['a'] + cnt['i'])%mod;
+            int a = (cnt['e'] + cnt['i'] + cnt['u'])%mod;
+            int i = (cnt['e'] + cnt['o'])%mod;
+            int o = (cnt['i'])%mod;
+            int u = (cnt['i'] + cnt['o'])%mod;
+            cnt['a'] =a;
+            cnt['e'] =e;
+            cnt['i'] =i;
+            cnt['o'] =o;
+            cnt['u'] =u;
         }
-        
-        return (a + e + i + o + u) % mod;
+        long ans = 0;
+        for (auto c : string("aeiou")){
+            ans = (ans + cnt[c])%mod;
+        }
+        return ans;
     }
 };
