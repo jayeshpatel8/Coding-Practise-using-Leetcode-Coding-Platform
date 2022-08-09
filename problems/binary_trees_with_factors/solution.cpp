@@ -1,35 +1,21 @@
 class Solution {
-    //int dp[1000];
-    unordered_map<int,long> dp;
-    const int MOD = (int)1e9+7;
 public:
     int numFactoredBinaryTrees(vector<int>& arr) {
-        // [2,4,5,10]
-        //20 => 2 10, 4 5  
-        
-
-        sort(arr.begin(), arr.end());
-
-        for (int i=0; i< arr.size(); i++) {dp[arr[i]]=1;}
-        
-        
-        long ans=0;
-        for (int i=0;  i < arr.size(); i++){              
-            long cnt=0;
+        long ans = 0 , mod  = 1e9 + 7;
+        unordered_map<int,long> dp;
+        sort(begin(arr),end(arr));
+        for (int i=0; i<arr.size(); i++){
+            int n1 = arr[i];
+            long a =1;
             for (int j=0; j<i; j++){
-                int a =  arr[i] % arr[j];
-                if ( a == 0){
-                    int  b = arr[i] / arr[j];
-                     if (dp.count(b) ){                     
-                        cnt = (cnt +  dp[arr[j]]* dp[b])%MOD; 
-                     }
-                }
+                auto n2 = arr[j];
+                if (n1 % n2 == 0)
+                    a = (a + dp[n2] * dp[n1/n2])%mod;
             }
-            dp[arr[i]]+=cnt;            
-            ans +=dp[arr[i]];
-            
-        }       
-        return ans%MOD;
+            dp[n1] = a;
+            ans = (ans + a)%mod;
+        }
+        
+        return ans ;
     }
-
 };
