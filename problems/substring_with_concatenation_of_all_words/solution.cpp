@@ -1,33 +1,45 @@
 class Solution {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
-        vector<int> r;
-        if (words.empty() || !s.length()) return r;
-        int w=words.size();
-        int w_len=words.front().length();
-        int w_t_len=words.front().length()*w;
+        unordered_map<string,int> map,map2;
+        for (int i =0; i<words.size(); i++){
+            ++map2[words[i]];
+        }
+        int  wlen = words[0].size(), N1 = words.size()* wlen;
+      
         
-        unordered_map<string,int> w_map;
-        for (auto i : words)
-            w_map[i]++;
-        for (int i=0; (s.length()-i) >= (w_t_len) ; i++){
-             unordered_map<string,int> local_map;
-            int j;
-            for (j=0; j < w_t_len; j+=w_len)
-            {                
-                string ts = s.substr(i+j,w_len);
-                if (w_map.find(ts) == w_map.end()){                    
-                    break;
+        vector<int> ans;
+        for (int i1=0, N = s.size(); i1<wlen; i1++ ){
+            unordered_map<string,int> map (map2);
+            for (int i=i1, j = i1; i<N && j<N-N1+1; ){
+                auto s2 = s.substr(i,wlen);
+                auto it = map.find(s2);
+                if (it != map.end()){
+                    while ( it->second <= 0){ // sliding window
+                        map[s.substr(j,wlen)]++;
+                        j+=wlen;
+                    }
+
+                    it->second--;
+                    i += wlen;
+                    if (i-j == N1) {
+                        ans.push_back(j);
+                        map[s.substr(j,wlen)]++;
+                        j+=wlen;
+
+                    }                
                 }
-                else {                    
-                   local_map[ts]++; 
-                    if (local_map[ts] > w_map[ts]) break;
+                else{// not matching word found -> start fresh from next word width
+                    while ( j < i){
+                        map[s.substr(j,wlen)]++;
+                        j+=wlen;
+                    }
+                    i+=wlen;
+                    j=i;
                 }
-            }
-            if(j == w_t_len){
-                r.push_back(i);
+
             }
         }
-        return r;
+        return ans;
     }
 };
