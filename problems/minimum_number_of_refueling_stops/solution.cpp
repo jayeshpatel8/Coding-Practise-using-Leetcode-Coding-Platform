@@ -1,24 +1,34 @@
 class Solution {
 public:
-    int minRefuelStops(int target, int startFuel, vector<vector<int>>& st) {
-        int n =  st.size();
+    int minRefuelStops(int target, int fuel, vector<vector<int>>& stations) {
+        int i=0,ans=  0, N = stations.size(), dist = fuel;
+        priority_queue<long> pq;
         
-        st.push_back({target,0});
-        int ans=0;
-        priority_queue<int> pq;
-        int dist = startFuel,i=0;
-        //pq.push(startFuel);
-        while (dist < target){
+        while (dist < target){           
+            while (i<N && stations[i][0] <= dist)
+                pq.push(stations[i++][1] );
             
-            while (i < st.size() && st[i][0] <= dist){
-                pq.push(st[i][1]); i++;
-            }
-            if (pq.empty()) return -1;
-            dist += pq.top();pq.pop();
-            
-            ans++;           
+            if (pq.empty()) return  -1;
+            dist += pq.top(); pq.pop();
+            ans++;
         }
-    
-        return  ans;
+        return ans;
+    }
+    int minRefuelStops2(int target, int fuel, vector<vector<int>>& stations) {
+        if (fuel >= target) return 0;
+        int N = stations.size() ;
+        vector<long> dist(N+1);
+        dist[0] =fuel;
+        for (int i=0; i<N; i++){
+            for (int j=i; j>=0; j--){
+                if (dist[j] >= stations[i][0]){
+                    dist[j+1] = max(dist[j+1], dist[j] + stations[i][1]);
+                }
+            }
+        }
+        for (int i=0; i<=N; i++){
+            if (dist[i] >= target) return i;
+        }
+        return -1;
     }
 };
