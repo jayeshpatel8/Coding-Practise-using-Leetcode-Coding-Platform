@@ -11,27 +11,22 @@
 class Solution {
 public:
     bool isPalindrome(ListNode* head) {
-        if (!head->next) return true;
-        ListNode * fast , * slow ;
-        fast=slow=head;
+        auto * slow = head, *fast=head;
+        while (fast && fast->next) slow=slow->next, fast=fast->next->next;
         
-        while(fast && fast->next && fast->next->next){
-            fast=fast->next->next;
-            {
-                
-                slow = slow->next;
-            }
+        //reverse
+        ListNode * prev = NULL, *next;
+        while(slow){
+            next = slow->next;
+            slow->next=prev;
+            prev = slow;
+            slow=next;
         }
-        slow = slow ->next;
-
-        return isPalindrome(&head,&slow);
-    }
-    bool isPalindrome(ListNode** L, ListNode** R){
-        if (*L==*R || !*R) return true;
-        
-        if (!isPalindrome(L, &(*R)->next)) return false;
-        if ((*L)->val != (*R)->val) return false;
-        *L=(*L)->next;
-         return true;
+        fast=head;
+        while ( prev){
+            if (prev->val != fast->val) return false;
+            prev= prev->next; fast=fast->next;
+        }
+        return true;
     }
 };
