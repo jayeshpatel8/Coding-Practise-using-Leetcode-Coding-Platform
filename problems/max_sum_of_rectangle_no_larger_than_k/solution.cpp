@@ -1,29 +1,23 @@
 class Solution {
 public:
-    
     int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {
-        int m = matrix.size() , n  = matrix[0].size();
-        int ans = INT_MIN;
-        for (int c=0; c<n; c++){
-            vector<int> sum(m);
-            
-            for (int j=c; j<n; j++){
-                int psum=0, msum=INT_MIN;
-                for (int i=0; i<m; i++){
-                    sum[i] +=matrix[i][j];
-                    psum = max(psum +sum[i], sum[i]);
-                    msum = max(msum,psum);
+        int ans = INT_MIN, rows = matrix.size(), cols = matrix[0].size();
+        
+        for (int col =0; col <cols; col++){
+            vector<int> sums(rows);
+            for (int c = col; c<cols; c++){
+                for (int r=0; r<rows; r++){
+                    sums[r] += matrix[r][c];
                 }
-                if (msum <= k) {ans = max(ans,msum); continue;}
-                set<int> s={0};
-                psum=0;
-                for (auto i : sum){
-                    psum +=i;
-                    auto it  = s.lower_bound(psum - k);
-                    if (it != end(s)){
-                        ans = max(ans,psum-*it);
+                set<int> set={0};
+                int csum = 0;
+                for (auto sum : sums){
+                    csum += sum;
+                    auto it = set.lower_bound(csum - k);
+                    if (it != set.end()){
+                        ans = max(ans , csum - *it);
                     }
-                    s.insert(psum);
+                    set.insert(csum);
                 }
             }
         }
