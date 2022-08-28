@@ -1,27 +1,34 @@
 class Solution {
 public:
     vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
-        int M = mat.size(), N = mat[0].size();
-        for (int i=0; i<M; i++){
-            vector<int> a;
-            for (int k=i, j=0; k<M && j<N; k++,j++){
-                a.push_back(mat[k][j]);
+        unordered_map<int, priority_queue<int,vector<int>,greater<int>>> A;
+        for ( int i=0;i<mat.size(); i++)
+            for (int j=0;  j<mat[0].size(); j++)
+                A[i-j].push(mat[i][j]);
+        for ( int i=0;i<mat.size(); i++)
+            for (int j=0;  j<mat[0].size(); j++){
+                mat[i][j] = A[i-j].top(); A[i-j].pop();
             }
-            sort(begin(a),end(a));
-            for (int k=i, j=0,c=0; k<M && j<N; k++,j++){
-                mat[k][j] = a[c++];
+        return mat;
+    }
+
+    vector<vector<int>> diagonalSort2(vector<vector<int>>& mat) {
+        vector<array<int,2>> A;
+        for ( int i=0;i<mat.size(); i++)
+            for (int j=0;  j<mat[0].size(); j++)
+                A.push_back({i-j, mat[i][j]});
+        sort(begin(A),end(A));
+        int prev = -1000,  r = 0 , c = 0;
+        for (auto a : A){
+            if (prev != a[0] ) {
+                prev = a[0];
+                 r = a[0] <=0 ? 0 : a[0] ;
+                 c = a[0] <=0 ? (-1* a[0]) : 0 ;
             }
+
+            mat[r][c] = a[1];
+            ++r,++c;
         }
-        for (int j=0; j<N; j++){
-            vector<int> a;
-            for (int k=j, i=0; i<M && k<N; k++,i++){
-                a.push_back(mat[i][k]);
-            }
-            sort(begin(a),end(a));
-            for (int k=j, i=0,c=0; i<M && k<N; k++,i++){
-                mat[i][k] = a[c++];
-            }
-        }        
         return mat;
     }
 };
