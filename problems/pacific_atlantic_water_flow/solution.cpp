@@ -1,96 +1,41 @@
-#define PA 1
-#define AT 2
-
 class Solution {
 public:
-    
-    int dp[201][201],m,n;
-    vector<vector<int>> pacificAtlantic(vector<vector<int>>& h) {
-        m = h.size(), n= h[0].size();
-       
-        memset(dp,0,sizeof(int)*m*n);
+    int m , n , dirs[5] = {-1,0,1,0,-1};
+    vector<vector<bool>> P,A;
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& H) {
+         m = H.size(), n = H[0].size();
+        P.resize(m,vector<bool>(n));
+        A.resize(m,vector<bool>(n));
         
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++) 
-                if(i==0 || j==0)
-                    DFS_p(h,i,j,0,PA);
-
-        for (int i=m-1; i>=0; i--)
-            for (int j=n-1; j>=0; j--) 
-                if(i==m-1 || j==n-1)
-                    DFS_p(h,i,j,0,AT);
-        
+        for (int i=0;i<m; i++)
+        {
+            if (!P[i][0])
+                dfs(H,i,0,P);
+            if (!A[i][n-1])
+                dfs(H,i,n-1,A);
+        }
+        for (int i=0;i<n; i++)
+        {
+            if (!P[0][i])
+                dfs(H,0,i,P);
+            if (!A[m-1][i])
+                dfs(H,m-1,i,A);
+        }        
         vector<vector<int>> ans;
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++)
-                if(dp[i][j] > AT)
+        for (int i=0;i<m; i++)
+            for (int j =0; j<n; j++)
+                if (P[i][j] && A[i][j])
                     ans.push_back({i,j});
-
-            
         return ans;
     }
-    void DFS_p(vector<vector<int>>& h, int i, int j, int p,int k){
+    void dfs(vector<vector<int>>& H, int i, int j, vector<vector<bool>>& vis){
         
-        if  (i<0 || j<0  || i>=m || j>= n || p>h[i][j] || dp[i][j]>=k) return;
+        vis [i][j] = true;
         
-        dp[i][j]+=k;
-        p  = h[i][j];
-        DFS_p(h,i,j+1,p,k);
-        DFS_p(h,i+1,j,p,k);
-        DFS_p(h,i-1,j,p,k);
-        DFS_p(h,i,j-1,p,k);        
-    }  
-};
-#if 0
-class Solution {
-public:
-    
-    int dp[201][201],m,n;
-    vector<vector<int>> pacificAtlantic(vector<vector<int>>& h) {
-        m = h.size(), n= h[0].size();
-       
-        memset(dp,0,sizeof(int)*m*n);
-        
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++) 
-                if(i==0 || j==0)
-                    DFS_p(h,i,j,0,PA);
-
-        for (int i=m-1; i>=0; i--)
-            for (int j=n-1; j>=0; j--) 
-                if(i==m-1 || j==n-1)
-                    DFS_p(h,i,j,0,AT);
-        
-        vector<vector<int>> ans;
-        for (int i=0; i<m; i++)
-            for (int j=0; j<n; j++)
-                if(dp[i][j] > AT)
-                    ans.push_back({i,j});
-
-            
-        return ans;
+        for (int d=0; d<4; d++){
+            int i1 = i+dirs[d] , j1 = j + dirs[d+1];
+            if (i1<0 || j1<0 || i1>=m || j1>=n || vis[i1][j1] || H[i][j] > H[i1][j1]) continue;
+            dfs(H,i1, j1,vis);
+        }
     }
-    void DFS_p(vector<vector<int>>& h, int i, int j, int p,int k){
-        
-        if  (i<0 || j<0  || i>=m || j>= n || p>h[i][j] || dp[i][j]>=k) return;
-        
-        dp[i][j]+=k;
-        p  = h[i][j];
-        DFS_p(h,i,j+1,p,k);
-        DFS_p(h,i+1,j,p,k);
-        DFS_p(h,i-1,j,p,k);
-        DFS_p(h,i,j-1,p,k);        
-    }
-    void DFS_a(vector<vector<int>>& h, int i, int j, int p){
-       
-        if  (i<0 || j<0  || i>=m || j>= n ||p>h[i][j] || dp[i][j]>=2) return;
-       
-        dp[i][j]+=2;
-        p  = h[i][j];
-        DFS_a(h,i-1,j,p);
-        DFS_a(h,i,j-1,p);
-        DFS_a(h,i,j+1,p);
-        DFS_a(h,i+1,j,p);        
-    }    
 };
-#endif
