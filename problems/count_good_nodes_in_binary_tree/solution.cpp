@@ -11,8 +11,15 @@
  */
 class Solution {
 public:
-    int goodNodes(TreeNode* root, int m = -100000) {
-        if (!root) return 0;
-        return (root->val >= m) + goodNodes(root->left, max(m,root->val)) + goodNodes(root->right, max(m,root->val));
+    int ans = 0;
+    int goodNodes(TreeNode* root, int high=INT_MIN) {
+        if (!root) return ans;
+        
+        if (root->val >= high)
+            ans++, high = root->val;
+        
+        goodNodes(root->left, high);
+        goodNodes(root->right, high);
+        return ans;
     }
 };
