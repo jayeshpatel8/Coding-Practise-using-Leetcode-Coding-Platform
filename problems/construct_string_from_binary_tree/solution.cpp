@@ -11,18 +11,21 @@
  */
 class Solution {
 public:
-    string tree2str(TreeNode* r) {
-        string s = to_string(r->val);
-        
-        if (r->left){
-            s += '(' + tree2str(r->left) + ')';
+    
+    string tree2str(TreeNode* root) {
+        string s = to_string(root->val);
+    
+
+        if (root->left){
+            s += '(' + tree2str(root->left) + ')';        
+            if(root->right)
+                s += '(' + tree2str(root->right) + ')';       
         }
-        if (r->right){
-            if (r->left == NULL)  s += "()";
-            s += '(' + tree2str(r->right) + ')';
+
+        else if (root->right){
+            s+="()";
+            s += '(' + tree2str(root->right) + ')';                   
         }
         return s;
-        
     }
-
 };
