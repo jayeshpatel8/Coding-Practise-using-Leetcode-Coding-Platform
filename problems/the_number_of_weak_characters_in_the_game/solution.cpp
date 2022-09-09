@@ -1,14 +1,12 @@
 class Solution {
 public:
-    int numberOfWeakCharacters(vector<vector<int>>& p) {
-        sort(begin(p),end(p),[](auto&a, auto&b){return a[0]==b[0]? a[1]>b[1]:a[0]<b[0];});
-
-        int N = p.size(), ans = 0, high = p[N-1][1];
-
-        for(int i=N-2; i>=0; i--){
-            if (p[i][1]<high)  ans++ ;   
-            
-            high = max(high, p[i][1]);
+    int numberOfWeakCharacters(vector<vector<int>>& P) {
+        int def[100002]={};
+        for (auto &i : P) def[i[0]] = max(def[i[0]],i[1]);
+        for (int a = 100000; a>0; a--) def[a] = max(def[a],def[a + 1]);
+        int ans = 0;
+        for (auto &i : P){
+            if (def[i[0] + 1] > i[1]) ans++;
         }
         return ans;
     }
