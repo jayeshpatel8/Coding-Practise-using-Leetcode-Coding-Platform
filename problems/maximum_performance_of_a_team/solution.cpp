@@ -1,26 +1,21 @@
 class Solution {
 public:
-    int maxPerformance(int n, vector<int>& sp, vector<int>& ef, int k) {
-        vector<array<int,2>> v(n);
-        priority_queue<int,vector<int>,greater<int>> p1;        
-        long sum = 0 ,ans=0;
+    int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
+        vector<pair<int,int>> A;
+        for (int i=0; i<speed.size(); i++)
+            A.push_back({efficiency[i],speed[i]});
+        sort(rbegin(A),rend(A));
+        priority_queue<int> pq;
+        long sum=0, ans = 0;
         int mod = 1e9 +7;
-        for (int i=0; i<n; i++){
-            v[i] = { ef[i] ,sp[i]};
-        }      
-        sort(rbegin(v),rend(v));
-        for ( int i=0; i<n; i++){                        
-            int e = v[i][0], s = v[i][1];
-            p1.push(s);
+        for (auto &[e,s] : A){
             sum+=s;
-             if( p1.size()>k){
-                 sum -=p1.top();
-                p1.pop();
+            pq.push(-s);
+            if (pq.size() > k){
+                sum+=pq.top(); pq.pop();
             }
-            ans= max(ans , sum * e);
+            ans = max(ans, sum * e );
         }
-
-        
         return ans % mod;
     }
 };
