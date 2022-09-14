@@ -11,23 +11,20 @@
  */
 class Solution {
 public:
-    int path=0,num=0;
-    int pseudoPalindromicPaths (TreeNode* root) {
-        pal(root,num)       ;
-        return  path;
-    }
-    void pal(TreeNode * root, int num){
-        if (!root) return ;
-        num ^= 1 << root->val;
-        
-        if (!root->left && !root->right) {
-                if ((num & num-1)==0) 
-                    path++;
-           return;
+    int ans = 0;
+    //int freq=0;
+    int pseudoPalindromicPaths (TreeNode* root, int freq = 0) {
+        if (!root) return ans ;
+
+        freq ^= (1<<root->val);
+        if (!root->left && !root->right){
+            ans += (freq & (freq-1))==0;
         }
-        
-        pal(root->left,num) ;
-        pal(root->right,num);
-        return;        
+        else{
+            pseudoPalindromicPaths(root->left,freq);
+            pseudoPalindromicPaths(root->right,freq);
+        }
+        //freq ^= (1<<root->val);
+        return ans;
     }
 };
