@@ -1,38 +1,49 @@
 class Solution {
 public:
-    int DP[1001];
-    int maximumScore(vector<int>& nums, vector<int>& mul) {
-        int M = mul.size(),N=nums.size();
-        for (int i =0; i <= M; i++)
-                DP[i]=0;
-        for (int m=M-1, diff=N-M; m>=0; m--,diff++){
-            for (int i=0; i<N - diff; i++){
-                DP[i] = max(DP[i] + nums[i+diff]*mul[m], DP[i+1] + nums[i]*mul[m]);
+    int N, M;
+    vector<vector<int>> dp;
+    int maximumScore(vector<int>& nums, vector<int>& multipliers) {
+         N = nums.size();
+        M = multipliers.size();
+        vector<int> dp2(M+1);
+
+        for (int i=M-1; i>=0; i--){
+            int next = dp2[i+1];
+            for (int left=i; left >=0; left--){
+                auto d = max(nums[left] * multipliers[i] + dp2[left+1],
+                                 nums[N- 1 - (i - left)] * multipliers[i] + dp2[left]);
+                dp2[left+1]=next;
+                next = d;
+            }
+            dp2[0]=next;
+        }
+        return dp2[0];
+    }
+    int maximumScore1(vector<int>& nums, vector<int>& multipliers) {
+         N = nums.size();
+        M = multipliers.size();
+        dp.resize(M+1, vector<int>(M+1,0));
+
+        for (int i=M-1; i>=0; i--){
+            for (int left=i; left >=0; left--){
+                dp[i][left] = max(nums[left] * multipliers[i] + dp[i+1][left+1],
+                                 nums[N- 1 - (i - left)] * multipliers[i] + dp[i+1][left]);
             }
         }
-        return DP[0];
+        return dp[0][0];
+    }
+    int maximumScore2(vector<int>& nums, vector<int>& multipliers) {
+         N = nums.size();
+        M = multipliers.size();
+        dp.resize(M, vector<int>(M,INT_MIN));
+        return dfs(nums, multipliers, 0, 0);
+    }    
+    int dfs(vector<int>& nums, vector<int>& multipliers, int i, int left) {
+        if (i == M) return 0;
+        if (dp[i][left] != INT_MIN) return dp[i][left];
+        int ans, right = N - 1 - (i - left);
+        ans = nums[left] * multipliers[i] + dfs(nums,multipliers,i+1,left+1);
+        ans= max(ans, (nums[right] * multipliers[i]) + dfs(nums,multipliers,i+1,left));
+        return dp[i][left] =ans;
     }
 };
-#if 0
-class Solution {
-public:
-    int DP[1001][1001];
-    int maximumScore(vector<int>& nums, vector<int>& mul) {
-        for (int i =0; i < 1001; i++)
-            for (int j =0; j < 1001; j++)
-                DP[i][j]=-1;
-        return ms(0,0,nums,mul);
-        
-    }
-    int ms(int l, int m, vector<int>& nums, vector<int>& mul) {
-        if (m>= mul.size()) return 0;
-        
-        if (DP[l][m]!=-1) return DP[l][m];
-        int r = nums.size()-1  +l - m;
-        return DP[l][m] = max (
-                                nums[l]*mul[m] + ms(l+1,m+1,nums,mul),
-                                nums[r]*mul[m] + ms(l,m+1,nums,mul)
-                                );
-    }
-};
-#endif
