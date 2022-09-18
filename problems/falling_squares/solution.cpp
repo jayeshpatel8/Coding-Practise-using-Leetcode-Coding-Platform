@@ -26,15 +26,13 @@ public:
 
        
         if (hi < l || lo > r || lo > hi) return ;
-        push_down(i,lo,hi);
+        
         if (l<= lo && hi<=r) {
-            lazy[i] = height[i] = val;
-           
-            if (lo!=hi)
-                lazy[lc] = lazy[rc] =val;
+            lazy[i] = val;
+            push_down(i,lo,hi);
             return ;
         }
-       
+        push_down(i,lo,hi);
         upd(l,r,val,lc,lo,mid); 
         upd(l,r,val,rc,mid+1,hi);
         height[i] = max(height[lc],height[rc]);
