@@ -14,22 +14,22 @@ public:
     vector<vector<int>> ans;
     vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
         vector<int> path;
-        traverse(root, targetSum, path, 0);
+        dfs(root,targetSum, path);
         return ans;
     }
-    void traverse(TreeNode* root, int t, vector<int>& path, int sum){
-        if (!root) {
-            return ;
+    void dfs( TreeNode* root, int sum, vector<int>& path){
+        if (!root){
+            return;
         }
-        
-        int newsum = root->val + sum;
-        path.push_back(root->val);                
-        if (root->left || root->right){
-            traverse(root->left,t,path,newsum);
-            traverse(root->right,t,path,newsum);
+        path.push_back(root->val);
+        sum -= root->val;
+        if (!root->left && !root->right){
+            if (sum == 0) ans.push_back(path);
         }
-        else if (newsum == t) ans.push_back(path);
-        
+        else{
+            dfs(root->left,sum, path);
+            dfs(root->right,sum, path);
+        }
         path.pop_back();
     }
 };
