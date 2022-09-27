@@ -1,33 +1,29 @@
 class Solution {
 public:
     string pushDominoes(string dom) {
-        // ...   LL RR  
-        //  .LX  
-        //  XR.
-        // R.(.).L
-        int prev='L', j=-1,i=0;
-        while( i < dom.size()){
-            if ( dom[i] != '.') 
-            {
-                if (dom[i]== 'R'){
-                    if (prev=='R') while(++j<i) dom[j] = 'R';
-                    prev='R';
-                }
-                else{
-                    // 'L'
-                    if (prev=='L') while(++j<i) dom[j] = 'L';
-                    else {
-                        int s = ++j, e=i-1;
-                        while(s<e) dom[s++]='R', dom[e--]='L';
-                    }
-                    prev='L';
-                }
-                j=i;
+        bool changed=true;
+        string a = 'L' + dom + 'R';
+
+        for (int i=0; i<a.size(); i++){
+            if (a[i] != '.') continue;
+            int i1=i-1,j1=i+1;
+            while ( j1 < a.size() && a[j1] =='.') j1++;
+            if ( a[i1]=='L'){
+                i=j1;
+                if (a[j1]=='L')                     
+                    while(i1<--j1) a[j1]='L' ;              
             }
-            i++;
+            else{
+                if (a[j1]=='R') 
+                    while(i < j1) a[i++]='R';                
+                else{
+                    i=j1;
+                    i1++,--j1;
+                    while(i1<j1) a[i1++]='R',a[j1--]='L';
+                }
+            }
         }
-        if (prev=='R')
-            while (j<i) dom[++j]='R';
-        return dom;
+
+        return a.substr(1,dom.size());
     }
 };
