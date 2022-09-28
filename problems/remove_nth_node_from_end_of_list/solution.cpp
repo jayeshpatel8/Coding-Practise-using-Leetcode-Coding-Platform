@@ -10,15 +10,13 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-       if (!head ) return head;
-        ListNode * h ,*h2,d;
-        d.next=head;
-        h=h2=&d;
-        while(n--) h=h->next;
-        while(h->next){ h=h->next;h2=h2->next;}
-                        
-        h2->next = h2->next->next;
-        return d.next;
+    ListNode* removeNthFromEnd(ListNode* head, int n) {        
+        auto end  = head , start=head;
+        while(n-- > 0 && end) end = end->next;
+        if (!end) return head->next;
+        while (end->next)
+            end= end->next, start=start->next;
+        start->next = start->next->next;
+        return head;
     }
 };
