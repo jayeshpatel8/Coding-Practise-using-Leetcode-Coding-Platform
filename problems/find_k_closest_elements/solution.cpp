@@ -1,13 +1,13 @@
 class Solution {
 public:
     vector<int> findClosestElements(vector<int>& arr, int k, int x) {
-        int l=0,r=arr.size()-k,m;
+        int r = lower_bound(begin(arr),end(arr),x)- begin(arr);
+        int l = r-1, N =arr.size();
         
-    while(l<r){
-        m = l+(r-l)/2;
-        if (x - arr[m] > arr[m+k] - x) l=m+1;
-        else r=m;
-    }
-        return vector<int>(arr.begin()+l,arr.begin()+l+k);
+        while (k-- > 0){
+            if (r >=N || (l>=0 && x-arr[l] <= arr[r]-x))    --l;
+            else r++;
+        }
+        return {begin(arr) + l + 1 , begin(arr)  + r};
     }
 };
