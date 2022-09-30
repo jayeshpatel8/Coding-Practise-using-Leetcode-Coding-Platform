@@ -1,27 +1,27 @@
 class Solution {
 public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        priority_queue<array<int,2>> pq; pq.push({0,INT_MAX}); // height, end_distance
-        set<array<int,3>> event; // start/end distance, 0-start/1-end, index i
-        for (int i=0;i<  buildings.size(); i++) {
-            event.insert({buildings[i][0],0,i}); event.insert({buildings[i][1],1,i});
+    vector<vector<int>> getSkyline(vector<vector<int>>& bui) {
+        priority_queue<array<int,2>> pq;
+        pq.push({0,INT_MAX});
+        set<array<int,3>> ev;
+        for (int i=0; i<bui.size(); i++){
+            ev.insert({bui[i][0],0,i});
+            ev.insert({bui[i][1],1,i});
         }
-        vector<vector<int>> ans; 
-        ans.push_back({(*event.begin())[0],(*event.begin())[2]});
-        
-        for ( auto &i : event){
-            if (i[1] == 0) // start
-                pq.push({buildings[i[2]][2],buildings[i[2]][1]});
-            else{ // end
-                while(!pq.empty() && pq.top()[1] <= i[0]) // remove till cur end distance
-                    pq.pop();
+        vector<vector<int>> ans={{(*ev.begin())[0],(*ev.begin())[2]}};
+        for (auto &e : ev){
+            int i = e[2];
+            if (e[1] == 0)
+                pq.push({bui[i][2], bui[i][1]});
+            else{
+                while (!pq.empty() && pq.top()[1] <= e[0]) pq.pop();
             }
-             if ( ans.back()[1] != pq.top()[0]){ // ignore no change in height
-                if (ans.back()[0]== i[0]){ // multiple end distance
-                    ans.back()[1] = pq.top()[0]; //only update height
-                }
+
+            if (ans.back()[1] != pq.top()[0]){
+                if (ans.back()[0] == e[0])
+                    ans.back()[1]  = pq.top()[0];
                 else
-                    ans.push_back({i[0],pq.top()[0]});
+                    ans.push_back({e[0],pq.top()[0]});
             }
         }
         return ans;
