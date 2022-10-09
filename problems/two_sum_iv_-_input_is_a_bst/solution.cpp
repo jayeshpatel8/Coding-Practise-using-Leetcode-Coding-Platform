@@ -11,11 +11,12 @@
  */
 class Solution {
 public:
-    unordered_set<int> set;
+    unordered_set< int> st;
     bool findTarget(TreeNode* root, int k) {
         if (!root) return false;
-        if (set.count(k - root->val)) return true;
-        set.insert(root->val);
-        return findTarget(root->left, k) || findTarget(root->right, k) ;
+        if (st.count(k-root->val) ) return true;
+        st.insert(root->val);
+        if (findTarget(root->left, k) || findTarget(root->right, k )) return true;
+        return false;
     }
 };
