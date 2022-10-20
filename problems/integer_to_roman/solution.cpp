@@ -1,6 +1,7 @@
 class Solution {
 public:
-    string intToRoman(int num) {   
+    unordered_map<int,string> m;
+    string intToRoman(int num) {
         string ans; 
         while (num > 0){
             if(num>=1000){
