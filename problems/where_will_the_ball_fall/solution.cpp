@@ -1,26 +1,19 @@
 class Solution {
 public:
     vector<int> findBall(vector<vector<int>>& grid) {
-        
-        int M = grid.size();        
-        int N = grid[0].size();
-        vector<int> res;
-                
-        int R=1, L=-1;
-        for (int c=0; c <N; c++){
-            int i=0, j=c;
-            while (true){
-                if ( grid[i][j] == R && (j+1<N) && (grid[i][j+1] == R) )
-                     j++;
-                else if(grid[i][j] == L && (j-1>=0) &&  (grid[i][j-1] == L) )
-                     j--;
-                else
-                {   res.push_back(-1); break;}
-                i++;
-                if (i==M) {res.push_back(j);break;}
+        int M = grid.size(), N = grid[0].size();
+
+        vector<int> dp(N);
+        iota(begin(dp),end(dp),0);
+
+        for (int r=0; r<M; r++){
+            for (auto &c1 : dp){
+                if (c1 <0 || c1 >= N) continue;
+                auto c2 = grid[r][c1] > 0 ? c1+1 : c1-1;
+                if (c2 < 0 || c2 >=N || grid[r][c1] != grid[r][c2]) c1=-1;
+                else c1 = c2;                
             }
         }
-        return res;
-        
+        return dp;
     }
 };
