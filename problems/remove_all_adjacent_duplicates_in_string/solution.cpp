@@ -1,12 +1,12 @@
 class Solution {
 public:
     string removeDuplicates(string s) {
-        int j=1;
-        for (int i=1; i<s.size(); i++,j++){
-            // "abbaca"
-            s[j]=s[i];
-            if (j>0 && s[j]==s[j-1]) j-=2;            
+        string ans;
+        for (auto & c : s){
+            if (!ans.empty() && ans.back() == c) ans.pop_back();
+            else
+             ans.push_back(c);
         }
-        return s.substr(0,j);
+        return ans;
     }
 };
