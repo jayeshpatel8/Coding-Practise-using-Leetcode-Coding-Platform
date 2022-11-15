@@ -11,37 +11,22 @@
  */
 class Solution {
 public:
-    int countNodes(TreeNode* root) {
-        if(!root) return 0;
-        int hl =0 ,hr = 0;
-        TreeNode *t = root;
-        
-        while(t) t=t->left, hl++;
-        t = root;
-        while(t) t=t->right, hr++;
-        
-        if(hl==hr) return (1 << hl)-1;
-        return 1 + countNodes(root->left) + countNodes(root->right) ;
+    int height(TreeNode * root){
+        if (!root) return 0;
+        int cnt = 0;
+        while (root)
+            cnt++,    root=root->left;
+        return cnt;
     }
-    int countNodes2(TreeNode* root) {
-        if(!root) return 0;
-        int h =0 ,level=0, cnt=0;
-        TreeNode *t = root;
-        
-        while(t) t=t->left, h++;
-        
-        level = h -2;
-        
-        t =  root;
-        while(level>=0){
-            TreeNode * left = t->left;
-            for (int l=0; l<level; l++) left  = left->right;
-            
-            if (left) cnt += 1<<level , t = t->right;
-            else t = t->left;
-            level--;
+    int countNodes(TreeNode* root,int cnt = 1) {
+        if (!root) return 0;
+        auto lh = height(root->left) , rh = height(root->right);
+
+        if (rh==0)
+            return lh == 0 ? cnt : cnt *2;
+        else{
+            if (lh==rh) return countNodes(root->right,cnt* 2 + 1);
+            else return countNodes(root->left,cnt*2);
         }
-        if(t) cnt ++;
-        return cnt  + (1 << (h-1)) -1;
     }
 };
