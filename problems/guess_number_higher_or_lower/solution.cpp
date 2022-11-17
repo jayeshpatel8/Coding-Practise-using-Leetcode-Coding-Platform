@@ -1,8 +1,8 @@
 /** 
  * Forward declaration of guess API.
  * @param  num   your guess
- * @return 	     -1 if num is lower than the guess number
- *			      1 if num is higher than the guess number
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
  *               otherwise return 0
  * int guess(int num);
  */
@@ -10,16 +10,15 @@
 class Solution {
 public:
     int guessNumber(int n) {
-        int l=1, r=n, m = l + (r-l)/2, p ;
-        
-        while(p = guess(m)){
-            if (p > 0){
-                l = m+1;
+        int start = 0, mid = (start + (n - start)/2);
+        while (auto a  = guess(mid)){
+            if ((a > 0)){
+                start=  mid +1;
             }
-            else 
-                r = m-1;
-            m = l + (r-l)/2;
+            else
+            n = mid-1;
+            mid = (start + (n - start)/2);
         }
-        return m;
+        return mid;
     }
 };
