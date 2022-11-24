@@ -1,26 +1,24 @@
 class Solution {
 public:
-    int  N, M, W;
+     
     bool exist(vector<vector<char>>& board, string word) {
-        M = board.size(), N = board[0].size(),W =word.size();
-        for (int i=0; i<M; i++){
-            for (int j=0;j<N; j++){
-                if (word[0] == board[i][j]){
-                    if (dfs(board, i,j,word,0)) return true;
-                }
+        for ( int i=0; i<board.size(); i++){
+            for ( int j=0; j<board[0].size(); j++){
+                if ( board[i][j] == word[0] && dfs(board, word, 0, i,j )) return true;
             }
         }
         return false;
     }
-    int dfs(vector<vector<char>>& board, int i, int j,string& word, int k){
-        if (i >= M || i<0 || j<0 ||j >=N || board[i][j] != word[k]) return false;
-        if (k == W-1) return true;
-        board[i][j]=1;
-        if (dfs(board, i+1,j,word,k+1) || dfs(board, i,j+1,word,k+1) ||
-            dfs(board, i-1,j,word,k+1) || dfs(board, i,j-1,word,k+1)){
-            return true;
+    int dirs[5] = {-1,0,1,0,-1};
+    bool dfs(vector<vector<char>>& board, string word, int i, int r , int c){
+        if (i == word.size()) return true;
+        if (r<0 || c < 0 || r >= board.size() || c >= board[0].size()||word[i] != board[r][c]) return false;
+        board[r][c] = 1;
+        for (int d=0; d<4; d++){
+            int r1 = r + dirs[d], c1 = c + dirs[d+1];
+            if (dfs(board,word,i+1,r1,c1)) return true;
         }
-        board[i][j]=word[k];
+        board[r][c] = word[i];
         return false;
     }
 };
