@@ -1,16 +1,17 @@
 class Solution {
 public:
     int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
-        vector<int> index(startTime.size());
-        iota(begin(index), end(index),0);
-        sort(begin(index), end(index), [&](auto i, auto j){return startTime[i] > startTime[j];});
-        
-        map<int,int> dp ;
-        int ans = 0;
-        for (  int i =0; i< index.size(); i++){
-            auto it = dp.lower_bound(endTime[index[i]]);
-            ans = max(ans, (it == end(dp)? 0 : it->second) + profit[index[i]]);
-            dp[startTime[index[i]]]=ans;
+        vector<int> idx(profit.size());
+        iota(begin(idx),end(idx),0);
+        sort(begin(idx),end(idx),[&](auto a, auto b){ return startTime[a] > startTime[b];});
+        int ans =0; 
+        map<int,int> dp;
+        for (int i=0; i<profit.size(); i++){
+            auto index = idx[i];
+            auto start = startTime[index];
+            auto it = dp.lower_bound(endTime[index]);
+            ans = max(ans, profit[index] + (it == end(dp) ? 0 : it->second));
+            dp[start] = ans;
         }
         return ans;
     }
