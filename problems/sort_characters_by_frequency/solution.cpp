@@ -1,24 +1,17 @@
 class Solution {
 public:
     string frequencySort(string s) {
-        int freq[128] = {};
-        for (auto c : s) freq[c]++;
-        sort(begin(s),end(s), [&](auto a, auto b){ return freq[a] != freq[b] ? freq[a] > freq[b] : a > b;});
-        return s;
-    }
-
-    string frequencySort2(string s) {
-        int freq[128] = {};
-        for (auto c : s) freq[c]++;
-        string res;
-        priority_queue<pair<int,char>>pq;
-        for (int i=0; i<128; i++)
-            if (freq[i])
-                pq.push({freq[i],i});
-        while(!pq.empty()){
-            auto [f , c] = pq.top(); pq.pop(); 
-            res += string(f,c);
+        vector<int> f(256), idx(256);
+        iota(begin(idx),end(idx),0);
+        for (auto c : s) f[c]++;
+        sort(begin(idx),end(idx),[&](auto a, auto b){return f[a] >f[b];});
+        string ans;
+        for (auto i : idx){
+            if (f[i])
+                ans += string(f[i],i);
+            else 
+                break;
         }
-        return res;
+        return ans;
     }
 };
