@@ -11,18 +11,20 @@
  */
 class Solution {
 public:
-    int ans = 0;
-    int maxAncestorDiff(TreeNode* root) {
-        findMinMax(root,root->val,root->val);
+int ans=0;
+    int maxAncestorDiff(TreeNode* root,  int max_=0, int min_ = 1e5) {
+        if (!root){
+            return ans;
+        }
+        if (max_ < root->val)
+            max_ = root->val;
+        if (min_ > root->val)
+            min_ = root->val;
+        if (!root->left && !root->right){
+            return ans = max(ans, (max_ - min_)); 
+        }
+        maxAncestorDiff(root->left,max_,min_);
+        maxAncestorDiff(root->right,max_,min_);
         return ans;
-    }
-    void findMinMax(TreeNode * root, int  mi, int  ma){
-        if (!root) 
-            return ;
-        mi = min(mi,root->val); 
-        ma = max(ma,root->val);
-        ans= max(ans, ma-mi);
-        findMinMax(root->left,mi,ma);
-        findMinMax(root->right,mi,ma);
     }
 };
