@@ -11,21 +11,23 @@
  */
 class Solution {
 public:
-    long ans=0 ,msum , mod =  1e9 + 7;
+long ans = 0 ,tsum =0,mod=1e9 +7;
     int maxProduct(TreeNode* root) {
-        msum = sum(root);
-        mproduct(root);
-        return ans %mod; 
+        tsum = totalsum(root);
+        dfs(root);
+        return ans%mod;
     }
-    long sum(TreeNode * root){
-        if (root) return root->val + sum(root->left) + sum(root->right);
-        return 0;
+    int totalsum(TreeNode * root){
+        if (root)
+            return root->val + totalsum(root->left) + totalsum(root->right);
+            return 0;
     }
-    long mproduct(TreeNode * root){
+    long dfs(TreeNode* root) {
         if (!root) return 0;
-        long l = mproduct(root->left);
-        long r = mproduct(root->right);
-        ans = max({ans, (msum - l) * l, (msum-r)*r});
-        return root->val + l + r;
+        
+        long  sum  =  root->val + dfs(root->left) + dfs(root->right);
+        ans =  max(ans, (tsum - sum)* sum);
+        return sum;
     }
+
 };
