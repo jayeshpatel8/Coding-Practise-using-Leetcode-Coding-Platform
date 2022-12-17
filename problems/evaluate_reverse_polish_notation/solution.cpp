@@ -1,33 +1,21 @@
 class Solution {
 public:
     int evalRPN(vector<string>& tokens) {
-        stack<int64_t> num;
-        
-        for (auto s : tokens){
-            if (s.size() ==1 && (s[0] =='+' || s[0] =='-' || s[0] =='*' || s[0] == '/')){
-                int64_t r, n1,n2;
-                n2 = num.top(); num.pop();
-                n1 = num.top(); num.pop();
-                switch (s[0] ){
-                    case '+':
-                        r  = n1 + n2;
-                        break;
-                    case '-':
-                        r  = n1 - n2;
-                        break;
-                    case '*':
-                        r  = n1 * n2;
-                        break;
-                    case '/':
-                        r  = n1 / n2;
-                        break;
-                }
-                num.push((int64_t)r);
+        stack<long> st;
+        //using fp = int f (int a , int b);
+        typedef int (*fp)(int , int);
+        map<string,fp> s = {{"+",[](auto a, auto b)->int{return (long)a + b;}},{"-",[](auto a, auto b)->int{return (long)a - b;}},{"/",[](auto a, auto b)->int{return (long)a / b;}},{"*",[](auto a, auto b)->int{return (long)a * b;}}};// "-", "/", "*"};
+        for (auto i :tokens){
+            if ( s.count(i)){
+                int b = (st.top());
+                st.pop();
+                long a  =  (st.top());
+                st.pop();
+                st.push((s[i](a,b)));
             }
-            else{
-                num.push(stoi(s));
-            }
+            else
+                st.push(stoi(i));
         }
-        return num.top();
+        return st.top();
     }
 };
