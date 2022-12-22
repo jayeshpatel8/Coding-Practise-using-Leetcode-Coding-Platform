@@ -1,34 +1,35 @@
 class Solution {
 public:
-    int N;
-    vector<int> count,sum;
+vector<int> sum,count;
+int N;
     vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
-        N = n;
-        sum.resize(N); count.resize(N,1);
-        vector<vector<int>> graph(n);
-        for ( auto e : edges){
-            graph[e[0]].push_back(e[1]);
-            graph[e[1]].push_back(e[0]);
+        // first: count total nodes at each nodes using count[n]
+        // second:  sum[node]= sum[root] - (no_of_subnodes_at_this_node) + (remainming_sub_nodes = N-no_of_subnodes_at_this_node);
+        sum.resize(n,0);
+        count.resize(n,1);
+        N=n;
+        vector<vector<int>> G(n);
+        for ( auto  &e : edges){
+            G[e[0]].push_back(e[1]);
+            G[e[1]].push_back(e[0]);
         }
-        dfs(graph,0,-1);
-        dfs2(graph,0,-1);
+        dfs(G,0,-1);
+        dfs2(G,0,-1);
         return sum;
     }
-    void dfs(vector<vector<int>> &graph, int root, int parent){
-        for (auto c : graph[root]){
-            if( c != parent){
-                dfs(graph,c,root);
-                sum[root] += sum[c]+count[c];
-                count[root] +=count[c];
-            }
+    void dfs(vector<vector<int>>& G,int root, int par){
+        for (auto node : G[root]){
+            if (node == par) continue;
+            dfs(G,node,root);
+            sum[root] += sum[node] + count[node];
+            count[root] += count[node];
         }
     }
-    void dfs2(vector<vector<int>> &graph, int root, int parent){
-        for (auto c : graph[root]){
-            if( c != parent){
-                sum[c] = sum[root] - count[c] + N - count[c];
-                dfs2(graph,c,root);
-            }
+    void dfs2(vector<vector<int>>& G,int root, int par){
+        for (auto node : G[root]){            
+            if (node == par) continue;
+            sum[node] = sum[root] -count[node]+ (N-count[node]);
+            dfs2(G,node,root);            
         }
-    }    
+    }     
 };
