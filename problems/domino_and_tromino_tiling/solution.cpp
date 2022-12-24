@@ -1,35 +1,74 @@
 class Solution {
 public:
-    int dp[1001][2], mod = 1e9 + 7;
     int numTilings(int n) {
-        if(n<=2) return n;
-        memset(dp,-1,sizeof(dp));
-        return dfs(n,1);
-    }
-    long dfs(int n, bool done){
-        if (n<0) return 0;
-        if (n==0) return done;
-
+        //vector<int> dp(n+1);
+        int mod = 1e9 +7;
+        long a=0,b=1,c=1,d=1;
         
-        if (dp[n][done]!= -1) return dp[n][done];
-        
-        long ans = 0;
-        if (done)
-            ans += dfs(n-1, 1) + dfs(n-2,1) + 2 * dfs(n-2,0);
-        else{
-            ans +=  dfs(n-1,0) + dfs(n-1,1);
+        for (int i=2; i<=n; i++){
+            // put dom
+            //dp[i] =( dp[i] + dp[i-1] + dp[i-2])%mod;             
+//               d = (c + b ) %mod;
+            //put trom
+            /*
+            for (int j= i ,k = i-3; j>2; j--)
+                dp[i] =( dp[i] + (long)dp[k--]*2)%mod;
+            */
+            //if (i>=3) 
+            {
+            //    psum =(psum  + dp[i-3]);// %mod;
+            //    dp[i] = (dp[i] + psum * 2) %mod;
+//                d = (d + a * 2) %mod;
+            }
+            // put dom + trom together 
+            d = (c + b + a * 2) %mod;
+            a+=b;b=c;c=d;
         }
-        return dp[n][done] = ans % mod;
+        return d;//dp[n];
+    }
+    int numTilings3(int n) {
+        //vector<int> dp(n+1);
+        int mod = 1e9 +7;
+        long a=0,b=1,c=1,d=1;
+        
+        for (int i=2; i<=n; i++){
+            // put dom
+            //dp[i] =( dp[i] + dp[i-1] + dp[i-2])%mod;             
+               d = (c + b) %mod;
+            //put trom
+            /*
+            for (int j= i ,k = i-3; j>2; j--)
+                dp[i] =( dp[i] + (long)dp[k--]*2)%mod;
+            */
+            //if (i>=3) 
+            {
+            //    psum =(psum  + dp[i-3]);// %mod;
+            //    dp[i] = (dp[i] + psum * 2) %mod;
+                d = (d + a * 2) %mod;
+            }
+            
+            a+=b;b=c;c=d;
+        }
+        return d;//dp[n];
+    }
+    int numTilings2(int n) {
+        vector<int> dp(n+1);
+        int mod = 1e9 +7;
+        dp[0]=dp[1]=1;
+        long psum=0;
+        for (int i=2; i<=n; i++){
+            // put dom
+            dp[i] =( dp[i] + dp[i-1] + dp[i-2])%mod;             
+            //put trom
+            /*
+            for (int j= i ,k = i-3; j>2; j--)
+                dp[i] =( dp[i] + (long)dp[k--]*2)%mod;
+            */
+            if (i>=3) {
+                psum =(psum  + dp[i-3]);// %mod;
+                dp[i] = (dp[i] + psum * 2) %mod;
+            }
+        }
+        return dp[n];
     }
 };
-/*
-
-// dom
-n>= 1  vertical 
-n>=2  2 Horiz
-
-// trom
-n>=3 2 trom
-n>=5 2 trom + 2  dom
-
-*/
