@@ -1,16 +1,21 @@
 class Solution {
 public:
     int minStoneSum(vector<int>& piles, int k) {
-        priority_queue<int> pq (begin(piles), end(piles));
-        
-        while(k-- && !pq.empty()){
-            int high = pq.top() ; pq.pop();
-            pq.push(high/2 + (high & 1));            
+        map<int,int,greater<>> map;
+        int sum = 0;
+        for (auto i : piles)
+            map[i]++;
+        while (k){
+            auto it = begin(map);
+            auto &[top, val] = *it;
+            if (top == 1) break;
+            auto cnt = min(k,val);
+            map[top/2 + (top &1)] += cnt;
+            k -=cnt;
+            if (val > cnt) sum += (top * (val - cnt));       
+            map.erase(it);
         }
-        int stones=0;
-        while(!pq.empty()){
-            stones +=pq.top(); pq.pop();
-        }
-        return stones;
+        for (auto &[k,v] : map) sum+= (k*v);
+        return sum;
     }
 };
