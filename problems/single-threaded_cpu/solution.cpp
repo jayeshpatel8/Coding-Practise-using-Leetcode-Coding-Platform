@@ -7,7 +7,7 @@ using ll = long long;
         iota(begin(idx),end(idx),0);
         sort(begin(idx),end(idx)
         ,[&](auto & a, auto & b){
-            return tasks[a][0] < tasks[b][0];
+            return  tasks[a][0] < tasks[b][0];
         });
 
         set<pair<int,int>> st;
