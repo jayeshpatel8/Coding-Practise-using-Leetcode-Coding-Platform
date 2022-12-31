@@ -1,47 +1,30 @@
-int uniquePathsIII_(vector<vector<int>>& grid, int cnt, int i, int j){
-     int r =grid.size(), c=grid[0].size();
-        
-    if (grid[i][j]==2 ) 
-        return cnt==0;
-    
-    if (grid[i][j]==3 || grid[i][j]==-1) return 0;
-    grid[i][j]=3;
-    cnt--;
-    int ret=0;
-    if (i>0 ){        
-        ret += uniquePathsIII_(grid,cnt,i-1,j);
-    }
-    if (j>0){
-        ret += uniquePathsIII_(grid,cnt,i,j-1);
-    }    
-    if (i+1<r ){        
-       ret +=  uniquePathsIII_(grid,cnt,i+1,j);
-    }
-    if (j+1<c ){
-        ret += uniquePathsIII_(grid,cnt,i,j+1);
-    }    
-    cnt++;
-    grid[i][j]=0;
-    return ret; 
-    
-}
 class Solution {
 public:
+    int cnt,N,M, dirs[5]= {-1,0,1,0,-1};;
     int uniquePathsIII(vector<vector<int>>& grid) {
-        int r =grid.size(), c=grid[0].size();
-        vector<vector<bool>> used(r,vector<bool>(c,0));
-        int cur=0,cnt=r*c-1;
-        int i ,j,si=-1,sj=0;
-        
-        for (i=0; i<r; i++)
-            for (j=0; j<c; j++){
-                if (grid[i][j]==1){
-                    si=i,sj=j;
-                }
-                else if (grid[i][j]==-1) cnt--;
+        N = grid.size(), M=grid[0].size();
+        int si,sj; cnt = N*M-1;
+        for (int i=0; i<N; i++)
+            for (int j=0;j<M; j++){ 
+                if (grid[i][j] == 1)
+                    si = i, sj = j;
+                else if (grid[i][j]==-1)cnt--;
             }
-        if (cnt<1 || si==-1) return cur;
-        cur = uniquePathsIII_(grid,cnt,si,sj);
-        return cur;        
+         return dfs(grid,si,sj);       
     }
+    int dfs (vector<vector<int>>& grid, int i, int j){
+            if (i<0 || i>=N || j<0 || j>=M || grid[i][j] < 0) return 0;
+            
+            if (grid[i][j] == 2) return !cnt;
+
+            grid[i][j]=-1; 
+            int ans = 0;
+            cnt--;
+            for (int d=0; d<4; d++){
+                ans += dfs(grid, i + dirs[d], j + dirs[d+1]);
+            }
+            grid[i][j]=0;
+            cnt++;
+            return ans;
+        };    
 };
