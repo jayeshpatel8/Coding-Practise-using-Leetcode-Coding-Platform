@@ -1,23 +1,19 @@
 class Solution {
 public:
     bool wordPattern(string pattern, string s) {
-        unordered_map<string,char> map;
-        int map2[26]={};
-        int i=0, n = s.size();;
-        for (auto c : pattern){
-            string s1;
-            while (i<n && s[i] != ' ')
-                s1 +=s[i++];
-            if (map.count(s1)){
-                if (map[s1] != c) return false;                
+        stringstream ss (s);
+        unordered_map<char,string> map;
+        set<string> st;
+        int i=0,N=pattern.size();
+        for (string w; ss>>w;i++){
+            if (i >= N) return false;
+            auto ch = pattern[i];
+            if (map.count(ch)){
+                if (map[ch] != w) return false;
             }
-            else {
-                if (map2[c-'a'] || s1 == "") return false;
-                map[s1]=c;
-                map2[c-'a']=1;
-            }            
-            i++;
+            else if (st.count(w)) return false;
+            else map[ch]=w,st.insert(w);
         }
-        return  i>n;
+        return (i>= N);
     }
 };
