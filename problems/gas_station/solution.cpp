@@ -1,15 +1,14 @@
 class Solution {
 public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-        int c = 0, ans = 0, cur = 0;
-        for ( int i= 0; i< gas.size(); i++){
-            int c1 =  gas[i] - cost[i];
-            cur = max (c1, c1+ cur);
-            c += c1;
-            if (cur < 0 ) ans = i+1;
+        int sum = 0,cur=0, ans=0 , N = cost.size();
+        for (int i=0;  i<N; i++){
+            int d = gas[i]-cost[i];
+            cur = max(d,cur +d);
+            sum += d;
+            if (cur < 0) ans = i+1;
         }
-        
-        if (c<0) return -1;
-        return ans ;
+        if (sum < 0) return -1;    
+        return ans;
     }
 };
