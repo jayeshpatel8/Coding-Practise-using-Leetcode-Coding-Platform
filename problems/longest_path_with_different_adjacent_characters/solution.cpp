@@ -1,37 +1,30 @@
 class Solution {
 public:
-    int longestPath(vector<int>& par, string s) {
-        int  n = par.size();
-        vector<vector<int>> vis(n,vector<int>(2));
-        vector<int> cnt(n);
-        for (int i = 1; i < n; ++i)
-            ++cnt[par[i]];
+    int longestPath(vector<int>& parent, string s) {
+        int n =  parent.size();
+        vector<vector<int>> len(n,vector<int>(2)); // 2 highest length to save
+        vector<int> child_cnt(n);
+        for (auto i = 1; i<n; i++ ) child_cnt[parent[i]]++;
         queue<int> q;
-        for (int i = 1; i < n; ++i)
-            if (cnt[i] == 0)
-                q.push(i);
-        
+        for (int  i=1; i<n; i++ )  if (child_cnt[i] == 0) q.push(i);
         while (!q.empty()){
-            int sz = q.size();
-            while (sz-- > 0){
-                int i = q.front(); q.pop();
-                int j = par[i];
-                if (s[i] != s[j]){
-                    int hi =1 + vis[i][0]  ;
-                    if (vis[j][0]<hi)
-                        vis[j][1] = vis[j][0] , vis[j][0]=hi;
-                    else if (vis[j][1]<hi) 
-                        vis[j][1]=hi;
+            int v = q.front(); q.pop();
+            int u = parent[v];
+            if (u >= 0){
+                if ( s[u]!=s[v]){
+                    int l = len[v][0] + 1;
+                    if (len[u][0] < l) 
+                        len[u][1] = len[u][0], len[u][0]= l;
+                    else if (len[u][1] < l)
+                        len[u][1] = l;
                 }
-                if (--cnt[j] == 0)
-                    if (j > 0)
-                        q.push(j);
+                if (--child_cnt[u] == 0)
+                    q.push(u);
             }
         }
-        int ans = -1;
-        for (auto &i  : vis)           
-            ans = max(ans, i[0]+i[1]+1);
-
-        return ans;
+        int ans = 0;
+        for (auto &i : len)
+            ans=  max(ans, i[0]+i[1]);
+        return ans + 1;
     }
 };
