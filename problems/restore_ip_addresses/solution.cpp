@@ -1,26 +1,29 @@
-
 class Solution {
 public:
+int N;
+vector<string> ans;
     vector<string> restoreIpAddresses(string s) {
-    vector<string> v;
-    string ip;
-    restoreIpAddresses(s,0,ip,v,0);
-        return v;
+      N = s.size();
+      backtrack(s,string(),0);
+      return ans;  
     }
-void restoreIpAddresses(string s,int idx,string ip,vector<string>&v,int depth){
-
-    if (depth >4) return;
-    if (depth ==4 && idx ==s.size()) { ip.erase(ip.end()-1);v.push_back(ip); return;}
-    for (int i=1; i<=3;i++){
-        if (idx+i > s.size() ) return;
-        if (s[idx]=='0' && i>1) return;
-        
-        string sub = s.substr(idx,i);
-        int n = stoi(sub);
-        if (n >255) return;
-        restoreIpAddresses(s,idx+i,ip+sub+'.',v,depth+1);
+    void backtrack(string s, string ip, int i, int part = 0){
+        if (part >= 4) {
+            if (part ==4 && i == N) {
+                ip.pop_back();
+                ans.push_back(ip);
+            }
+            return;
+        }
+        if (s[i]=='0'){
+            backtrack(s, ip=ip+"0.",++i,part+1);            
+            return;
+        }
+        for (int c = 1;c<=3 && i+c <=N; c++){
+            string str = s.substr(i,c);            
+            int num = stoi(str);
+            if (num > 255) return;
+            backtrack(s, ip+str+'.',i+c,part+1);            
+        }
     }
-}
 };
-
-
