@@ -1,38 +1,26 @@
 class Solution {
 public:
-    int pal[16][16];
-    int n;
-    vector<vector<string>> ans;
+bool pal[16][16]={};
+vector<vector<string>> ans;
+int N ;
     vector<vector<string>> partition(string s) {
-        
-        n = s.size();
-        //memset(pal,-1,sizeof(pal));
-        vector<string> a;
-        dfs(s,0,a);
+        vector<string> s1;
+        N=s.size();
+        dfs(s,s1, 0);
         return ans;
     }
-    void dfs(string &s, int i, vector<string>& a){
-        
-        if (i >= n){
-            ans.push_back(a);
-            return ;
+    void dfs(string &s, vector<string> & pals, int i ){
+        if (i == N){
+            ans.push_back(pals);
+            return;
         }
-
-        for (int j=i; j < n; j++){
-            if (s[i]==s[j] && (j-i<=2 || pal[i+1][j-1])){     
+        for (int j=i; j<N; j++){
+            if (s[i]==s[j] && (j-i<=2 || pal[i+1][j-1])){
                 pal[i][j]=true;
-                a.push_back(s.substr(i,j-i+1));
-                dfs(s,j+1,a);
-                a.pop_back();
+                pals.push_back(s.substr(i,j-i+1));
+                dfs(s,pals,j+1);
+                pals.pop_back();
             }
         }
-    }
-    bool isPal(string & s, int i, int j){
-        //if (pal[i][j] != -1) return pal[i][j];
-        while(i<j){
-            if (s[i]!=s[j]) return false;//pal[i][j] = false;
-            i++,j--;
-        }
-        return true;//pal[i][j] = true;
     }
 };
