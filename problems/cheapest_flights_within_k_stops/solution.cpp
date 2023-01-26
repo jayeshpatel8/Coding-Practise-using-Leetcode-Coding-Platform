@@ -1,27 +1,25 @@
 class Solution {
 public:
-
-    
-
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
-        vector<int> dis(n, -1);
-        vector<vector<pair<int,int>>> graph(n);
-        for ( auto &f : flights){
-            graph[f[0]].push_back({f[1],f[2]});
+        vector<int> dist(n,1e7);
+         vector<vector<array<int,2>>> G(n);
+         for (auto &f : flights)
+            G[f[0]].push_back({f[1], f[2]});
+        queue<array<int,2>>q;
+        q.push({src, 0});
+        while (!q.empty() && k >= 0){
+            k--;
+            int sz = q.size();
+            while (sz-- > 0){
+                auto from = q.front(); q.pop();
+                for (auto &to : G[from[0]]){
+                    if ( from[1] + to[1] < dist[to[0]]){
+                        dist[to[0]] = from[1] + to[1];
+                        q.push({to[0],dist[to[0]]});
+                    }
+                }
+            }
         }
-        priority_queue<vector<int>,vector<vector<int>>, greater<vector<int>>>   q;
-        q.push({0,k,src}); // cost, step, node
-        while(!q.empty()){
-            auto v = q.top(); q.pop();
-
-            if(v[2]==dst ) return v[0];
-
-            if(v[1]<0 || dis[v[2]] >=  v[1]) continue;
-            dis[v[2]] =  v[1];
-            for (auto &e : graph[v[2]])
-                //if ( e.first==dst)
-                    q.push({e.second+v[0],v[1]-1,e.first});
-        }
-        return -1;
+        return dist[dst] == (int)1e7 ? -1 : dist[dst];
     }
 };
