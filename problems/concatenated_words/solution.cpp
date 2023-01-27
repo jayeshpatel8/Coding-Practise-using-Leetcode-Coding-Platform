@@ -49,36 +49,3 @@ public:
         return ans;
     }
 };
-
-/* // DP
-class Solution {
-public:
-    unordered_set<string> set;
-    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
-        //sort(begin(words),end(words),[&](string &s1, string &s2){return s1.size() < s2.size();               });
-        for ( auto &i : words) set.insert(i);
-        vector<string> ans;
-        for ( auto &i : words){
-            if (isConc(i)) ans.push_back(i);
-            //set.insert(words[i]);
-        }        
-        return ans;
-    }
-    bool isConc(string& word){
-        int N = word.size();
-        if(set.size()==0) return false;
-        vector<int> dp(N+1);
-        dp[0]=true;
-        for( int i=0; i< N; i++){
-            if(!dp[i]) continue;
-            for ( int j=i+1; j<=N; j++){
-                
-                if (j-i<N && set.count(word.substr(i,j-i)))
-                    dp[j] = true;
-            }
-            if(dp[N]) return true;
-        }
-        return dp[N];
-    }
-};
-*/
