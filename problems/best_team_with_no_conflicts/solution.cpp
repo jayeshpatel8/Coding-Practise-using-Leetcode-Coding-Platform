@@ -19,18 +19,5 @@ public:
             ans = max(ans , dp1[i]);
         }
         return ans;
-        //memset(dp, -1, sizeof (dp));
-        //return dfs(s,0,1000);
     }
-    int dfs (vector<array<int,2>> & s, int i, int age){
-        if (i >= N) return 0;
-        if (dp[i][age] != -1) return dp[i][age];
-        
-        int ans = dfs(s,i+1,age);
-        if (age >= s[i][1])
-            ans = max(ans, s[i][0] + dfs (s,i+1,min(age,s[i][1])));
-        
-        return dp[i][age] = ans;
-    }
-
-}; 
+};
