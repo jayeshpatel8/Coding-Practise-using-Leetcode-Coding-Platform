@@ -1,19 +1,17 @@
 class Solution {
 public:
     bool isAlienSorted(vector<string>& words, string order) {
-     int wt[256];
-        int i=0;
-        for(auto c : order) wt[c]=i++;
-        
-        for ( i=1; i<words.size();i++){
-            int l = min(words[i-1].size(), words[i].size()),j=0;
-            while(j<l){
-                if (wt[words[i-1][j]] > wt[words[i][j]]) 
-                    return false;
-                else if (wt[words[i-1][j]] < wt[words[i][j]]) break;
-                j++;
+        vector<int> idx(26);
+        for (int i=0; i< order.size(); i++) idx[order[i]-'a']=i;
+        string prev="";
+        for (auto & s : words){
+            auto i=0,j=0;
+            for (; i<prev.size() && j < s.size(); i++, j++){              
+                if (idx[prev[i]-'a']  == idx[s[j]-'a']) continue;
+                else break;
             }
-            if (j==l && j<words[i-1].size()) return false;
+            if ((j==s.size() && i!=prev.size()) || (i<prev.size() && idx[prev[i]-'a'] > idx[s[j]-'a'])) return false;
+            prev=s;
         }
         return true;
     }
