@@ -1,14 +1,14 @@
 class Solution {
 public:
     vector<int> findAnagrams(string s, string p) {
-        int freq2[126]={};
-        vector<int> ans;
-        for (auto i : p) freq2[i]++;
-        for (int i=0,j=0,ps = p.size()-1,c=ps+1; j<s.size(); j++){
-            if (freq2[s[j]]-->=1) c--;
-            if (j>=ps){
-                if(c==0) ans.push_back(i);                    
-                if(freq2[s[i++]]++>=0) c++;
+        vector<int> freq(128,0), ans;
+        for (auto c : p) freq[c]++;
+        for (int i=0,cnt=p.size(), N = cnt-1; i<s.size(); i++){
+            if (freq[s[i]]-- >0) cnt--;
+            if (i >= N){
+                if (cnt == 0)
+                    ans.push_back(i-N);
+                if (++freq[s[i-N]]>0)cnt++;
             }
         }
         return ans;
