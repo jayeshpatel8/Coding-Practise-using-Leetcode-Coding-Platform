@@ -1,36 +1,34 @@
 class Solution {
 public:
     vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
-        vector<vector<array<int,2>>> graph(n);
-        for (auto &e : redEdges){
-            graph[e[0]].push_back({e[1],0});
-        }
-        for (auto &e : blueEdges){
-            graph[e[0]].push_back({e[1],1});
-        }
-        vector<int> ans(n,-1);
-        vector<vector<bool>> vis(n,vector<bool>(2));
+        int vis[100][2]={};
+        vector<vector<array<int,2>>> G(n);
+        for (auto &e : redEdges)
+            G[e[0]].push_back({e[1],0});
+        for (auto &e : blueEdges)
+            G[e[0]].push_back({e[1],1});
         queue<array<int,2>> q;
-        int dist=1; 
-        for (auto e : graph[0])
-            q.push({e[0],e[1]});
-        vis[0][0]=vis[0][1]=1; ans[0]=0;
-        while( !q.empty() ){
-            int sz = q.size();
+        q.push({0,2});
+        int cnt=0;
+        vector<int> ans(n,-1);
+        ans[0]=0;
+        vis[0][0]=vis[0][1]=1;
+        while (!q.empty()){
+            int sz= q.size();
             while (sz-- > 0){
-                auto e = q.front(); q.pop();
-                if (vis[e[0]][e[1]]) continue;
-                vis[e[0]][e[1]]=1;
-                if (ans[e[0]] == -1)
-                    ans[e[0]] = dist;
-                for (auto i : graph[e[0]]){
-                    if (i[1] == e[1] || vis[i[0]][i[1]]) continue;
-                    q.push({i[0],i[1]});
+                auto cur = q.front(); q.pop();
+                if (ans[cur[0]]==-1)
+                    ans[cur[0]]=cnt;                
+                for (auto &v : G[cur[0]]){
+                    if (vis[v[0]][v[1]] || v[1] == cur[1]) continue;
+                    
+                        vis[v[0]][v[1]]=1;
+                        q.push(v);
+                    
                 }
             }
-            dist++;
+            cnt++;
         }
         return ans;
     }
-    
 };
