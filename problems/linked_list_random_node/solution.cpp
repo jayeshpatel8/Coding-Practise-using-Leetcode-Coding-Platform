@@ -10,17 +10,17 @@
  */
 class Solution {
 public:
-    ListNode * h;
+ListNode * h ; 
     Solution(ListNode* head) {
         h = head;
     }
     
     int getRandom() {
-        ListNode  *t = h;
-        int k=1, cnt=1, ans = 0;
-        while (t){
-            if (rand() % cnt++ < k) ans = t->val;
-            t=t->next;
+        int k=1, cnt=1 ,ans=0;
+        auto *cur = h;
+        while ( cur ){
+            if (random() %cnt++ < k) ans = cur->val;
+            cur= cur->next;
         }
         return ans;
     }
