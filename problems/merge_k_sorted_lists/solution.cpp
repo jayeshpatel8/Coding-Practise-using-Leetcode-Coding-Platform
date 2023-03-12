@@ -10,22 +10,19 @@
  */
 class Solution {
 public:
-    class comp{
-      public:
-        bool operator()(ListNode* a, ListNode*b){
-            return a->val > b->val;
-        }
-    };
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        priority_queue<ListNode*,vector<ListNode*>,comp> pq;
-        ListNode ans ,*t;
-        t = &ans;
-        for (int i=0; i<lists.size(); i++) if (lists[i]) pq.push(lists[i]);
-        while (!pq.empty()){
-            t->next = pq.top();pq.pop();
-            t=t->next;
-            if (t->next) pq.push(t->next);            
+        set<pair<int,ListNode*>> st;
+        ListNode t, * ans = &t;
+        for (auto &i : lists) if (i)st.insert({i->val,i});
+        while( !st.empty()){
+            auto i  = *begin(st);
+            st.erase(begin(st));
+
+            ans->next = i.second;
+            if (i.second->next) st.insert({i.second->next->val,i.second->next});
+            ans=ans->next;
         }
-        return ans.next;
+        ans->next=nullptr;
+        return t.next;
     }
 };
