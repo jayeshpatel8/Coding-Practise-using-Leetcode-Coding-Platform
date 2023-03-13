@@ -12,24 +12,13 @@
 class Solution {
 public:
     bool isSymmetric(TreeNode* root) {
-        if (!root) return true;
-        queue<TreeNode*> q;
         
-        q.push(root->left);
-        q.push(root->right);
-        
-        while(!q.empty()){
-            TreeNode* root1, *root2;
-            root1 = q.front();q.pop();
-            root2 = q.front();q.pop();
-            if (root1 == root2) continue;
-            if (!root1 || !root2 || root1->val != root2->val) return false;
-            q.push(root1->left);
-            q.push(root2->right);
-            q.push(root1->right);
-            q.push(root2->left);            
-        }
-        return true;
-        
+        return dfs(root->left,root->right)   ;
+    }
+    bool dfs(TreeNode* l,TreeNode * r){
+        if (!l || !r ) return l==r;
+        if (l->val !=r->val) return false;
+
+        return dfs (l->left,r->right) && dfs(l->right,r->left);
     }
 };
