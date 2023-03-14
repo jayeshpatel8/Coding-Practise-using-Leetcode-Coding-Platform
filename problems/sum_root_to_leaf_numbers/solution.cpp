@@ -11,16 +11,16 @@
  */
 class Solution {
 public:
-    int ans = 0;
-    int sumNumbers(TreeNode* root, int sum = 0) {
-        if (!root) {
-            return ans;
-        }
-        
-        sum =  sum * 10 + root->val;
-        if (!root->left && !root->right) return ans+=sum;
-        sumNumbers(root->left,sum);
-        sumNumbers(root->right,sum);
-        return ans;
+int sum = 0;
+    int sumNumbers(TreeNode* root, int i=0) {
+        if (!root) return (sum +=i);
+        auto s = i*10 + root->val;
+        if(root->left)
+            sumNumbers(root->left,s);
+        if (root->right)
+            sumNumbers(root->right,s);
+        if (!root->left && !root->right) 
+            sum += s;
+        return sum;
     }
 };
