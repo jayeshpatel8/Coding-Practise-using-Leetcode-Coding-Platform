@@ -11,21 +11,19 @@
  */
 class Solution {
 public:
-    unordered_map<int,int> ino_idx;
-    int i ;
+unordered_map<int,int> map;
+int  i ;
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        for (int i=0; i<inorder.size(); i++) 
-            ino_idx[inorder[i]] = i;
-        i = postorder.size()-1;
-        return rec(0,postorder.size()-1, postorder);
+        for (int i=0;  i<inorder.size(); i++) map[inorder[i]]=i;
+    i = postorder.size()-1;
+        return dfs(inorder, postorder, 0,postorder.size()-1);
     }
-    TreeNode * rec(int st, int en,  vector<int>& po){
-        if (st > en) return NULL;
-        if (st == en) return new TreeNode (po[i--]);
-        int val = po[i--] , idx = ino_idx[val];
-        TreeNode * root = new TreeNode(val);
-        root -> right = rec(idx+1,en,po);
-        root -> left = rec(st,idx-1,po);
-        return root;
+    TreeNode* dfs(vector<int>& inorder, vector<int>& postorder,int l, int r){
+        if (r<l ) return nullptr;
+        auto * n = new TreeNode(postorder[i]);
+        int m = map[postorder[i--]];
+        n->right = dfs(inorder, postorder,m+1,r);
+        n->left = dfs(inorder, postorder,l ,m-1);
+        return n;
     }
 };
