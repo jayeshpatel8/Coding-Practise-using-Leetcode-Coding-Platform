@@ -1,44 +1,47 @@
-class Trie {
-    Trie * t[26]={};
+struct Tr{
+    Tr * t[26] = {nullptr};
     bool w=false;
+
+};
+class Trie {
 public:
+struct Tr root;
     Trie() {
         
     }
     
-    void insert(string word) {        
-        Trie *root = this;
-        for ( auto c : word){
-            if (root->t[c-'a'] == NULL){
-                root->t[c-'a'] = new Trie;
+    void insert(string word) {
+        auto * r =  &root;
+        for (auto c : word){
+            if (!r->t[c-'a']){
+                r->t[c-'a']=new Tr();
             }
-            root= root->t[c-'a'];
+            r = r->t[c-'a'];
         }
-        root->w=true;
+        r->w=true;
     }
     
     bool search(string word) {
-        Trie *root = this;
-        for ( auto c : word){
-            if (root->t[c-'a'] == NULL){
+        auto * r =  &root;
+        for (auto c : word){
+            if (!r->t[c-'a']){
                 return false;
             }
-            root= root->t[c-'a'];
+            r = r->t[c-'a'];
         }
-        return root->w==true;
-        
+        return r->w;        
     }
     
-    bool startsWith(string word) {
-        Trie *root = this;
-        for ( auto c : word){
-            if (root->t[c-'a'] == NULL){
+    bool startsWith(string prefix) {
+        auto * r =  &root;
+        bool ans = false;
+        for (auto c : prefix){
+            if (!r->t[c-'a']){
                 return false;
             }
-            root= root->t[c-'a'];
+            r = r->t[c-'a'];            
         }
-         return true;
-                
+        return true;
     }
 };
 
