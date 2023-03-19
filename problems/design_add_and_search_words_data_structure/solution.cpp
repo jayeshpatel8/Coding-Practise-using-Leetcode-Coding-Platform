@@ -1,46 +1,60 @@
+class Trie{
+    public:
+    Trie * ch[26]={};
+    bool w=false;
+};
 class WordDictionary {
 public:
-    class Trie{
-      public:
-        Trie * ch[26]={};
-        bool w=false;
-    };
-    Trie root;
-
-    bool search(Trie* root1, string& w, int i = 0){
-        Trie *r = root1;
-        for (; i<w.size(); i++){
-            int ch = w[i]- 'a';
-            if (w[i] == '.'){
-                for (int j=0;j<26;j++)
-                    if (r->ch[j] && search(r->ch[j], w, i+1))
-                            return true;
-                return false;
-            }
-            else if (r->ch[ch]) 
-                r = r->ch[ch];
-            else
-                return  false;                        
-        }
-        return r->w==true;
-    }
+Trie root;
     WordDictionary() {
         
     }
     
     void addWord(string word) {
-        Trie *r = &root;
+        Trie * r = &root;
         for (auto c : word){
-            int ch = c- 'a';
-            if (!r->ch[ch]) 
-                r->ch[ch] = new Trie;
-            r = r->ch[ch];
+            if (!r->ch[c-'a'])
+                r->ch[c-'a']= new Trie;
+            r = r->ch[c-'a'];
         }
         r->w=true;
     }
-    
+    bool search2(string & word, Trie * r, int i=0) {
+        for (;i<word.size(); i++){
+            auto c = word[i];
+            if (c=='.'){
+                for ( char ch='a'; ch<='z'; ch++){
+                    if (!r->ch[ch-'a']) continue;
+                    if (search2(word, r->ch[ch-'a'],i+1)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (!r->ch[c-'a'])
+                return false;
+            r = r->ch[c-'a'];
+        }
+        return r->w;        
+    }
     bool search(string word) {
-        return search(&root,word);
+        Trie * r=&root;
+        for (int i = 0;i<word.size(); i++){
+            auto c = word[i];
+            if (c=='.'){
+                for ( char ch='a'; ch<='z'; ch++){
+                    if (!r->ch[ch-'a']) continue;
+                    if (search2(word, r->ch[ch-'a'],i+1)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if (!r->ch[c-'a'])
+                return false;
+            r = r->ch[c-'a'];
+        }
+        return r->w;
     }
 };
 
