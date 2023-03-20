@@ -1,14 +1,14 @@
 class Solution {
 public:
     bool canPlaceFlowers(vector<int>& f, int n) {
-        int i=0, prev = 0,  next, cur=f[0];
-        for ( ; n && i<f.size()-1; i++){
-            next = f[i+1];
-            if (!cur && !prev && !next)
-                n--, cur=1;
-            prev=cur; cur=next;
-        }
-        if (n && prev==0 && cur==0) n--;
-        return n == 0;
+
+     for (int i=0; n && i<f.size(); i++)   {
+         if (!f[i]){
+             if (i!=0 && f[i-1]) continue;
+             if (i+1 != f.size() && f[i+1]) continue;
+             f[i]=1;n--;
+         }
+     }
+     return n==0;
     }
 };
