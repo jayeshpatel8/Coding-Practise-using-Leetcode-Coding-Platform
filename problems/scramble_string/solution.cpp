@@ -1,31 +1,42 @@
-
 class Solution {
 public:
+int dp[30][30][31]={};
+int n;
+/* TLE
     bool isScramble(string s1, string s2) {
-        return isScramble(s1,0,s1.size(),s2,0,s2.size());
+        n = s1.size();
+        memset(dp,-1,sizeof(dp));
+        function<bool(int,int,int)> dfs = [&](int i, int j, int len)    {
+            if (len > n) return false;
+            if (len == 1) return (dp[i][j][len] = s1[i]==s2[j])==true;
+            if (dp[i][j][len] != -1) return dp[i][j][len]==true;
+            for (int k=1; k<len; k++){
+                if ((dfs(i,j,k) && dfs(i+k,j+k,len-k)) || (dfs(i,j+len-k,k) && dfs(i+k,j,len-k))){
+                    dp[i][j][len]=true;
+                    return true;
+                }
+            }
+            return false;
+        };
+        return dfs(0,0,n);
     }
-    private:
-    bool isScramble(string& s1,int start1,int len1, string& s2, int start2, int len2) {
-        
-        if (len1!=len2) return false;
-        
-        vector<char> cnt(26,0);
-        bool match = true;
-        
-        
-        for (int i=0;  i<len1; i++){
-            if (s1[start1+i]!=s2[start2+i]) match=false;
-            cnt[s1[start1+i]-'a']++,cnt[s2[start2+i]-'a']--;
+*/
+    bool isScramble(string s1, string s2) {
+        int n = s1.size();
+
+
+        for (int k=1; k<=n; k++){
+            for (int i=0; i+k<=n; i++)
+            for (int j=0; j+k<=n; j++){
+                if (k==1)
+                    dp[i][j][k] = s1[i]==s2[j];
+                else{
+                    for (int q=1; q<k && !dp[i][j][k]; q++){
+                        dp[i][j][k] = (dp[i][j][q] && dp[i+q][j+q][k-q]) || (dp[i][j+k-q][q] && dp[i+q][j][k-q]) ;
+                    }
+                }
+            }
         }
-        if (match) return true;
-        for (auto &i : cnt)
-            if (i)return false;
-        
-        for (int i=1; i< len1; i++){
-           
-            if (isScramble(s1,start1,i,s2,start2,i) && isScramble(s1,start1+i,len1-i, s2,start2+i,len2-i)) return true;
-            if (isScramble(s1,start1,i,s2,start2+len2-i,i) && isScramble(s1,start1+i,len1-i, s2,start2,len2-i)) return true;            
-        }
-        return false;
-    }    
+        return dp[0][0][n];
+    }
 };
