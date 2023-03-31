@@ -1,4 +1,3 @@
-
 class Solution {
 public:
     int dp1[51][51][11], M, N, mod = 1e9 + 7;
