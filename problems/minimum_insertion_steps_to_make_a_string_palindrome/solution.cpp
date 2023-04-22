@@ -1,19 +1,17 @@
 class Solution {
 public:
-    int dp[501][501];
     int minInsertions(string s) {
-        memset(dp,-1,sizeof(dp));
-        return dfs(s,0,s.size()-1);
-    }
-    int dfs(string &s, int i, int j){
-        if (i>=j) return 0;
-        if (dp[i][j] != -1) return dp[i][j] ;
-        int ans ;
-        if (s[i]==s[j])
-            ans = dfs(s,i+1,j-1);
-        else{
-            ans= 1 + min (dfs(s,i+1,j),dfs(s,i,j-1));
+        int N=  s.size();
+        vector<vector<int>> dp(N+1,vector<int>(N+1));
+        for (int i=0; i<=N; i++) 
+            dp[i][i]=0;
+        for (int i=2; i<=N; i++){
+            for (int j=0,k=i-1; k<N; k++,j++ ){
+                if (s[j]==s[k]) dp[j][k] = dp[j+1][k-1];
+                else
+                    dp[j][k] =  1 + min(dp[j+1][k], dp[j][k-1]);                
+            }
         }
-        return dp[i][j]  = ans;
+        return dp[0][N-1];
     }
 };
