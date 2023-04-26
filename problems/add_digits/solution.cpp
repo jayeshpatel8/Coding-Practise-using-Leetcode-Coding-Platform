@@ -1,14 +1,12 @@
 class Solution {
 public:
-    int addDigits(int n) {
-        while(n > 9){
-            int s = 0;
-            while (n){
-                s += n%10;
-                n /=10;
-            }       
-            n = s;
+    int addDigits(int num) {
+        string s =  to_string(num);
+        while(s.size() >1 ){
+            int n = 0;
+            for (auto c : s) n += c-'0';
+            s= to_string(n);
         }
-        return n;
+        return s[0]-'0';
     }
 };
