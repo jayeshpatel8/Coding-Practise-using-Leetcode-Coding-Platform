@@ -1,19 +1,23 @@
+int pow2[100001]={};
 class Solution {
 public:
-    
+int ans = 0,mod = 1e9+7;
+
     int numSubseq(vector<int>& nums, int target) {
-        sort(begin(nums), end(nums));
-        vector<int> po(nums.size()+1);
-        int ans=0, mod = 1e9 + 7;
-        po[0]=1;
-        for (int i=1; i<=nums.size(); i++)
-            po[i] = (po[i-1]*2) % mod;
-        for ( int r=nums.size()-1,l=0; l<=r; )
-        {
-            if (nums[l] + nums[r] > target)
-                r--;
+        
+        if (!pow2[0]){
+            pow2[0]=1;
+            for (int i1=1; i1<100000; i1++)
+                pow2[i1] = (pow2[i1-1]<<1)%mod;            
+        }
+        
+        
+        sort(begin(nums),end(nums));
+
+        for (int i=0, j = nums.size()-1; i<=j;  ){
+            if (nums[i] + nums[j] > target) j--;
             else
-                ans = (ans + po[r - l++])%mod;            
+                ans = (ans +pow2[j-i++]) %mod;
         }
         return ans;
     }
