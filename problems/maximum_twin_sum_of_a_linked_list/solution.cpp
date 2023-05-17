@@ -11,22 +11,21 @@
 class Solution {
 public:
     int pairSum(ListNode* head) {
-        ListNode* slow = head,* fast = head;
-        while(fast && fast->next){
-            fast= fast->next->next;
-            slow = slow->next;
-        }
-        ListNode * prev=NULL, *cur = slow , *next;
-        while (cur){
+        int len =0 ,ans = 0;
+        auto *h = head;
+        while (h) h=h->next->next, len++;
+        
+        ListNode * prev=nullptr , *cur = head, *next;
+        while (len--){
             next = cur->next;
-            cur->next = prev;
-            prev= cur;
-            cur= next;
-        }
-        int ans =0;
-        while(prev){
-            ans  = max(ans, prev->val + head->val);
-            prev= prev->next; head = head->next;
+            cur->next=prev;
+            prev=cur;
+            cur=next;
+        }   
+        while (cur){
+            ans= max(ans, cur->val + prev->val);
+            cur=cur->next;
+            prev=prev->next;
         }
         return ans;
     }
