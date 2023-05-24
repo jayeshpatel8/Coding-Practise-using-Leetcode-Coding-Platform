@@ -1,26 +1,22 @@
 class Solution {
 public:
     long long maxScore(vector<int>& nums1, vector<int>& nums2, int k) {
-        vector<int> idx(nums1.size());
-        iota(begin(idx), end(idx), 0);
-        sort(rbegin(idx), rend(idx), [&](int a, int b){
-            return nums2[a] == nums2[b] ? nums1[a]>nums2[b]:  nums2[a] < nums2[b];
-        });
-        long  sum = 0, ans = 0;
-        priority_queue<int,vector<int>, greater<int>> q;
-
-        for (int i=0; i<nums1.size(); i++){
-            sum += nums1[idx[i]];
-            if (i >= k-1){                                
-                if (i>=k){
-                    sum -=q.top();q.pop();                
-                }
-                ans = max(ans, nums2[idx[i]]* sum);
-                
+        vector<int> ids(nums1.size());
+        iota(begin(ids),end(ids),0);
+        sort(begin(ids),end(ids),[&](auto a , auto b){return nums2[a] > nums2[b];});
+        priority_queue<int,vector<int>,greater<>> pq;
+        long long ans = 0,sum=0;
+        for (auto i=0; i<ids.size(); i++){
+            auto idx = ids[i];
+            sum += nums1[idx];
+            if (i>=k-1){
+                if (i>=k)
+                    sum -=pq.top(),pq.pop();
+                ans = max(ans,  sum * nums2[idx]);
             }
-            q.push(nums1[idx[i]]);
+            pq.push(nums1[idx]);
         }
-
+        
         return ans;
     }
 };
