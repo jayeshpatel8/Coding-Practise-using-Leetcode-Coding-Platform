@@ -1,17 +1,17 @@
 class Solution {
 public:
-    double new21Game(int n, int k, int W) {
-        if (k==0 || n>= k-1+W) return 1;
-        
-        double dp[n+1], sum = 1.0,ans=0.0;
-        dp[0]=1.0;
-        
-        for (int i=1; i<=n; i++){
-            dp[i]=sum/W;
-            if (i<k) sum +=dp[i];             
-            if (i+1-W >= 1) sum-=dp[i-W];            
+    double new21Game(int n, int k, int maxPts) {
+        if (!k) return 1;
+        vector<double> dp(n+1);
+        dp[0]=1;
+        double sum = 1 ;
+        for (int i=1; i<=n; i++){            
+            dp[i] += sum/maxPts;
+            if (i < k) 
+                sum += dp[i];
+            if ( i -maxPts >=0 && i-maxPts < k)
+                sum -= dp[i-maxPts];
         }
-        for (int i=k; i<=n; i++) ans +=dp[i];
-        return ans;
+        return accumulate(begin(dp)+k,end(dp),0.0);
     }
 };
