@@ -1,21 +1,20 @@
 class Solution {
 public:
-    int dp[101][101];
-    int stoneGameII(vector<int>& piles) {
-        memset(dp,-1,sizeof(dp));
-        return (accumulate(begin(piles), end(piles),0)  + dfs(piles, 0, 1))/2;
+long dp[101][101]={};
+    int stoneGameII(vector<int>& piles){
+        return (accumulate(begin(piles),end(piles),0) + dfs(piles))/2;
     }
-    int dfs(vector<int>& piles, int i, int m, int alice=1){
-        if (i>= piles.size()) return 0;
-        if(m > piles.size()) m = piles.size();
-        if(dp[i][m] != -1)  return dp[i][m];
-        
-        int M = 2*m, ans = INT_MIN;
-        long sum = 0;
-        for (int j = i, x= 1; x<= M && j<piles.size(); j++,x++){
+    int dfs(vector<int>& piles,int i=0, int m=1) {
+       if (i>=piles.size()) return 0;
+       if (dp[i][m]) return dp[i][m];
+
+       int x = 1, sum=0 , best=INT_MIN, m2=  2 *m;
+  
+       for (int j=i ,N = min<int>(piles.size() ,i + m2); j<N; j++,x++){
             sum += piles[j];
-            ans  = max<long>(ans , sum - dfs(piles, j+1, (max(m, x ))));
-        }
-        return dp[i][m] =ans;
+            best = max<int>(best, sum - dfs(piles,j+1,max(x,m)));
+       }
+       
+       return dp[i][m]=best;
     }
 };
