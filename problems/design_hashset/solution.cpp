@@ -1,20 +1,20 @@
 class MyHashSet {
 public:
-    vector<int> map;
-    MyHashSet() : map(1e6 + 1){
+bool st[1000001]={};
+    MyHashSet() {
         
     }
     
     void add(int key) {
-        map[key]=1;
+        st[key]=1;
     }
     
     void remove(int key) {
-        map[key]=0;
+        st[key]=0;
     }
     
     bool contains(int key) {
-        return map[key]==1;
+        return st[key];
     }
 };
 
