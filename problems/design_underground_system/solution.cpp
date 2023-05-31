@@ -1,27 +1,27 @@
 class UndergroundSystem {
 public:
-    unordered_map<int,pair<string,int>> cin;
-    unordered_map<string,pair<int,int>> avg;
+    unordered_map<int,pair<string, int>> ids;
+    unordered_map<string,array<int,2>> avg;
     UndergroundSystem() {
         
     }
     
     void checkIn(int id, string stationName, int t) {
-        cin[id]={stationName, t};
+        ids[id]={stationName,t};
     }
     
     void checkOut(int id, string stationName, int t) {
-        auto &[s1,t1] = cin[id];
-        auto &v = avg[s1+'-'+stationName];
-
-        v.first += t-t1;
-        v.second++;
+        auto [s,t1] = ids[id];
+        string s1 = s+" "+stationName;
+        auto &a = avg[s1];
+        a[0] += t-t1;
+        a[1]++;
     }
     
     double getAverageTime(string startStation, string endStation) {
-        auto &v = avg[startStation+'-'+endStation];
-        
-        return (double)v.first/v.second;
+        auto s = startStation +" "+ endStation;
+        auto &a  =  avg[s];
+        return (double) a[0] / a[1];
     }
 };
 
