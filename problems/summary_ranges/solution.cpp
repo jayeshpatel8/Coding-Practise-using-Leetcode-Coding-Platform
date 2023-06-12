@@ -1,21 +1,15 @@
 class Solution {
 public:
-    vector<string> summaryRanges(vector<int>& nums) {        
-        int N = nums.size(), prev = 0;
-        if (N==0) return {};
+    vector<string> summaryRanges(vector<int>& nums) {
         vector<string> ans;
-        ans.push_back(to_string(nums[0]));
-        for (int i=1;i<N; i++){
-            if (nums[i-1]+1 == nums[i]) continue;
-            string s = to_string(nums[i-1]);
-            if (ans.back() != s){
-                ans.back() = ans.back() + "->" + s;
+        for (int i=0; i<nums.size(); i++){
+            string str =to_string(nums[i]);
+            int j=i+1;
+            for (; j<nums.size(); j++){
+                if (nums[j] != nums[j-1]+1) break;
             }
-            ans.push_back(to_string(nums[i]));
-            prev= i;
-        }
-        if (prev != N-1){
-            ans.back() = ans.back() + "->" + to_string(nums[N-1]);
+            if (i+1 < j) str+="->"+to_string(nums[j-1]), i=j-1;
+            ans.push_back(str);
         }
         return ans;
     }
