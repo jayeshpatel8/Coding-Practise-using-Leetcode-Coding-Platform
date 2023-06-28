@@ -1,29 +1,24 @@
 class Solution {
 public:
     double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<double> dist(n,-1.0);
         vector<pair<int,double>> G[n];
-        for (int i=0; i< edges.size(); i++ ){
-            int u = edges[i][0] ,v = edges[i][1] ;
-            double w = succProb[i];
-            G[u].push_back({v,w});
-            G[v].push_back({u,w});
+        for (auto i=0; i< edges.size(); i++){
+            auto e = edges[i];
+            G[e[0]].push_back({e[1],succProb[i]}),G[e[1]].push_back({e[0],succProb[i]});
         }
-        queue<int> q;
-        q.push(start);
-        vector<double> p(n);
-        p[start]=1;
-        while(!q.empty()){
-            int sz = q.size();
-            while(sz-- > 0){
-                int u = q.front(); q.pop();
-                for (auto & [v,w] : G[u]){
-                    if (p[v] < p[u] * w){
-                        p[v] = p[u] * w;
-                        q.push(v);
-                    }
-                }
+        priority_queue<pair<float,int>> pq;
+        pq.push({1,start});
+
+        while(!pq.empty()){
+            auto [p, u] = pq.top(); pq.pop();
+            if (u == end) return p;
+            for (auto &[v,p1] : G[u]){
+                if (p1 * p <= dist[v]) continue;
+                dist[v] = p1 * p ;
+                pq.push({dist[v], v});
             }
         }
-        return p[end];
+        return 0;
     }
 };
