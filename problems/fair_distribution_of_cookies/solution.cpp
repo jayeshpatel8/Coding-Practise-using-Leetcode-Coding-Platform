@@ -1,22 +1,23 @@
 class Solution {
 public:
-    //int dp[]
-    int ans = INT_MAX;
-    int distributeCookies(vector<int>& ck, int k ) {
-        vector<int> sum(k,0);
-            dfs(ck,k,0,0,sum);
+
+    int distributeCookies(vector<int>& cookies, int k) {
+        int ans = INT_MAX, avg = accumulate(begin(cookies),end(cookies),0) / k;
+
+        vector<int> ch(cookies.size());
+        function<void(int,int)> dfs = [&] (int i, int sum) {
+            if (i >= cookies.size() || sum > ans){
+                ans= min(ans,sum); return;
+            }
+            for (int j=0; j<k; j++){
+                if (ch[j] >= avg) continue;
+                if (j>0 && ch[j] == ch[j-1]) continue;
+                ch[j] += cookies[i];
+                dfs(i+1,max(sum , ch[j]));
+                ch[j] -= cookies[i];
+            }
+        }   ;    
+        dfs(0,0);
         return ans;
-    }
-    void dfs(vector<int>& ck, int k , int i, int s,vector<int> &sum){
-        if (i ==ck.size()|| s >=ans){
-            ans = min ({ans,s});
-            return ;
-        }
-        for (int j =0; j<k; j++){
-            sum[j]+=ck[i];
-            dfs (ck,k,i+1, max(s,sum[j]),sum);
-            sum[j]-=ck[i];
-        }
-        
     }
 };
