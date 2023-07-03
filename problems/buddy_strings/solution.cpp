@@ -1,48 +1,25 @@
 class Solution {
 public:
-    bool buddyStrings(string A, string B) {
-        size_t repeat=false,same=0,al = A.length(),bl=B.length();
-        int f=-1;
-        
-        if ( (bl!= al) || !al)
-            return false;
-        char a[26];
-        memset(a,0x0,26);
-        
-        while(al--)
-        {
-            if(A[al]!=B[al])
-            {
-                if(same <2){
-                    if(f ==-1)
-                        f=al;
-                    else if (bl!=2){
-                        if((A[f] != B[al]) || (A[al]!=B[f])) 
-                            return false;
-                    }
-                    else if ((A[f] == B[al]) && (A[al]==B[f]) )
-                        return true;
-                    else 
-                        return false;
-                        
-                    same++;
-                    
+    bool buddyStrings(string s, string goal) {
+        if (s.size()!=goal.size()) return false;
+        int f[26]={},c=0;
+        for (int i=0,j=-1; i<s.size(); i++){
+            f[s[i]-'a']++;
+            if (s[i] != goal[i]){
+                c++;
+                if (c==1){
+                    j=i; continue;
+                }
+                else if (c==2){
+                    if (s[j] != goal[i] || s[i] != goal[j]) return false;
                 }
                 else
                     return false;
             }
-    
-            a[A[al]-'a']++;
         }
-
-        if (same ==1)
-            return false;
-
-        for(size_t c=0;c<26;c++)
-        {
-             if(a[c]>1)
-                 return true;          
-        }
+        if (c==2) return true;
+        if (c==0)
+            for (auto i : f) if (i>1) return true;
         return false;
     }
 };
