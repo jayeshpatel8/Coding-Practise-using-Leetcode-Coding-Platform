@@ -14,16 +14,13 @@ public:
         return ans;
     }
     int longestSubarray(vector<int>& nums) {
-        int ans=0, zero=0,j=0,one=0;
+        int ans=0,j=0,f[2]={};
         for (auto i=0; i<nums.size(); i++){
-            if (nums[i])
-                one++;
-            else 
-                zero++;
-            while (zero > 1)
-                if( nums[j++]) one--; else zero--;
+            f[nums[i]]++;
+            
+            while (f[0] > 1) f[nums[j++]]--;
 
-            ans = max(ans, one-(!zero));
+            ans = max(ans, f[1]-(!f[0]));
         }
         return ans;
     }
