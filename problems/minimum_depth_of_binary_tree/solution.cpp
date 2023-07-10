@@ -10,14 +10,27 @@
  * };
  */
 class Solution {
-public:int min=INT_MAX;
+public:
     int minDepth(TreeNode* root) {
-        if (!root )          return 0;
-        if (!root->left &&  !root->right) return 1;
-        if (!root->left) return 1 +  minDepth(root->right);  
-        if (!root->right) return 1 +  minDepth(root->left);  
-
-        return 1+std::min(minDepth(root->left),minDepth(root->right));
         
+        if (!root) return 0;
+        vector<TreeNode *> q{root};
+        int ans = 0;
+        while (!q.empty()){
+            vector<TreeNode* > t;
+            for (auto u : q){
+                if (u->left || u->right){
+                    if (u->left)
+                        t.push_back(u->left);
+                    if (u->right)
+                        t.push_back(u->right);
+                }
+                else
+                    return ++ans;
+            }
+            q.swap(t);
+            ans++;
+        }
+        return ans;
     }
 };
