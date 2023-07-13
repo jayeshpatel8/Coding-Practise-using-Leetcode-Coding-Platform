@@ -1,5 +1,6 @@
 class Solution {
 public:
+
     bool canFinish(int n, vector<vector<int>>& pre) {
         if (pre.size() < 1) return true;
         vector<int> graph[n] , indegree(n,0);
@@ -26,17 +27,5 @@ public:
         }
                 
         return count==n;
-    }
-    bool Cycle( vector<int> *g,vector<int> &vis, int v){
-        if (vis[v]==1) return true;
-        if (vis[v]==2) return false;
-        
-        vis[v]=1;
-        for (auto i : g[v]){
-            if (Cycle(g,vis, i)) { return true;}
-        }
-        
-        vis[v]=2;
-        return false;
     }
 };
