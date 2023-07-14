@@ -1,11 +1,12 @@
 class Solution {
 public:
-    int longestSubsequence(vector<int>& arr, int diff) {
-        unordered_map<int,int> M;
+    int longestSubsequence(vector<int>& arr, int difference) {
+        unordered_map<int,int> map;
         int ans = 1;
-        for(auto i : arr)
-            ans = max (ans , M[i] = 1 + M[i-diff]);
-        
+        for (auto i : arr){
+                map[i] = max(map[i], 1 + map[i-difference]);
+                ans= max(ans, map[i]);
+        }   
         return ans;
     }
 };
