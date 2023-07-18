@@ -1,81 +1,35 @@
-#define KEY_MAX 3000
 class LRUCache {
 public:
-    int LRU[KEY_MAX+1],prev[KEY_MAX+1],next[KEY_MAX+1];
-    int head=0,tail=0,cap=0,max=0;
-    void RemoveHead(void){
-        int t = head;
-        head= next[t];
-        prev[head]=tail;
-        next[tail]=head;
-        
-        LRU[t]=-1;
-        next[t]=prev[t]=t;
-    }
-    void AddToTail(int key){
-        tail[next]=key;
-        prev[key]=tail;
-        tail=key;
-        
-        next[tail]=head;
-        prev[head]=tail;
-    }
-    void RemoveKey(int key){
-        if (head == key)
-            RemoveHead();
-        else if (tail != key){
-            int pr =prev[key], nx=next[key];
-            next[pr]=nx;
-            prev[nx]=pr;
-            
-            LRU[key]=-1;
-            next[key]=prev[key]=key;
-        }
-    }
+    map<int,int> lru;
+    unordered_map<int,array<int,2>> k;
+    int c = 0;
+    long cnt=0;
     LRUCache(int capacity) {
-        max=capacity;
-        for (int i=0; i<=KEY_MAX; i++){
-            prev[i]=next[i]=i;
-            LRU[i]=-1;
-        }
+        c= capacity;
     }
     
     int get(int key) {
-        if (LRU[key]!= -1){  
-          if (key != tail){
-              int t = LRU[key];
-              RemoveKey(key);
-              AddToTail(key);  
-              LRU[key]=t;
-          }            
+        if (lru.count(k[key][0])){
+            lru.erase(k[key][0]);
+            k[key][0]=++cnt;
+            lru[cnt]=key;
+            return k[key][1];
         }
-        return LRU[key];
+        else
+            return -1;
     }
     
-    void put(int key, int value) {        
-        if (LRU[key] == -1){
-            // new
-            if (cap<max){
-                if (cap==0){
-                    tail  = head= key;                        
-                }
-                else{
-                    AddToTail(key);
-                }
-                cap++;
-            }
-            else{ //cap==full Add new Key
-                  RemoveHead();
-                  AddToTail(key);                                    
-            }
+    void put(int key, int value) {
+        if (lru.count(k[key][0]) )
+            lru.erase(k[key][0]);
+        k[key][0]=++cnt;
+        k[key][1]=value;
+        lru[cnt]=key;            
+        
+        if (lru.size() > c){
+            lru.erase(begin(lru));
         }
-        else{       // update key
-            if (key != tail){
-                RemoveKey(key);
-                AddToTail(key);
-            }
-        }    
-        LRU[key]=value;
+
     }
 };
 
@@ -85,4 +39,3 @@ public:
  * int param_1 = obj->get(key);
  * obj->put(key,value);
  */
-
