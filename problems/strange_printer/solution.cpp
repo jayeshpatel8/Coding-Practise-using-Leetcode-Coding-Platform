@@ -15,10 +15,8 @@ public:
         int len=end-start,ans = dfs(s,start+1,end)+1;
         
         for ( int k=start+1; k<=end; k++){
-            if (s[start]==s[k])
-            //ans = min (ans, dfs(s,start,k-1)+dfs(s,k,end)-1);
-            ans = min (ans, dfs(s,start+1,k-1)+dfs(s,k,end));
-            //if (ans == 1) break;
+            if (s[start]==s[k])            
+                ans = min (ans, dfs(s,start+1,k-1)+dfs(s,k,end));            
         }
         return dp[start][end] = ans;
     }
