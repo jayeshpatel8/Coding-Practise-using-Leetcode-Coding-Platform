@@ -1,23 +1,24 @@
-void combine_(int n,int k,int j, vector<int>& cur, vector<vector<int>>& res){
-
-    if (k == cur.size()) {res.push_back(cur);return;}      
-    for (int i=j; i<=n; i++){      
-        cur.push_back(i);
-        combine_(n,k,i+1, cur,res);
-        cur.pop_back();        
-    }
-}
 class Solution {
 public:
-    vector<vector<int>> combine(int n, int k) {      
-        vector<vector<int>> res;
-         if (k==0) return vector<vector<int>>(1,vector<int>());
-        vector<int> cur;
-        for (int i=1; i<=n; i++){
-            cur.push_back(i);            
-            combine_(n,k,i+1,cur,res);
-            cur.pop_back();            
+    vector<vector<int>> ans;
+    vector<int> cur;
+    int N;
+    vector<vector<int>> combine(int n, int k) {
+        N=n;
+        dfs(1,k);
+        return ans;
+    }
+    void dfs(int i, int k){
+
+        if (k==0){            
+            ans.push_back(cur);
+            return;
         }
-        return res;
+        for (int j=i; j<=N; j++){
+            cur.push_back(j);
+            dfs(j+1,k-1);
+            cur.pop_back();
+        }
+        
     }
 };
