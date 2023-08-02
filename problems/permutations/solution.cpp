@@ -1,24 +1,21 @@
-void permute_rec(vector<int>&nums,int idx, vector<vector<int>> & r)    
-{
-    if (idx>=nums.size()) {r.push_back(nums); return;}
-    
-        for (int i=idx; i<nums.size(); i++)
-        {
-           
-            swap(nums[i], nums[idx]);      
-            permute_rec(nums,idx+1,r);
-            swap(nums[i], nums[idx]);                                
-            
-        }            
-}
 class Solution {
 public:
+    vector<vector<int>> ans;
+    int N;
     vector<vector<int>> permute(vector<int>& nums) {
-        int l=nums.size();
-        vector<vector<int>> r;
-        
-                              
-   permute_rec(nums,0,r);
-        return r;
+        N= nums.size();
+        dfs(nums);    
+        return ans;
+    }
+    void dfs(vector<int> & nums, int i=0){
+        if (i==N){
+            ans.push_back(nums);
+            return;
+        }
+        for (int j=i; j<N; j++){
+            swap(nums[i],nums[j]);
+            dfs(nums, i+1);
+            swap(nums[i],nums[j]);
+        }
     }
 };
