@@ -13,26 +13,26 @@ class Solution {
 public:
     vector<TreeNode*> dp[9][9]={};
     vector<TreeNode*> generateTrees(int n) {
-        return build(1,n);
+        return dfs(1,n);
     }
-    vector<TreeNode*> build(int i, int n){
-        if (i>n) return {NULL};
-        if (!dp[i][n].empty()) return dp[i][n];
-        vector<TreeNode*> v;
-        for (int j=i; j<=n; j++){        
-            vector<TreeNode*> left = build(i,j-1);
-            vector<TreeNode*> right = build(j+1,n);
-            
-            for (auto &l : left){
-                for (auto &r : right)
-                {
-                    TreeNode* root = new TreeNode(j);
-                    root->left = l;
-                    root->right = r;
-                    v.push_back(root);                        
-                }
+    vector<TreeNode*> dfs(int j,int n){
+        if (j>n) return {nullptr};
+        if (dp[j][n].empty()){            
+            vector<TreeNode *> ans;
+            for (int i=j; i<=n; i++){
+                auto l = dfs(j,i-1);
+                auto r = dfs(i+1,n);
+                
+                for (auto & l1: l)
+                    for (auto& r1: r){
+                        auto root = new TreeNode(i);
+                        root->left = l1;
+                        root->right = r1;
+                        ans.push_back(root);
+                    }
             }
+            dp[j][n]=ans;
         }
-        return dp[i][n] = v;
+        return dp[j][n];
     }
 };
