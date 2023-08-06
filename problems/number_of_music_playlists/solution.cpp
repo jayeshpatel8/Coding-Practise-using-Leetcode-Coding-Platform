@@ -7,13 +7,13 @@ public:
         memset(dp,-1,sizeof(dp));
         return lists(0,0);
     }
-    int lists(int n, int listlen){
-        if (listlen == L) return n == N;
-        if (dp[n][listlen] != -1) return dp[n][listlen];
-        long ans =  ((lists(n+1,listlen+1) * (N - n) )%mod);
-        if (n>K) 
-            ans +=(lists(n,listlen+1) * (n - K) )%mod;
+    int lists(int i, int listlen){
+        if (listlen == L) return i == N;
+        if (dp[i][listlen] != -1) return dp[i][listlen];
+        long ans =  ((lists(i+1,listlen+1) * (N - i) )%mod);
+        if ( i > K) // repeat
+            ans +=(lists(i,listlen+1) * (i - K) )%mod;
         
-        return dp[n][listlen] = ans%mod;
+        return dp[i][listlen] = ans%mod;
     }
 };
