@@ -1,39 +1,26 @@
-int mbsearch(vector<int>& n, int l, int r, int t)
-{
-    if (l >r)
-        return -1;
-    
-    int m = r+(l-r)/2;
-    
-    if (t == n[m]) return m;
-    
-    if (n[l] < n[m]) // right side is correctly sorted
-    {
-        if (t < n[m])
-            if (t >= n[l])
-                return mbsearch(n, l, m-1,t);
-            else if (t <=n[r])
-                return mbsearch(n, m+1, r,t);
-            else
-                return -1;
-        else
-            return mbsearch(n, m+1, r,t);        
-    }
-    else{
-        if (t > n[m])
-            if (t <= n[r])
-                return mbsearch(n, m+1, r,t);
-            else if (t >= n[l])
-                return mbsearch(n, l, m-1,t);
-            else
-                return -1;
-        else
-            return mbsearch(n, l, m-1,t);        
-    }
-}
-class Solution {    
+class Solution {
 public:
-    int search(vector<int>& nums, int target) {
-        return mbsearch(nums, 0, nums.size()-1, target);
+    int search(vector<int> A, int target) {
+        int n=A.size(), lo=0,hi=n-1;
+        // find the index of the smallest value using binary search.
+        // Loop will terminate since mid < hi, and lo or hi will shrink by at least 1.
+        // Proof by contradiction that mid < hi: if mid==hi, then lo==hi and loop would have been terminated.
+        while(lo<hi){
+            int mid=(lo+hi)/2;
+            if(A[mid]>A[hi]) lo=mid+1;
+            else hi=mid;
+        }
+        // lo==hi is the index of the smallest value and also the number of places rotated.
+        int rot=lo;
+        lo=0;hi=n-1;
+        // The usual binary search and accounting for rotation.
+        while(lo<=hi){
+            int mid=(lo+hi)/2;
+            int realmid=(mid+rot)%n;
+            if(A[realmid]==target)return realmid;
+            if(A[realmid]<target)lo=mid+1;
+            else hi=mid-1;
+        }
+        return -1;
     }
 };
