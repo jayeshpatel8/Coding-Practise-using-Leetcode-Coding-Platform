@@ -1,13 +1,18 @@
 class Solution {
 public:
-    string convertToTitle(int n) {
-        string r;
-        while (n >0){
-            n -=1;
-            char t = 'A' + n%26;
-            n /=26;
-            r = t + r;
+    string convertToTitle(int cn) {
+        string ans;
+        
+        while (cn>0){
+            cn-=1;
+            auto c = cn%26;
+            
+            ans.push_back('A' + c );
+            //cn-=c;
+            cn /=26;
+            
         }
-        return r;
+        reverse(begin(ans),end(ans));
+        return ans;
     }
 };
