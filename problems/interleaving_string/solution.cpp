@@ -1,22 +1,18 @@
 class Solution {
 public:
+int dp[101][101];
     bool isInterleave(string s1, string s2, string s3) {
-        int l1 = s1.size(), l2 = s2.size(), l3=s3.size();
-        if (l1+l2 != l3) return false;
-        vector<bool> dp(l2+1);
-        
-        for (int i=0; i<=l1; i++){
-            for (int j=0; j<=l2; j++){
-                if (i==0 && j==0)
-                    dp[j]=true;
-                else if (i==0 )
-                    dp[j] = dp[j-1] && s3[i+j-1] == s2[j-1];
-                else if (j==0 )
-                    dp[j] = dp[j] && s3[i+j-1] == s1[i-1];
-                else 
-                    dp[j] = (dp[j-1] && s3[i+j-1] == s2[j-1]) ||  (dp[j] && s3[i+j-1] == s1[i-1]);                
-            }
+        memset(dp,-1,sizeof(dp));
+        return dfs(s1,s2,s3,0,0,0);
+    }
+    bool dfs(string &s1, string &s2, string &s3, int i, int j,int k){
+        if (k== s3.size() ){
+            return i==s1.size() && j==s2.size();
         }
-        return dp[l2];
+        if (dp[i][j] != -1) return dp[i][j];
+        bool ans = 0;
+        if (i<s1.size() && s1[i]==s3[k]) ans = dfs(s1,s2,s3,i+1,j,k+1);
+        if (j<s2.size() && s2[j]==s3[k]) ans |= dfs(s1,s2,s3,i,j+1,k+1); 
+        return dp[i][j]=ans;
     }
 };
