@@ -10,29 +10,19 @@
  */
 class Solution {
 public:
-    ListNode* reverseBetween(ListNode* head, int left, int right) {
-        if (right==left) return head;
-        
-        ListNode  *h, ans;
-        h = &ans;
-        h->next = head;
-        right -=left;
-        while (--left) h = h->next ;
-        
-        ListNode *prev =h->next, *tail = h->next ,*cur = h,*next;
-        h = prev->next;
-        
-        while (right--){
-            next  = h->next;
-            h->next = prev;
-            prev = h;
-            h = next;
+    ListNode* reverseBetween(ListNode* head, int left, int right, int cur=1) {
+        if (!head) return head;
+        if (right == cur) return head;
+        auto *h = reverseBetween(head->next,left,right, cur+1);
+        if (cur >= left){
+            if (head->next){
+                auto *t = head->next->next;
+                head->next->next=head;
+                head->next= t;
+            }
+            return h;
         }
-
-        cur->next= prev; 
-        tail->next= next;
-        return ans.next;
-            
-        return ans.next;
+        head->next = h;
+        return head;
     }
 };
