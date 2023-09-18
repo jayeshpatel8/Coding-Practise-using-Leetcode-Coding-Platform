@@ -1,21 +1,16 @@
 class Solution {
 public:
     vector<int> kWeakestRows(vector<vector<int>>& mat, int k) {
-        set<array<int,2>> st;
-        for (int j =0; j<mat.size(); j++){
-            int cnt = 0;
-            for (auto &i : mat[j]){
-                if (i) cnt++ ;
-                else break;
-            }
-            st.insert({cnt,j});
+        vector<int> cnt;
+        for (auto &i : mat){
+            int c = 0;
+            for (auto j : i) c+=j;
+            cnt.push_back(c);
         }
-        vector<int> ans;
-        for ( auto & s : st){
-            if (k-- > 0){
-                ans.push_back(s[1]);
-            }
-        }
-        return ans;
+        vector<int> idx(cnt.size()),ans;
+        iota(begin(idx),end(idx),0);
+        sort(begin(idx),end(idx),[&](int a, int b){return cnt[a]==cnt[b] ? a < b : cnt[a]<cnt[b];});
+        idx.resize(k);
+        return idx;
     }
 };
