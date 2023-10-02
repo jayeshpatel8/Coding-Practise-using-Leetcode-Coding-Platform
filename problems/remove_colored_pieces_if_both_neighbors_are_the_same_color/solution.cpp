@@ -1,14 +1,11 @@
 class Solution {
 public:
     bool winnerOfGame(string colors) {
-        int ac=0,bc=0, A=0,B=0;
-        for (auto c : colors){
-            if (c == 'A') A++,B=0;
-            else A=0,B++;
-            if (A > 2) ac++;
-            if (B > 2) bc++;
-        }
-        
-        return ac > bc;
+        int cnt[2]={},c[2]={};
+        for (auto ch : colors){
+            if (c[ch-'A']++ > 1) cnt[ch-'A']++;
+            c[!(ch-'A')]=0;
+        }   
+        return cnt[0] > cnt[1];
     }
 };
