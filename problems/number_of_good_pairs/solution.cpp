@@ -1,12 +1,13 @@
 class Solution {
 public:
     int numIdenticalPairs(vector<int>& nums) {
-        unordered_map<int,int> freq;
-        for (auto i : nums) freq[i]++;
+        int f[101]={};
+        for (auto i : nums) f[i]++;
         int ans = 0;
-        for ( auto & [k,v] : freq){
-            if (v>1){
-                ans += (v-1)*v/2;
+        for (int i=1; i<=100; i++)   {
+            if (f[i] >1){
+                auto n  = f[i]-1;
+                ans += (n * (n+1))/2;
             }
         }
         return ans;
