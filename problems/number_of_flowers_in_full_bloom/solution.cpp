@@ -1,24 +1,32 @@
+#import <map>
+#import <algorithm>
+
 class Solution {
 public:
-    vector<int> fullBloomFlowers(vector<vector<int>>& f, vector<int>& per) {
-        int n=f.size();
-        vector<array<int,2>> s(n*2 +per.size());
-        for (int i=0;i<n; i++){
-            s[i]={f[i][0],1};
-            s[n+i]={f[i][1]+1,-1};
-        }
-        for (int i=0; i<per.size(); i++)
-            s[2*n+i]={per[i],i-50000-2};
-        sort (begin(s),end(s), [](auto &i, auto &j){return i[0] == j[0] ? i[1] > j[1] : i[0] < j[0] ;});
+    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
+        std::map<int, int> flower_count;
         
-        vector<int> ans(per.size());
-        for (int cnt=0, i=0; i<s.size(); i++){
-            if (s[i][1] >-2)
-                cnt += s[i][1];
-            else
-                ans[s[i][1]+50002] = cnt;        
+        for(auto &it:flowers) {
+            flower_count[it[0]]++;
+            flower_count[it[1] + 1]--;
         }
-        return ans;
-        
+
+        int sum = 0;
+        for(auto &it:flower_count) {
+            sum += it.second;
+            it.second = sum;
+        }
+
+        int len = people.size();
+        std::vector<int> res(len, 0);
+
+        for(int i = 0; i < len; i++) {
+            auto it = flower_count.upper_bound(people[i]);
+            if (it != flower_count.begin()) {
+                it--;
+                res[i] = it->second;
+            }
+        }
+        return res;
     }
 };
