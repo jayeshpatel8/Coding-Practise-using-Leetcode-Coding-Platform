@@ -1,34 +1,36 @@
 class Solution {
 public:
-    bool vis[10001]={0};
-    bool validateBinaryTreeNodes(int n, vector<int>& l, vector<int>& r) {
-        vector<int> v1(n+1);
-        for (int i =0; i<n; i++){    
-            if (l[i] !=  -1)
-                v1[l[i]]++;
-            if (r[i] !=  -1)
-                v1[r[i]]++;
-            
+    bool validateBinaryTreeNodes(int n, vector<int>& lc, vector<int>& rc) {
+        vector<int> indeg(n),q;
+        for (int i=0; i<n; i++){
+            if (lc[i] != -1)
+                indeg[lc[i]]++;
+            if (rc[i] != -1)
+                indeg[rc[i]]++;
         }
-        
-        if (*min_element(begin(v1),end(v1)) >=1 || *max_element(begin(v1),end(v1)) >=2) return false;
-        int m = -1;
-        for (int i =0; i<n; i++){            
-            if (v1[i]==0){
-                if (m !=-1) return false;
-                m = i;
+        int root=-1;
+        for (int i=0; i<n; i++){
+            if (indeg[i] ==0 ){
+                if (root != -1) return false;
+                else root = i;
             }
+            else if (indeg[i] > 1) return false;
         }
-         dfs(l,r,m);
-        for (int i =0; i<n; i++){
-            if (vis[i] == 0) return false;
+        if (root == -1)
+            return false;
+        vector<bool> vis(n);
+        
+        q.push_back(root);
+        while (!q.empty()){
+            vector<int> t;
+            for (int u : q){
+                if (vis[u]) return false;
+                if (lc[u] != -1) t.push_back(lc[u]);
+                if (rc[u] != -1) t.push_back(rc[u]);
+                vis[u]=true;
+            }
+            q.swap(t);
         }
-        return true;
-    }
-    bool dfs(vector<int>& l, vector<int>& r, int i ){
-        if (i == -1) return true;
-        if (vis[i]) return false;
-        vis[i]=1;
-        return (dfs(l,r,l[i])  && dfs(l,r,r[i]) );
+        return accumulate(begin(vis),end(vis),0)==n;
     }
 };
