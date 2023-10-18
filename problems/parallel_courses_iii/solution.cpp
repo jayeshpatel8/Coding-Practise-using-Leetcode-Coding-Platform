@@ -1,22 +1,30 @@
 class Solution {
 public:
-    int minimumTime(int n, vector<vector<int>>& rel, vector<int>& time) {
-        vector<vector<int>> G(n+1);
-        vector<int> indeg(n+1), D(n+1);
-        for (auto  e : rel ) G[e[0]].push_back(e[1]), indeg[e[1]]++;
-        queue<int> q;
-        for (int i=1; i<=n; i++) 
-            if (indeg[i]==0) 
-                q.push(i), D[i]=time[i-1];
-        
-        while(!q.empty()){
-            int u = q.front(); q.pop();
-            for (auto v : G[u]){
-                D[v] = max(D[u]+time[v-1], D[v]);
-                if (--indeg[v]==0)
-                    q.push(v);
+    int minimumTime(int n, vector<vector<int>>& relations, vector<int>& time) {
+        vector<int> G[n+1] , cost(time), ind(n+1);
+        for (auto i : relations){
+            G[i[0]].push_back(i[1]);
+            ind[i[1]]++;
+        }
+        vector<int> q;
+        for (int i=1; i<=n; i++){
+            if (ind[i]==0){
+                q.push_back(i);
             }
         }
-        return *max_element(begin(D), end(D));
+   
+        while (!q.empty()){
+            vector<int> t;
+            for (auto  u : q){
+                for (auto v : G[u]){
+                    if (--ind[v]==0) 
+                        t.push_back(v);
+                    cost[v-1] = max(cost[v-1], cost[u-1] + time[v-1]);
+                    
+                }
+            }
+            q.swap(t);
+        }
+        return *max_element(begin(cost),end(cost));
     }
 };
