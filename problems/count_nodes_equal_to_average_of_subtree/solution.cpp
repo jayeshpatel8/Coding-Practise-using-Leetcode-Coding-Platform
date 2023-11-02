@@ -11,18 +11,20 @@
  */
 class Solution {
 public:
-    int ans = 0;
+int ans = 0;
     int averageOfSubtree(TreeNode* root) {
-        avg(root);
+        dfs(root);
         return ans;
     }
-    array<int,2> avg(TreeNode* root) {
+    pair<int,int> dfs(TreeNode* root) {
         if (!root) return {0,0};
-        auto l = avg(root->left);
-        auto r = avg(root->right);
-        int sum =  root->val + l[0] + r[0];
-        int cnt =  1 + l[1] + r[1];
-        if ((sum/cnt) == root->val) ans++;
-        return {sum, cnt};
+        auto [s1,c1] = dfs(root->left);
+        auto [s2,c2 ] = dfs(root->right);
+
+        int sum = s1+s2+root->val ,cnt= c1+c2+1;
+        if ((sum) / (cnt) == root->val){
+            ans++;
+        }
+        return {sum,cnt};
     }
 };
