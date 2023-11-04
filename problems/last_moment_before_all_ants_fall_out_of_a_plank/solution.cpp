@@ -1,9 +1,8 @@
 class Solution {
 public:
     int getLastMoment(int n, vector<int>& left, vector<int>& right) {
-        int ans = 0;
-        for (auto i : left) ans = max(ans, i);
-        for (auto i : right) ans = max(ans, n-i);
-        return ans;
+        int l  = left.empty() ? 0 : *max_element(begin(left), end(left));
+        int r  = right.empty() ? n : *min_element(begin(right), end(right));
+        return max(l,n-r);
     }
 };
