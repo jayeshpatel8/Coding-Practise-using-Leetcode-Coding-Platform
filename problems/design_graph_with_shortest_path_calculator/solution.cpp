@@ -38,3 +38,10 @@ public:
  * obj->addEdge(edge);
  * int param_2 = obj->shortestPath(node1,node2);
  */
+
+/**
+ * Your Graph object will be instantiated and called as such:
+ * Graph* obj = new Graph(n, edges);
+ * obj->addEdge(edge);
+ * int param_2 = obj->shortestPath(node1,node2);
+ */
