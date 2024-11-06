@@ -1,20 +1,20 @@
 class Solution {
 public:
     bool canSortArray(vector<int>& nums) {
-        int n = nums.size();
-        unordered_map<int, int> m;
-        for (auto i : nums) m[i] = __builtin_popcount(i);
-
-        int f=1;
-        while (f){
-            f=0;
-            for (int i=1; i<n; i++){
-                int a = nums[i-1], b =  nums[i];
-                if (a<=b) continue;
-                if (m[a] != m[b]) return false;
-                swap(nums[i-1],nums[i]);
-                f=1;
+        int pmax=0 , cmax=0, cmin=cmax;
+        int pbits = -1;
+        for (int i=0,j=0; i<nums.size(); i++){
+            int bits = __builtin_popcount(nums[i]);
+            if (nums[i] < pmax) return false;
+            if (pbits != bits){      
+                if (nums[i] < cmax) return false;          
+                pmax = cmax;
+                pbits=bits;
+                cmax= nums[i];
             }
+            else
+                cmax=max(cmax, nums[i]);
+            
         }
         return true;
     }
