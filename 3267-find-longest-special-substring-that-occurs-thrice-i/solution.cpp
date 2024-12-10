@@ -3,8 +3,8 @@ public:
     int maximumLength(string s) {
         int ans = -1;
         for (int c='a'; c<='z'; c++){
-            for (int l=s.size()-2; l>0 && l>ans; l--){
-                bool found =true;
+            bool found =false;
+            for (int l=s.size()-2; l>0 && l>ans && !found; l--){
                 int cnt=0;
                 for (int i=0; i<s.size(); i++){
                     if (s[i]==c){
@@ -18,7 +18,7 @@ public:
                     }
                 }
                
-                if (cnt >=3) ans=max(ans, l);
+                if (cnt >=3) ans=max(ans, l), found=true;
             }
         }
         return ans;
