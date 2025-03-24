@@ -1,0 +1,2 @@
+class Solution { public: int countDays(int days, vector<vector<int>>& meetings) { //line sweep 
+map<int,int> mp; for(int i=0;i<meetings.size();i++){ mp[meetings[i][0]]++; mp[meetings[i][1]]--; } int temp=0; int start=-1; int busy=0; bool flag=false; for(auto a:mp){ if(temp==0 ){ start=a.first; flag=true; } temp+=a.second; if(temp==0 && flag){ flag=false; busy+=a.first-start+1; } } return days-busy; } };
