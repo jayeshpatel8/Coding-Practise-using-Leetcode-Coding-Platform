@@ -1,62 +1,39 @@
 class Solution {
 public:
-    string p;
-    using ll = long long;
-    ll ans= 0;
     long long countGoodIntegers(int n, int k) {
-        p = string(n,'0');
-        genpal(0,n-1,k,n);
-        return ans;
-    }
-    unordered_set<string> vis;
-    void genpal(int l, int r, int k, int n){
-        if (l >r ){
-            ll  num = stoll(p);
-            if (num % k ==0 ){
-                auto s = p;
-                sort(begin(s),end(s));
-                if (vis.count(s) == 0){
-                    vis.insert(s);
-                    ans += calc(num, n);
-                }
+        unordered_set<string> dict;
+        int base = pow(10, (n - 1) / 2);
+        int skip = n & 1;
+        /* Enumerate the number of palindrome numbers of n digits */
+        for (int i = base; i < base * 10; i++) {
+            string s = to_string(i);
+            s += string(s.rbegin() + skip, s.rend());
+            long long palindromicInteger = stoll(s);
+            /* If the current palindrome number is a k-palindromic integer */
+            if (palindromicInteger % k == 0) {
+                sort(s.begin(), s.end());
+                dict.emplace(s);
             }
-            return ;
         }
-        for (int i= (l==0) ? '1' : '0' ; i<='9'; i++){
-            p[l] = p[r] = i;
-            genpal(l+1,r-1,k,n);
+
+        vector<long long> factorial(n + 1, 1);
+        long long ans = 0;
+        for (int i = 1; i <= n; i++) {
+            factorial[i] = factorial[i - 1] * i;
         }
-    }
-    ll calc(ll num, int n){
-         map<int,int>m;
-          while(num){
-                    m[num%10]++;
-                    num /= 10;
+        for (const string &s : dict) {
+            vector<int> cnt(10);
+            for (char c : s) {
+                cnt[c - '0']++;
             }
-        return Total_Permutations(m,n) -  PermutationsStartWithZero(m,n);
-
-    }
-    ll Total_Permutations(map<int, int> &freq, int n) {
-        ll totalPermutations = fact(n);
-
-        for (auto i : freq) {
-            totalPermutations /= fact(i.second);
+            /* Calculate permutations and combinations */
+            long long tot = (n - cnt[0]) * factorial[n - 1];
+            for (int x : cnt) {
+                tot /= factorial[x];
+            }
+            ans += tot;
         }
-        return totalPermutations;
-    }
-    ll PermutationsStartWithZero(map<int, int> &freq, int n) {
-        if ( !freq.count(0) ) return 0;
-        freq[0]--;
-        ll totalPermutations = fact(n-1);
 
-        for (auto i : freq) {
-            totalPermutations /= fact(i.second);
-        }
-        return totalPermutations;
-    }
-     ll fact(int n){
-        ll ans = 1;
-        for(int i=2 ; i<=n ; i++) ans *= i;
         return ans;
     }
 };
