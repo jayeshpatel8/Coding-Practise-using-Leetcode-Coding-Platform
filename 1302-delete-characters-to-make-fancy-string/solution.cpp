@@ -2,11 +2,15 @@ class Solution {
 public:
     string makeFancyString(string s) {
         string ans;
-        int i =0;
-        for (auto c  : s){
-         if( i > 1 && ans[i-2] == c && ans[i-1]==c) continue;
-         ans+=c;
-         i++;
+        char ch = 'A';
+        int cnt=0;
+        for (auto c :  s){
+            if (c == ch) cnt++;
+            else cnt=1, ch=c;
+            if (cnt >2)
+                continue;
+            
+            ans.push_back(c);
         }
         return ans;
     }
