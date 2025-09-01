@@ -25,7 +25,6 @@ public:
             pair<int,int> item = pq.top(); pq.pop();
             total += (double)item.first/item.second;
         }
-        cout << " ";
         return total/classes.size();
     }
 };
