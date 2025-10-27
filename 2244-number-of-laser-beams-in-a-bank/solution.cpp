@@ -1,20 +1,15 @@
 class Solution {
 public:
     int numberOfBeams(vector<string>& bank) {
-        int n = bank.size();
-        vector<int> cnt;
-        for (auto &s : bank){
-            int one = 0;
-            for (auto c : s) one  += c == '1';
-            cnt.push_back(one);
-        }
-        int ans = 0;
-        for (int prev = 0, i=1; i<n; i++){
-            if (cnt[i]){
-                //if ( prev+1 != i) 
-                    ans += cnt[prev] * cnt[i];
-                
-                prev=i;
+        int prev=0, ans=0;
+        for ( auto &i : bank){
+            int c = 0;
+            for (auto j : i){
+                c +=  j=='1';
+            }
+            if (c){
+                ans += prev * c;
+                prev = c;
             }
         }
         return ans;
