@@ -1,62 +1,47 @@
 class Solution {
 public:
     int countUnguarded(int m, int n, vector<vector<int>>& guards, vector<vector<int>>& walls) {
-        vector<vector<int>> u(m,vector<int>(n)),d(u),l(u),r1(u),g(u);
-        
-        for (auto &i :  walls){
-            g[i[0]][i[1]] = -1;
-        }
-        for (auto &i : guards){
-            int r = i[0] ,c = i[1];
-            g[r][c]=2;
-        }
-        for (int r=0; r<m; r++){
-            int    v = 0;
-            for (int c=0; c<n;c++){
-                 if (g[r][c]== 2) v=1;
-                else if (g[r][c]== -1) v= 0;
-                
-                l[r][c]=v;
+        vector<vector<int>> merged(m,vector<int>(n));
+        for (auto &i : walls)
+            merged[i[0]][i[1]] = 2;
+        for (auto &i : guards)
+            merged[i[0]][i[1]] = 1;
+
+        for ( auto i=0; i<m; i++){
+            int g=0,g_rev=0;
+            for (int j=0; j<n; j++){
+                auto c= merged[i][j];
+                if (c ==2) g=0;
+                if (c == 1) g=1;
+                if (g && merged[i][j] != 1) 
+                    merged[i][j]=3;
+                c= merged[i][n-1-j];
+                if (c ==2) g_rev=0;
+                if (c == 1) g_rev=1;
+                if (g_rev && merged[i][n-1-j] != 1) 
+                    merged[i][n-1-j]=3;
             }
         }
-        for (int r=0; r<m; r++){
-            int    v = 0;
-            for (int c=n-1; c>=0;c--){
-                 if (g[r][c]== 2) v=1;
-                else if (g[r][c]== -1) v= 0;
-                
-                r1[r][c]=v;
+ 
+        for (int j=0; j<n; j++){
+            int g=0,g_rev=0;
+            for (int i=0; i<m; i++){
+                auto c= merged[i][j];
+                if (c ==2) g=0;
+                if (c == 1) g=1;
+                if (g && merged[i][j] != 1) 
+                    merged[i][j]=3;
+                c= merged[m-1-i][j];
+                if (c ==2) g_rev=0;
+                if (c == 1) g_rev=1;
+                if (g_rev && merged[m-1-i][j] != 1) 
+                    merged[m-1-i][j]=3;
             }
         }
-        for (int c=0; c<n;c++){
-            int    v = 0;
-            for (int r=0; r<m; r++){
-                 if (g[r][c]== 2) v=1;
-                else if (g[r][c]== -1) v= 0;
-                
-                u[r][c]=v;
-            }
-        } 
-        for (int c=0; c<n;c++){
-            int    v = 0;
-            for (int r=m-1; r>=0; r--){
-                 if (g[r][c]== 2) v=1;
-                else if (g[r][c]== -1) v= 0;
-                
-                d[r][c]=v;
-            }
-        }         
-        int ans= 0;
-        for (int r=0; r<m; r++){
-            for (int c=0; c<n;c++){
-                if (g[r][c]==0){
-                    if (l[r][c]  || r1[r][c] || u[r][c] || d[r][c])
-                        continue;
-                    ans++;
-                }
-            }
-        }
-                   
+        int ans=0;
+        for (auto &i : merged)
+            for (auto &j  : i)
+                if (j == 0) ans++;
         return ans;
     }
 };
