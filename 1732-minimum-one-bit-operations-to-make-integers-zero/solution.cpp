@@ -13,3 +13,14 @@ public:
         return j-1 - minimumOneBitOperations(n - (j>>1));
     }
 };
+/*
+ 0100
+ 0101
+ 0111
+ 0011
+ 0001
+ 0000 
+ 0101
+ 0110
+ 0111
+*/
