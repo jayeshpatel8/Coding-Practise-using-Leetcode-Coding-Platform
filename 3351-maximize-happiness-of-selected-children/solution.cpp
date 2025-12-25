@@ -1,10 +1,12 @@
 class Solution {
 public:
     long long maximumHappinessSum(vector<int>& h, int k) {
-        sort(rbegin(h),rend(h));
+        sort(begin(h),end(h), greater());
         long long ans = 0;
-        for (int i=0; i<k; i++){
-            ans += max(0,h[i]-i);
+        for (int i=0; i<k ; i++){
+            auto a = h[i]-i;
+            if (a < 0) break;
+            ans +=a;
         }
         return ans;
 
