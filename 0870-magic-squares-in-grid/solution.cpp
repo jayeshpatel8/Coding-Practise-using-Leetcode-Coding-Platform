@@ -1,32 +1,29 @@
 class Solution {
 public:
-    int numMagicSquaresInside(vector<vector<int>>& grid) {
-        int ans = 0;
-        int m = grid.size();
-        int n = grid[0].size();
-        for (int row = 0; row + 2 < m; row++) {
-            for (int col = 0; col + 2 < n; col++) {
-                if (isMagicSquare(grid, row, col)) {
-                    ans++;
-                }
+    bool isMagic(vector<vector<int>>& g, int r, int c) {
+        vector<int> seen(10, 0);
+        for (int i = r; i < r + 3; i++)
+            for (int j = c; j < c + 3; j++) {
+                int v = g[i][j];
+                if (v < 1 || v > 9 || seen[v]) return false;
+                seen[v] = 1;
             }
-        }
-        return ans;        
+
+        int s = g[r][c] + g[r][c+1] + g[r][c+2];
+        for (int i = 0; i < 3; i++)
+            if (g[r+i][c] + g[r+i][c+1] + g[r+i][c+2] != s) return false;
+        for (int j = 0; j < 3; j++)
+            if (g[r][c+j] + g[r+1][c+j] + g[r+2][c+j] != s) return false;
+
+        return g[r][c] + g[r+1][c+1] + g[r+2][c+2] == s &&
+               g[r][c+2] + g[r+1][c+1] + g[r+2][c] == s;
     }
-        bool isMagicSquare(vector<vector<int>>& grid, int row, int col) {
 
-        string sequence = "2943816729438167";
-        string sequenceReversed = "7618349276183492";
-
-        string border = "";
-        vector<int> borderIndices = {0, 1, 2, 5, 8, 7, 6, 3};
-        for (int i : borderIndices) {
-            int num = grid[row + i / 3][col + (i % 3)];
-            border += to_string(num);
-        }
-
-        return (grid[row][col] % 2 == 0 && grid[row + 1][col + 1] == 5 &&
-                (sequence.find(border) != string::npos ||
-                 sequenceReversed.find(border) != string::npos));
+    int numMagicSquaresInside(vector<vector<int>>& grid) {
+        int res = 0;
+        for (int i = 0; i + 2 < grid.size(); i++)
+            for (int j = 0; j + 2 < grid[0].size(); j++)
+                if (isMagic(grid, i, j)) res++;
+        return res;
     }
 };
